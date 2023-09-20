@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
+    /* HealthManager component:
+        The HealthManager component specifies both the maximum and current health of the associated Game Object.
+        It also subscribes to events produced via the DamageManager and handles them to update the health status of the associated Game Object.
+    */
     public float maxHealth = 100f;
     private float currentHealth;
 

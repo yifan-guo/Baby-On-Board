@@ -2,6 +2,17 @@ using UnityEngine;
 
 public class DamageableObject : MonoBehaviour
 {
+    /* DamageableObject component:
+        Attach to a Game Object along with the DamageManager component to raise damage events when the Game Object
+        collides with objects.
+
+        The DamageableObject component will only raise a damage event if the colliding object has DamagingHealingAttributes attached.
+
+        The DamageableObject component raises separate events for damage and healing to allow for divergent behavior and animations.
+
+        No events are raised when damage and healing amounts to 0.
+
+    */
     public float damageMultiplier = 1f;
     public float healingMultiplier = 1f;
     private DamageManager damageManager;
