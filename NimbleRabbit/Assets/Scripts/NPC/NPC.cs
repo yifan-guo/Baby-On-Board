@@ -22,19 +22,9 @@ public class NPC : MonoBehaviour
     public Role role;
 
     /// <summary>
-    /// Maximum HP.
-    /// </summary>
-    public int maxHealth;
-
-    /// <summary>
     /// Move speed.
     /// </summary>
     public int moveSpeed;
-
-    /// <summary>
-    /// Current health.
-    /// </summary>
-    public int health {get; protected set;}
 
     /// <summary>
     /// Reference to this NPC's nav component.
@@ -53,5 +43,13 @@ public class NPC : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
+    }
+
+    /// <summary>
+    /// Initialization Pt II.
+    /// </summary>
+    protected virtual void Start()
+    {
+        nav.speed = moveSpeed;
     }
 }

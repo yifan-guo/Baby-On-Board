@@ -17,6 +17,8 @@ public class Bandit : NPC
     /// </summary>
     protected void Start()
     {
+        base.Awake();
+
         Dictionary<Type, BaseState> states = new Dictionary<Type, BaseState>
         {
             {typeof(ChaseState), new ChaseState(this)}
