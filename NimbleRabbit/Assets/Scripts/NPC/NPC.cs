@@ -1,0 +1,57 @@
+using UnityEngine;
+using UnityEngine.AI;
+
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(StateMachine))]
+public class NPC : MonoBehaviour
+{
+    [Header("Testing")]
+    //temp gameobject to chase
+    public GameObject target;
+
+    /// <summary>
+    /// Enum for NPC roles.
+    /// </summary>
+    public enum Role {Civilian, Bandit, Police};
+
+    [Header("Info")]
+    
+    /// <summary>
+    /// Type of NPC.
+    /// </summary>
+    public Role role;
+
+    /// <summary>
+    /// Maximum HP.
+    /// </summary>
+    public int maxHealth;
+
+    /// <summary>
+    /// Move speed.
+    /// </summary>
+    public int moveSpeed;
+
+    /// <summary>
+    /// Current health.
+    /// </summary>
+    public int health {get; protected set;}
+
+    /// <summary>
+    /// Reference to this NPC's nav component.
+    /// </summary>
+    public NavMeshAgent nav {get; protected set;}
+
+    /// <summary>
+    /// Reference to this NPC's state machine.
+    /// </summary>
+    protected StateMachine stateMachine;
+
+    /// <summary>
+    /// Initialization Pt I.
+    /// </summary>
+    protected virtual void Awake()
+    {
+        nav = GetComponent<NavMeshAgent>();
+        stateMachine = GetComponent<StateMachine>();
+    }
+}
