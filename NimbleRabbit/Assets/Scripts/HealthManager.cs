@@ -7,16 +7,29 @@ public class HealthManager : MonoBehaviour
     public float currentHealth = 100f;
     public float damageMultiplier = 1f;
     public float healingMultiplier = 1f;
-    public event Action<float, GameObject> OnDamageReceived;
-    public event Action<float, GameObject> OnHealingReceived;
+
+    public static event Action<float, GameObject> OnDamageReceived;
+    public static event Action<float, GameObject> OnHealingReceived;
 
 
-    private void Start()
+    void OnEnable()
     {
         OnDamageReceived += HandleDamage;
         OnHealingReceived += HandleHealing;
-
     }
+
+    void Start()
+    {
+        HealDamage(0, gameObject);
+    }
+
+
+    void OnDisable()
+    {
+        OnDamageReceived -= HandleDamage;
+        OnHealingReceived -= HandleHealing;
+    }
+
     public void TakeDamage(float damageAmount, GameObject damagedObject)
     {
         OnDamageReceived?.Invoke(damageAmount, damagedObject);
@@ -27,15 +40,6 @@ public class HealthManager : MonoBehaviour
         OnHealingReceived?.Invoke(healingAmount, healedObject);
     }
 
-    public void SubscribeToDamageEvent(Action<float, GameObject> action)
-    {
-        OnDamageReceived += action;
-    }
-
-    public void SubscribeToHealingEvent(Action<float, GameObject> action)
-    {
-        OnHealingReceived += action;
-    }
 
     private void HandleDamage(float damageAmount, GameObject damagedObject)
     {
@@ -78,13 +82,13 @@ public class HealthManager : MonoBehaviour
         if (damagingHealingAttributes != null)
         {
             float damageAmount = damagingHealingAttributes.damagePerCollision * damageMultiplier;
-            if (damageAmount > 0f)
+            if (damageAmount >= 0f)
             {
                 TakeDamage(damageAmount, gameObject);
             }
 
             float healingAmount = damagingHealingAttributes.healingPerCollision * healingMultiplier;
-            if (healingAmount > 0f)
+            if (healingAmount >= 0f)
             {
                 HealDamage(healingAmount, gameObject);
 

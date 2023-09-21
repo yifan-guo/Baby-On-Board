@@ -2,24 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class HPDisplayUpdater : MonoBehaviour
 {
     public TextMeshProUGUI healthDisplay;
-    public GameObject healthfulObject;
-    private HealthManager healthManager;
 
-    void Start()
+    void OnEnable()
     {
-        healthManager = healthfulObject.GetComponent<HealthManager>();
-        healthManager.SubscribeToDamageEvent((damageAmount, damagedObject) => SetHealthDisplay());
-        healthManager.SubscribeToHealingEvent((healingAmount, healedObject) => SetHealthDisplay());
-        SetHealthDisplay();
+        HealthManager.OnDamageReceived += HandleHealthUpdate;
+        HealthManager.OnHealingReceived += HandleHealthUpdate;
     }
 
-    void SetHealthDisplay()
+
+    void OnDisable()
     {
-        healthDisplay.text = $"HP: {healthManager.currentHealth}/{healthManager.maxHealth}";
+        HealthManager.OnDamageReceived -= HandleHealthUpdate;
+        HealthManager.OnHealingReceived -= HandleHealthUpdate;
+    }
+
+    void SetHealthDisplay(float currentHealth, float maxHealth)
+    {
+        healthDisplay.text = $"HP: {currentHealth}/{maxHealth}";
+    }
+
+    void HandleHealthUpdate(float damageAmount, GameObject damagedObject)
+    {
+        HealthManager healthManager = damagedObject.GetComponent<HealthManager>();
+        SetHealthDisplay(healthManager.currentHealth, healthManager.maxHealth);
     }
 
 }
