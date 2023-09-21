@@ -15,22 +15,14 @@ public class ChaseState : BaseState
     /// <returns></returns>
     public override Type Update()
     {
-        switch (me.role)
+        // TODO:
+        // replace with a static instance reference to player
+        if (me.target == null)
         {
-            case NPC.Role.Bandit:
-                // TODO:
-                // replace with a static instance reference to player
-                if (me.target == null)
-                {
-                    return null;
-                }
-
-                me.nav.SetDestination(me.target.transform.position);
-                break;
-
-            default:
-                break;
+            return null;
         }
+
+        me.nav.SetDestination(me.target.transform.position);
 
         return null;
     }

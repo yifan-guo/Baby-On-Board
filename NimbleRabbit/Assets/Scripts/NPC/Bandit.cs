@@ -15,7 +15,7 @@ public class Bandit : NPC
     /// <summary>
     /// Initialization Pt II.
     /// </summary>
-    protected void Start()
+    protected override void Start()
     {
         base.Awake();
 
