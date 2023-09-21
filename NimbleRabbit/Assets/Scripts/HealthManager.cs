@@ -3,51 +3,82 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
-    /* HealthManager component:
-        The HealthManager component specifies both the maximum and current health of the associated Game Object.
-        It also subscribes to events produced via the DamageManager and handles them to update the health status of the associated Game Object.
-    */
     public float maxHealth = 100f;
     private float currentHealth;
+    public float damageMultiplier = 1f;
+    public float healingMultiplier = 1f;
+    public event Action<float, GameObject> OnDamageReceived;
+    public event Action<float, GameObject> OnHealingReceived;
 
-    private DamageManager damageManager;
 
     private void Start()
     {
         currentHealth = maxHealth;
-        damageManager = GetComponent<DamageManager>();
+        OnDamageReceived += HandleDamage;
+        OnHealingReceived += HandleHealing;
 
-        if (damageManager != null)
-        {
-            damageManager.OnDamageReceived += HandleDamage;
-            damageManager.OnHealingReceived += HandleHealing;
+    }
+    public void TakeDamage(float damageAmount, GameObject damagedObject)
+    {
+        OnDamageReceived?.Invoke(damageAmount, damagedObject);
+    }
 
-        }
+    public void HealDamage(float healingAmount, GameObject healedObject)
+    {
+        OnHealingReceived?.Invoke(healingAmount, healedObject);
     }
 
     private void HandleDamage(float damageAmount, GameObject damagedObject)
     {
-        currentHealth -= damageAmount;
-
+        float newHealth = currentHealth - damageAmount;
         Debug.Log($"Ouch! {damagedObject.name} was damaged for {damageAmount}!");
-        Debug.Log($"{damagedObject.name} currently has {currentHealth} health points");
 
-        if(currentHealth <= 0)
+        if(newHealth < 0)
         {
-            // do something meaningful here
+            currentHealth = 0;
         }
+        else
+        {
+            currentHealth = newHealth;
+        }
+
+        Debug.Log($"{damagedObject.name} currently has {currentHealth} health points");
     }
 
     private void HandleHealing(float healingAmount, GameObject healedObject)
     {
-        currentHealth += healingAmount;
-
+        float newHealth = currentHealth + healingAmount;
         Debug.Log($"Woohoo! {healedObject.name} was healed for {healingAmount}!");
-        Debug.Log($"{healedObject.name} currently has {currentHealth} health points");
 
-        if(currentHealth > maxHealth)
+        if(newHealth > maxHealth)
         {
-            // do something meaningful here
+            currentHealth = maxHealth;
+        }
+        else{
+            currentHealth = newHealth;
+        }
+
+        Debug.Log($"{healedObject.name} currently has {currentHealth} health points");
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        DamagingHealingAttributes damagingHealingAttributes = collision.gameObject.GetComponent<DamagingHealingAttributes>();
+        if (damagingHealingAttributes != null)
+        {
+            float damageAmount = damagingHealingAttributes.damagePerCollision * damageMultiplier;
+            if (damageAmount > 0f)
+            {
+                TakeDamage(damageAmount, gameObject);
+            }
+
+            float healingAmount = damagingHealingAttributes.healingPerCollision * healingMultiplier;
+            if (healingAmount > 0f)
+            {
+                HealDamage(healingAmount, gameObject);
+
+            }
         }
     }
 }
