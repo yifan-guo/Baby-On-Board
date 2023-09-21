@@ -6,6 +6,9 @@ using System;
 
 public class HPDisplayUpdater : MonoBehaviour
 {
+    /// <summary>
+    /// The TextMeshProGUI component that will be updated based on HealthManager events.
+    /// </summary>
     public TextMeshProUGUI healthDisplay;
 
     void OnEnable()

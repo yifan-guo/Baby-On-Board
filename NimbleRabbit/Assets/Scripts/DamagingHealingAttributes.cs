@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DamagingHealingAttributes : MonoBehaviour
 {
-    /* DamagingHealingAttributes component:
-        The DamagingHealingAttributes component specifies what amount of health or damage should be passed to a damageable object
-        on contact with the current object.
-
-        Both healing and damage are included in the same component to allow easy adding of one component to manage either behavior.
-    */
+    /// <summary>
+    /// Defines damage amount during collision with another GameObject that uses HealthManager.
+    /// </summary>
     public float damagePerCollision = 0f;
+    /// <summary>
+    /// Determines healing amount during collision with another GameObject that uses HealthManager.
+    /// </summary>
     public float healingPerCollision = 0f;
 }

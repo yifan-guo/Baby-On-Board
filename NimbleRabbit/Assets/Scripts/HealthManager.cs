@@ -3,12 +3,34 @@ using UnityEngine;
 
 public class HealthManager : MonoBehaviour
 {
+    /// <summary>
+    /// The desired maximum health of the GameObject.
+    /// </summary>
     public float maxHealth = 100f;
+
+    /// <summary>
+    /// The current health of the GameObject.
+    /// </summary>
     public float currentHealth = 100f;
+
+    /// <summary>
+    /// Use to increase or decrease the amount of damage received. Can simulate armor or curse.
+    /// </summary>
     public float damageMultiplier = 1f;
+
+    /// <summary>
+    /// Use to increase the amount of healing received. Can simulate health buff or curse.
+    /// </summary>
     public float healingMultiplier = 1f;
 
+    /// <summary>
+    /// Public broadcast event for damage taken by this object.
+    /// </summary>
     public static event Action<float, GameObject> OnDamageReceived;
+
+    /// <summary>
+    /// Public broadcast event for healing taken by this object.
+    /// </summary>
     public static event Action<float, GameObject> OnHealingReceived;
 
 
