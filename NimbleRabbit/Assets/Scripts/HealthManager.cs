@@ -37,39 +37,34 @@ public class HealthManager : MonoBehaviour
     public static event Action<float, GameObject> OnHealingReceived;
 
 
-    void OnEnable()
-    {
-        OnDamageReceived += HandleDamage;
-        OnHealingReceived += HandleHealing;
-    }
-
     void Start()
     {
-        HealDamage(0, gameObject);
+        // Send initial empty event to notify subscribers of starting health
+        HealDamage(0);
     }
 
 
-    void OnDisable()
+    public void TakeDamage(float damageAmount)
     {
-        OnDamageReceived -= HandleDamage;
-        OnHealingReceived -= HandleHealing;
+        // Update internal state
+        HandleDamage(damageAmount);
+        // Broadcast event to notify subscribers
+        OnDamageReceived?.Invoke(damageAmount, gameObject);
     }
 
-    public void TakeDamage(float damageAmount, GameObject damagedObject)
+    public void HealDamage(float healingAmount)
     {
-        OnDamageReceived?.Invoke(damageAmount, damagedObject);
+        // Update internal state
+        HandleHealing(healingAmount);
+        // Broadcast event to notify subscribers
+        OnHealingReceived?.Invoke(healingAmount, gameObject);
     }
 
-    public void HealDamage(float healingAmount, GameObject healedObject)
-    {
-        OnHealingReceived?.Invoke(healingAmount, healedObject);
-    }
 
-
-    private void HandleDamage(float damageAmount, GameObject damagedObject)
+    private void HandleDamage(float damageAmount)
     {
         float newHealth = currentHealth - damageAmount;
-        Debug.Log($"Ouch! {damagedObject.name} was damaged for {damageAmount}!");
+        Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
 
         if (newHealth < 0)
         {
@@ -80,13 +75,13 @@ public class HealthManager : MonoBehaviour
             currentHealth = newHealth;
         }
 
-        Debug.Log($"{damagedObject.name} currently has {currentHealth} health points");
+        Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
     }
 
-    private void HandleHealing(float healingAmount, GameObject healedObject)
+    private void HandleHealing(float healingAmount)
     {
         float newHealth = currentHealth + healingAmount;
-        Debug.Log($"Woohoo! {healedObject.name} was healed for {healingAmount}!");
+        Debug.Log($"Woohoo! {gameObject.name} was healed for {healingAmount}!");
 
         if (newHealth > maxHealth)
         {
@@ -97,7 +92,7 @@ public class HealthManager : MonoBehaviour
             currentHealth = newHealth;
         }
 
-        Debug.Log($"{healedObject.name} currently has {currentHealth} health points");
+        Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
     }
 
 
@@ -109,13 +104,13 @@ public class HealthManager : MonoBehaviour
             float damageAmount = damagingHealingAttributes.damagePerCollision * damageMultiplier;
             if (damageAmount >= 0f)
             {
-                TakeDamage(damageAmount, gameObject);
+                TakeDamage(damageAmount);
             }
 
             float healingAmount = damagingHealingAttributes.healingPerCollision * healingMultiplier;
             if (healingAmount >= 0f)
             {
-                HealDamage(healingAmount, gameObject);
+                HealDamage(healingAmount);
 
             }
         }
