@@ -4,7 +4,7 @@ using UnityEngine;
 public class HealthManager : MonoBehaviour
 {
     public float maxHealth = 100f;
-    private float currentHealth;
+    public float currentHealth = 100f;
     public float damageMultiplier = 1f;
     public float healingMultiplier = 1f;
     public event Action<float, GameObject> OnDamageReceived;
@@ -13,7 +13,6 @@ public class HealthManager : MonoBehaviour
 
     private void Start()
     {
-        currentHealth = maxHealth;
         OnDamageReceived += HandleDamage;
         OnHealingReceived += HandleHealing;
 
@@ -28,12 +27,22 @@ public class HealthManager : MonoBehaviour
         OnHealingReceived?.Invoke(healingAmount, healedObject);
     }
 
+    public void SubscribeToDamageEvent(Action<float, GameObject> action)
+    {
+        OnDamageReceived += action;
+    }
+
+    public void SubscribeToHealingEvent(Action<float, GameObject> action)
+    {
+        OnHealingReceived += action;
+    }
+
     private void HandleDamage(float damageAmount, GameObject damagedObject)
     {
         float newHealth = currentHealth - damageAmount;
         Debug.Log($"Ouch! {damagedObject.name} was damaged for {damageAmount}!");
 
-        if(newHealth < 0)
+        if (newHealth < 0)
         {
             currentHealth = 0;
         }
@@ -50,11 +59,12 @@ public class HealthManager : MonoBehaviour
         float newHealth = currentHealth + healingAmount;
         Debug.Log($"Woohoo! {healedObject.name} was healed for {healingAmount}!");
 
-        if(newHealth > maxHealth)
+        if (newHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
-        else{
+        else
+        {
             currentHealth = newHealth;
         }
 
