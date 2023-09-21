@@ -4,6 +4,9 @@ using UnityEngine;
 using TMPro;
 using System;
 
+/// <summary>
+/// Attach to a TextMeshProGUI object to update its text with the current and max health of a GameObject using the HealthManager.
+/// </summary>
 public class HPDisplayUpdater : MonoBehaviour
 {
     /// <summary>
