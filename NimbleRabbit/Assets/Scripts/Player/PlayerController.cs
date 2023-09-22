@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    /// <summary>
+    /// Static instance of PlayerController.
+    /// </summary>
+    public static PlayerController instance {get; private set;}
+
     public Rigidbody rb;
     public GameObject vehicle;
 
@@ -11,21 +16,30 @@ public class PlayerController : MonoBehaviour
     public Transform Left;
     public Transform Straight;
 
-
     public float forwardSpeed = 150f;
     public float backwardsSpeed = 80f;
     public float turnSpeed = 15f;
 
-    private void Start()
+    /// <summary>
+    /// Initialization Pt I.
+    /// </summary>
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    /// <summary>
+    /// Initialization Pt II.
+    /// </summary>
+    private void Start()
+    {
+        instance = this;
     }
 
     private void Update()
     {
         print(rb.velocity);
         HandleInput();
-
     }
 
     private void HandleInput()
@@ -33,13 +47,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey("w"))
         {
             rb.velocity += transform.forward * forwardSpeed * Time.deltaTime;
-
         }
 
         if (Input.GetKey("s"))
         {
             rb.velocity -= transform.forward * backwardsSpeed * Time.deltaTime;
-
         }
 
         // Turning left

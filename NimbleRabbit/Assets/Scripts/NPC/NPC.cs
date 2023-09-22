@@ -5,10 +5,6 @@ using UnityEngine.AI;
 [RequireComponent(typeof(StateMachine))]
 public class NPC : MonoBehaviour
 {
-    [Header("Testing")]
-    //temp gameobject to chase
-    public GameObject target;
-
     /// <summary>
     /// Enum for NPC roles.
     /// </summary>
