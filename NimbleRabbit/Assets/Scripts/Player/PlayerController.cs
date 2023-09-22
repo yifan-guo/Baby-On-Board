@@ -5,20 +5,24 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
-    /// Static instance of PlayerController.
+    /// Static instance of player.
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-    public Rigidbody rb;
-    public GameObject vehicle;
+    /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    private List<Package> packages;
 
-    public Transform Right;
-    public Transform Left;
-    public Transform Straight;
+    /// <summary>
+    /// Reference to Rigidbody.
+    /// </summary>
+    private Rigidbody rb;
 
-    public float forwardSpeed = 150f;
-    public float backwardsSpeed = 80f;
-    public float turnSpeed = 15f;
+    [Header("Driving")]
+    public float forwardSpeed;
+    public float backwardsSpeed;
+    public float turnSpeed;
 
     /// <summary>
     /// Initialization Pt I.
@@ -26,7 +30,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-    }
+    }    
 
     /// <summary>
     /// Initialization Pt II.
@@ -34,14 +38,20 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         instance = this;
+        packages = new List<Package>();
     }
 
+    /// <summary>
+    /// Every frame update loop.
+    /// </summary>
     private void Update()
     {
-        print(rb.velocity);
         HandleInput();
     }
 
+    /// <summary>
+    /// Interprets user input.
+    /// </summary>
     private void HandleInput()
     {
         if (Input.GetKey("w"))
@@ -65,5 +75,44 @@ public class PlayerController : MonoBehaviour
         {
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
         }
+
+        // TODO:
+        // This is test code to drop the package.
+        // Ideally DropPackage() is called elsewhere by something like an enemy.
+        if (Input.GetKeyDown(KeyCode.Space) &&
+            packages.Count > 0)
+        {
+            DropPackage(packages[0]);
+        }
+    }
+
+    /// <summary>
+    /// Add package.
+    /// </summary>
+    /// <param name="pkg"></param>
+    public void CollectPackage(Package pkg)
+    {
+        if (packages.Contains(pkg))
+        {
+            return;
+        }
+
+        packages.Add(pkg);
+        pkg.Collect();
+    }
+
+    /// <summary>
+    /// Drop a package.
+    /// </summary>
+    /// <param name="pkg"></param>
+    public void DropPackage(Package pkg)
+    {
+        if (packages.Contains(pkg) == false)
+        {
+            return;
+        }
+
+        packages.Remove(pkg);
+        pkg.Drop();
     }
 }
