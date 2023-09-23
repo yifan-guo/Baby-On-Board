@@ -15,4 +15,5 @@ public class DamagingHealingAttributes : MonoBehaviour
     /// Determines healing amount during collision with another GameObject that uses HealthManager.
     /// </summary>
     public float healingPerCollision = 0f;
+
 }
