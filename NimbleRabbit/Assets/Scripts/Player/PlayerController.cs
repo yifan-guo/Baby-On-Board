@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        Cursor.visible = false;
         instance = this;
         packages = new List<Package>();
     }
@@ -54,6 +55,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void HandleInput()
     {
+        if (Input.GetKeyDown("q"))
+        {
+            Application.Quit();
+        }
         if (Input.GetKey("w"))
         {
             rb.velocity += transform.forward * forwardSpeed * Time.deltaTime;
