@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,20 +10,35 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-    /// <summary>
-    /// Packages that player has collected.
-    /// </summary>
-    private List<Package> packages;
-
-    /// <summary>
-    /// Reference to Rigidbody.
-    /// </summary>
-    private Rigidbody rb;
-
     [Header("Driving")]
     public float forwardSpeed;
     public float backwardsSpeed;
     public float turnSpeed;
+
+    /// <summary>
+    /// Flag for if player is stable on the ground.
+    /// </summary>
+    public bool isGrounded {get; private set;}
+
+    /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    public List<Package> packages {get; private set;}
+
+    /// <summary>
+    /// Reference to Rigidbody.
+    /// </summary>
+    public Rigidbody rb {get; private set;}
+
+    /// <summary>
+    /// Time that the player can't endure another collision after one.
+    /// </summary>
+    private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
+
+    /// <summary>
+    /// Time of last collision.
+    /// </summary>
+    private float lastCollisionTime_s;
 
     /// <summary>
     /// Initialization Pt I.
@@ -47,6 +63,79 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         HandleInput();
+    }
+
+    /// <summary>
+    /// Physics update loop.
+    /// </summary>
+    private void FixedUpdate()
+    {
+        // Forward
+        SweepTest(
+            transform.forward,
+            (transform.localScale.z / 2f) + 0.1f);
+        
+        // Backward
+        SweepTest(
+            -transform.forward,
+            (transform.localScale.z / 2f) + 0.1f);
+
+        // Right
+        SweepTest(
+            transform.right,
+            (transform.localScale.x / 2f) + 0.1f);
+
+        // Left
+        SweepTest(
+            -transform.right,
+            (transform.localScale.x / 2f) + 0.1f);
+    }
+
+    /// <summary>
+    /// Use sweep test for fast collisions.
+    /// </summary>
+    /// <param name="direction"></param>
+    private void SweepTest(
+        Vector3 direction,
+        float distance)
+    {
+        if (Time.time - lastCollisionTime_s <= COLLISION_ENDURANCE_TIME_S)
+        {
+            return;
+        }
+
+        RaycastHit hit;
+        bool result = rb.SweepTest(
+            direction,
+            out hit,
+            distance);
+
+        // TODO:
+        // Update this to account for any highspeed collisions with non-static
+        // objects
+        if (result == true &&
+            hit.collider.gameObject.tag == "NPC")
+        {
+            NPC npc = hit.transform.GetComponent<NPC>();
+
+            float myVelocityDot = Vector3.Dot(
+                rb.velocity,
+                hit.transform.position - transform.position);
+            
+            float theirVelocityDot = Vector3.Dot(
+                npc.nav.velocity,
+                transform.position - hit.transform.position);
+
+            float force = (myVelocityDot + theirVelocityDot) / 3f;
+
+            rb.AddForce(
+                hit.normal * force,
+                ForceMode.Impulse);
+
+            StartCoroutine(npc.Crash(-hit.normal * force));
+
+            lastCollisionTime_s = Time.time;
+        }
     }
 
     /// <summary>
@@ -98,14 +187,17 @@ public class PlayerController : MonoBehaviour
         }
 
         packages.Add(pkg);
-        pkg.Collect();
+        pkg.Collect(transform);
     }
 
     /// <summary>
     /// Drop a package.
     /// </summary>
     /// <param name="pkg"></param>
-    public void DropPackage(Package pkg)
+    /// <param name="thief"></param>
+    public void DropPackage(
+        Package pkg,
+        Transform thief=null)
     {
         if (packages.Contains(pkg) == false)
         {
@@ -113,6 +205,14 @@ public class PlayerController : MonoBehaviour
         }
 
         packages.Remove(pkg);
-        pkg.Drop();
+
+        if (thief == null)
+        {
+            pkg.Drop();
+        }
+        else
+        {
+            pkg.Collect(thief);
+        }
     }
 }

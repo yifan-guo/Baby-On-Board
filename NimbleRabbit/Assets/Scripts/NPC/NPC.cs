@@ -1,9 +1,12 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(StateMachine))]
-public class NPC : MonoBehaviour
+public abstract class NPC : MonoBehaviour
 {
     /// <summary>
     /// Enum for NPC roles.
@@ -28,6 +31,11 @@ public class NPC : MonoBehaviour
     public NavMeshAgent nav {get; protected set;}
 
     /// <summary>
+    /// Reference to this NPC's rigidbody.
+    /// </summary>
+    protected Rigidbody rb;
+
+    /// <summary>
     /// Reference to this NPC's state machine.
     /// </summary>
     protected StateMachine stateMachine;
@@ -38,6 +46,7 @@ public class NPC : MonoBehaviour
     protected virtual void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
         stateMachine = GetComponent<StateMachine>();
     }
 
@@ -47,5 +56,30 @@ public class NPC : MonoBehaviour
     protected virtual void Start()
     {
         nav.speed = moveSpeed;
+    }
+
+    /// <summary>
+    /// Applies a force to the NPC and stops their nav system temporarily.
+    /// NavMeshAgent movement will not take any AddForce() while active.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator Crash(Vector3 force)
+    {
+        rb.velocity = nav.velocity;
+        nav.enabled = false;
+        rb.isKinematic = false;
+
+        rb.AddForce(
+            force,
+            ForceMode.Impulse);
+
+        // Regain control after coming to a stop
+        while (rb.velocity.magnitude > 0.1f)
+        {
+            yield return null;
+        }
+
+        nav.enabled = true;
+        rb.isKinematic = true;
     }
 }

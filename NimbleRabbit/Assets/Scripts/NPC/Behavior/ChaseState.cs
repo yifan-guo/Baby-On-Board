@@ -4,10 +4,18 @@ using UnityEngine;
 public class ChaseState : BaseState
 {
     /// <summary>
+    /// Reference to Enemy NPC using this state.
+    /// </summary>
+    protected new Enemy me;
+
+    /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="npc"></param>
-    public ChaseState(NPC npc) : base(npc) {}
+    public ChaseState(Enemy npc) : base(npc)
+    {
+        me = npc;
+    }
 
     /// <summary>
     /// Update cycle.
@@ -15,9 +23,32 @@ public class ChaseState : BaseState
     /// <returns></returns>
     public override Type Update()
     {
-        if (PlayerController.instance == null)
+        // Relax until navigation is back up
+        if (me.nav.enabled == false)
         {
             return null;
+        }
+
+        // If there's no player, just idle
+        if (PlayerController.instance == null)
+        {
+            return typeof(IdleState);
+        }
+
+        // Attack if we can
+        float dist = Vector3.Distance(
+            me.transform.position,
+            PlayerController.instance.transform.position);
+
+        if (dist < me.attackRange)
+        {
+            return typeof(AttackState);
+        }
+
+        // Do we still want to chase
+        if (me.KeepChasing() == false)
+        {
+            return typeof(IdleState);
         }
 
         // TODO:

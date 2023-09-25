@@ -1512,6 +1512,10 @@ PrefabInstance:
       value: Building (4)
       objectReference: {fileID: 0}
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -3507,6 +3511,10 @@ PrefabInstance:
       value: Obstacle (6)
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -5054,6 +5062,10 @@ PrefabInstance:
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_Name
       value: Building (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -12406,6 +12418,10 @@ PrefabInstance:
       value: Obstacle (3)
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -18746,13 +18762,49 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1643112760282714591, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3493498314706005656, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4370185163870834741, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: attackRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4864211869481263707, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_Mass
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4864211869481263707, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5793821951287302617, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
       propertyPath: m_Name
       value: Bandit
       objectReference: {fileID: 0}
     - target: {fileID: 5793821951287302617, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5939467314367502173, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6740491595264892505, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_Acceleration
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6740491595264892505, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461847001940290081, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
+      propertyPath: m_Size.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9212388429031679043, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18760,7 +18812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9212388429031679043, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.2288848e-18
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 9212388429031679043, guid: bf14a4f98cf55eb4b9819ab118c555f9, type: 3}
       propertyPath: m_LocalPosition.z
@@ -19501,6 +19553,10 @@ PrefabInstance:
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_Name
       value: Building (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -22378,6 +22434,10 @@ PrefabInstance:
       value: Obstacle (5)
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -23438,6 +23498,10 @@ PrefabInstance:
       value: Obstacle (1)
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -24297,6 +24361,10 @@ PrefabInstance:
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_Name
       value: Obstacle (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -26366,8 +26434,12 @@ PrefabInstance:
       value: parking (1)
       objectReference: {fileID: 0}
     - target: {fileID: 6641117809402974619, guid: a74ab541f8ccf144ebb484fb07d1cde8, type: 3}
+      propertyPath: m_TagString
+      value: Road
+      objectReference: {fileID: 0}
+    - target: {fileID: 6641117809402974619, guid: a74ab541f8ccf144ebb484fb07d1cde8, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 127
       objectReference: {fileID: 0}
     - target: {fileID: 7504691674665782170, guid: a74ab541f8ccf144ebb484fb07d1cde8, type: 3}
       propertyPath: m_Enabled
@@ -26785,6 +26857,10 @@ PrefabInstance:
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_Name
       value: Obstacle (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -30461,10 +30537,10 @@ GameObject:
   - component: {fileID: 1722178391}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &1722178391
 MeshCollider:
@@ -30611,6 +30687,10 @@ PrefabInstance:
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_Name
       value: Building (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -32613,6 +32693,10 @@ PrefabInstance:
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_Name
       value: Building (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -38139,6 +38223,10 @@ PrefabInstance:
       value: Building
       objectReference: {fileID: 0}
     - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559457371798207717, guid: 4c1ba7c201ae0474da177ef7bc7bf4c9, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -38212,8 +38300,12 @@ PrefabInstance:
       value: parking
       objectReference: {fileID: 0}
     - target: {fileID: 6641117809402974619, guid: a74ab541f8ccf144ebb484fb07d1cde8, type: 3}
+      propertyPath: m_TagString
+      value: Road
+      objectReference: {fileID: 0}
+    - target: {fileID: 6641117809402974619, guid: a74ab541f8ccf144ebb484fb07d1cde8, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 127
       objectReference: {fileID: 0}
     - target: {fileID: 7504691674665782170, guid: a74ab541f8ccf144ebb484fb07d1cde8, type: 3}
       propertyPath: m_Enabled
@@ -38371,6 +38463,10 @@ PrefabInstance:
       value: Obstacle
       objectReference: {fileID: 0}
     - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1103392548754629654, guid: d08dcd17b70d06946bbf8bdce27b30dd, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -38446,6 +38542,22 @@ PrefabInstance:
     - target: {fileID: 4524137099466556808, guid: b3e3b0df57484f446812ce851a73f5dc, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524137099982407745, guid: b3e3b0df57484f446812ce851a73f5dc, type: 3}
+      propertyPath: m_Mass
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524137099982407745, guid: b3e3b0df57484f446812ce851a73f5dc, type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524137099982407745, guid: b3e3b0df57484f446812ce851a73f5dc, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524137099982407745, guid: b3e3b0df57484f446812ce851a73f5dc, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4524137099982407746, guid: b3e3b0df57484f446812ce851a73f5dc, type: 3}
       propertyPath: m_RootOrder

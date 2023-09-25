@@ -57,13 +57,19 @@ public class Package : Collectible
     /// <summary>
     /// Alter state to be collected.
     /// </summary>
-    public void Collect()
+    public void Collect(Transform owner)
     {
         isCollected = true;
         coll.enabled = false;
 
-        transform.parent = PlayerController.instance.transform;
-        transform.localPosition = new Vector3(0f, 0.35f, 0f);
+        transform.parent = owner;
+
+        // TODO:
+        // Update as placeholders for player and NPCs change.
+        // Don't even know if we want it to sit on top of the vehicles.
+        transform.localPosition = (owner.tag == "Player") ?
+            new Vector3(0f, 0.35f, 0f) :
+            Vector3.up * ((owner.GetComponent<Collider>().bounds.size.y) + (transform.localScale.y / 2f));
     }
 
     /// <summary>
@@ -72,10 +78,12 @@ public class Package : Collectible
     public void Drop()
     {
         coll.enabled = true;
-        transform.parent = null;
 
-        Vector3 pos = PlayerController.instance.transform.position;
+        // Place on floor below owner
+        Vector3 pos = transform.parent.position;
         pos.y = transform.localScale.y / 2f;
         transform.position = pos;
+
+        transform.parent = null;
     }
 }
