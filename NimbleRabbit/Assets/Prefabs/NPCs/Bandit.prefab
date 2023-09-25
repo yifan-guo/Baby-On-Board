@@ -773,6 +773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   role: 1
   moveSpeed: 25
+  attackRange: 0
 --- !u!114 &9161132929671611794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1141,7 +1142,7 @@ SphereCollider:
   m_GameObject: {fileID: 9218787782130170167}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.3975829
   m_Center: {x: -0.09900798, y: 0, z: 0}
