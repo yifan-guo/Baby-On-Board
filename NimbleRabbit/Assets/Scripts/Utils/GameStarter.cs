@@ -20,8 +20,7 @@ public class GameStarter : MonoBehaviour
     }
 
     public void StartGame() {
-        // Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene("yguo83");
+        SceneManager.LoadScene("PlayerPrototyping");
         Time.timeScale = 1.0f;
     }
 }
