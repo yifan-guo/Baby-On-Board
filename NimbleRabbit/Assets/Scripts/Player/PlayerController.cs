@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Packages that player has collected.
     /// </summary>
-    public List<Package> packages;
+    public List<Package> packages {get; private set;}
 
     /// <summary>
     /// Reference to Rigidbody.
@@ -193,12 +193,6 @@ public class PlayerController : MonoBehaviour
 
         packages.Add(pkg);
         pkg.Collect(transform);
-        
-        // set PackageCollector component's hasPackage to true (if attached)
-        PackageCollector pc = GetComponent<PackageCollector>();
-        if (pc != null) {
-            pc.CollectPackage();
-        }
     }
 
     /// <summary>
@@ -224,12 +218,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             pkg.Collect(thief);
-        }
-
-        // set PackageCollector component's hasPackage to false (if attached)
-        PackageCollector pc = GetComponent<PackageCollector>();
-        if (pc != null) {
-            pc.DropPackage();
         }
     }
 }
