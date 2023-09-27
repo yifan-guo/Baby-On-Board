@@ -17645,7 +17645,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'HP: 100/100'
+  m_text: HP Numeric
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -22708,7 +22708,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123562410}
-  m_LocalRotation: {x: -0.00046490133, y: -0.013739837, z: 0.006877906, w: 0.99988186}
+  m_LocalRotation: {x: -0.00046490133, y: -0.013739872, z: 0.006877923, w: 0.99988186}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -35440,19 +35440,6 @@ MonoBehaviour:
   damageMultiplier: 1
   healingMultiplier: 1
   physicalDamageDebounceSeconds: 0.5
---- !u!114 &1922590067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922590060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87fceb0f2ed084fdd9ec422a0745a76a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hasPackage: 0
 --- !u!4 &1923683009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4569298607067219244, guid: b83523b431b01b1419fec18f1e746c3b, type: 3}
