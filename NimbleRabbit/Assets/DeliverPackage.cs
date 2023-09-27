@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class DeliverPackage : MonoBehaviour
 {
-    private CanvasGroup winCanvasGroup;
+    [SerializeField]
+    private GameObject WinScreen;
+
+
+    // private CanvasGroup winCanvasGroup;
+
     // Start is called before the first frame update
     void Start()
     {
-        GameObject GObj = GameObject.Find("Win UI Canvas");
-        if (GObj == null) {
-            Debug.LogError("No Win UI Canvas found!");
-        } else {
-            winCanvasGroup = GObj.GetComponent<CanvasGroup>();
-            if (winCanvasGroup == null) {
-                Debug.LogError("No Canvas Group found!");
-            }
-        }
+        WinScreen.SetActive(false);
     }
 
     // Update is called once per frame
@@ -27,12 +24,9 @@ public class DeliverPackage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
 
-        if (other.attachedRigidbody != null) {
-            PackageCollector pc = other.attachedRigidbody.gameObject.GetComponent<PackageCollector>();
-            if (pc != null && pc.hasPackage) { // pause the game and show the You Win panel
-                winCanvasGroup.interactable = true;
-                winCanvasGroup.blocksRaycasts = true;
-                winCanvasGroup.alpha = 1.0f;
+        if (other.CompareTag("Player")) {
+            if (PlayerController.instance.pc.packages.Count > 0) {
+                WinScreen.SetActive(true);
                 Time.timeScale = 0f;
             }
         }
