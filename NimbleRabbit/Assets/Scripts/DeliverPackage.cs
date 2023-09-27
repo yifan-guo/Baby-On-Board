@@ -25,7 +25,7 @@ public class DeliverPackage : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
 
         if (other.CompareTag("Player")) {
-            if (PlayerController.instance.pc.packages.Count > 0) {
+            if (PlayerController.instance.packages.Count > 0) {
                 WinScreen.SetActive(true);
                 Time.timeScale = 0f;
             }
