@@ -38,8 +38,7 @@ public class IdleState : BaseState
             }
         }
 
-
-        if (me.nav.remainingDistance < 0.1f)
+        if (me.nav.remainingDistance < 2f)
         {
             Vector3 pos = GetRandomNavMeshPoint();
             me.nav.speed = 10f;

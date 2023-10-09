@@ -438,7 +438,11 @@ public class IntersectionFitter : MonoBehaviour
         float centerHeight = (iRightTurnHere.localScale.z * left.localScale.z) + (iLeftTurnHere.localScale.z * right.localScale.z);
 
         // Position top road's link's starting points
-        Vector3 pos = Vector3.right * (((roadLength / 2f) - linkOffset) / roadLength);
+        Vector3 pos = new Vector3(
+            (((roadLength / 2f) - linkOffset) / roadLength),
+            0.5f,
+            0f);
+
         rightLaneUTurn.transform.localPosition = pos;
         leftLaneUTurn.transform.localPosition = pos;
         leftLaneStraight.transform.localPosition = pos;
