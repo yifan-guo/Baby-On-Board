@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Utility class for level design that dynamically resizes intersection in 
+/// Edit mode according to the input values.
+/// </summary>
 [ExecuteInEditMode]
 public class IntersectionFitter : MonoBehaviour
 {
