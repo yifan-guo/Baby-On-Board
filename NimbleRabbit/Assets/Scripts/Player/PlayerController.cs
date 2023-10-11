@@ -6,9 +6,14 @@ using UnityEngine.AI;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
-    /// Static instance of player.
+    /// Singleton instance of player.
     /// </summary>
     public static PlayerController instance {get; private set;}
+
+    /// <summary>
+    /// Time that the player can't endure another collision after one.
+    /// </summary>
+    private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
 
     [Header("Driving")]
     public float forwardSpeed;
@@ -31,11 +36,6 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb {get; private set;}
 
     /// <summary>
-    /// Time that the player can't endure another collision after one.
-    /// </summary>
-    private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
-
-    /// <summary>
     /// Time of last collision.
     /// </summary>
     private float lastCollisionTime_s;
@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        instance = this;
         rb = GetComponent<Rigidbody>();
     }    
 
@@ -54,7 +55,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        instance = this;
         packages = new List<Package>();
     }
 
@@ -148,6 +148,12 @@ public class PlayerController : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.instance.ToggleSettingsMenu();    
+        }
+
         if (Input.GetKey("w"))
         {
             rb.velocity += transform.forward * forwardSpeed * Time.deltaTime;
