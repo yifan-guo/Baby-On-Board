@@ -42,10 +42,12 @@ public class SettingsMenu : MonoBehaviour
         // Add listeners for restart/quit buttons.
         // Need to add a GameState class that manages pausing, quitting, etc.
 
-        closeButton.onClick.AddListener(PlayerController.instance.TogglePause);
-        resumeButton.onClick.AddListener(PlayerController.instance.TogglePause);
         musicSlider.onValueChanged.AddListener(AdjustMusicVolume);
         soundsSlider.onValueChanged.AddListener(AdjustSoundsVolume);
+        closeButton.onClick.AddListener(UIManager.instance.ToggleSettingsMenu);
+        resumeButton.onClick.AddListener(UIManager.instance.ToggleSettingsMenu);
+        restartButton.onClick.AddListener(GameState.instance.Restart);
+        quitButton.onClick.AddListener(GameState.instance.Quit);
     }
 
     /// <summary>

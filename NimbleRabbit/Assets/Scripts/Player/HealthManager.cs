@@ -60,7 +60,7 @@ public class HealthManager : MonoBehaviour
     {
         // Update internal state
         float newHealth = currentHealth - damageAmount;
-        Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
+        // Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
 
         if (newHealth < 0)
         {
@@ -71,7 +71,7 @@ public class HealthManager : MonoBehaviour
             currentHealth = newHealth;
         }
 
-        Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
+        // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
         OnDamageReceived?.Invoke(damageAmount, gameObject);
     }
@@ -80,7 +80,7 @@ public class HealthManager : MonoBehaviour
     {
         // Update internal state
         float newHealth = currentHealth + healingAmount;
-        Debug.Log($"Woohoo! {gameObject.name} was healed for {healingAmount}!");
+        // Debug.Log($"Woohoo! {gameObject.name} was healed for {healingAmount}!");
 
         if (newHealth > maxHealth)
         {
@@ -91,7 +91,7 @@ public class HealthManager : MonoBehaviour
             currentHealth = newHealth;
         }
 
-        Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
+        // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
         OnHealingReceived?.Invoke(healingAmount, gameObject);
     }
@@ -114,14 +114,14 @@ public class HealthManager : MonoBehaviour
         // Check if we're within the debounce window to avoid stuttering / multiple damages during a single bump with a damaging object.
         if (debounceIsActive())
         {
-            Debug.Log("Debounce check prevented damage");
+            // Debug.Log("Debounce check prevented damage");
             return;
         }
 
         DamagingHealingAttributes damagingHealingAttributes = collision.gameObject.GetComponent<DamagingHealingAttributes>();
         if (damagingHealingAttributes == null)
         {
-            Debug.Log("Collision with object that does not cause damage.");
+            // Debug.Log("Collision with object that does not cause damage.");
             return;
         }
 

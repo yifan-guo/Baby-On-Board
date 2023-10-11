@@ -38,12 +38,12 @@ public class HealthConsumable : Collectible
         // Exit early Conditions
         if (other.gameObject.tag != targetTag)
         {
-            Debug.Log($"HealthConsumable {gameObject.name} could not be picked up by {other.gameObject.name} because it is not tagged with {targetTag}.");
+            // Debug.Log($"HealthConsumable {gameObject.name} could not be picked up by {other.gameObject.name} because it is not tagged with {targetTag}.");
             return;
         }
         HealthManager healthManager = other.gameObject.transform.root.GetComponent<HealthManager>();
         if (healthManager == null) {
-            Debug.Log($"HealthConsumable {gameObject.name} could not be picked up by {other.gameObject.name} because it does not have a HealthManager.");
+            // Debug.Log($"HealthConsumable {gameObject.name} could not be picked up by {other.gameObject.name} because it does not have a HealthManager.");
             return;
         }
 
@@ -62,6 +62,6 @@ public class HealthConsumable : Collectible
 
         // Deactivate the consumable so it disappears
         gameObject.SetActive(false);
-        Debug.Log($"HealthConsumable {gameObject.name} was picked up by {other.gameObject.name}.");
+        // Debug.Log($"HealthConsumable {gameObject.name} was picked up by {other.gameObject.name}.");
     }
 }

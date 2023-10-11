@@ -26,11 +26,6 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded {get; private set;}
 
     /// <summary>
-    /// Whether or not the game is paused.
-    /// </summary>
-    private bool isPaused;
-
-    /// <summary>
     /// Packages that player has collected.
     /// </summary>
     public List<Package> packages {get; private set;}
@@ -156,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePause();    
+            UIManager.instance.ToggleSettingsMenu();    
         }
 
         if (Input.GetKey("w"))
@@ -230,19 +225,5 @@ public class PlayerController : MonoBehaviour
         {
             pkg.Collect(thief);
         }
-    }
-
-    /// <summary>
-    /// Pause or resume the game.
-    /// </summary>
-    public void TogglePause()
-    {
-        isPaused = !isPaused;
-
-        Time.timeScale = isPaused ?
-            0f :
-            1f;
-
-        UIManager.instance.TogglePauseMenu(isPaused);
     }
 }

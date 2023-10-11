@@ -9,7 +9,7 @@ public class DeliverPackage : MonoBehaviour
         if (other.CompareTag("Player")) {
             if (PlayerController.instance.packages.Count > 0) {
                 UIManager.instance.DisplayWinScreen();
-                Time.timeScale = 0f;
+                GameState.instance.TogglePause();
             }
         }
     }

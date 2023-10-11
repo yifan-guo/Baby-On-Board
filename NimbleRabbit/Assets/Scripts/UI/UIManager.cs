@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Reference to the parent object for the Win Screen.
     /// </summary>
-    public GameObject winScreen;
+    public GameObject winPopup;
 
     /// <summary>
     /// Initialization Pt I.
@@ -31,15 +31,16 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         settingsMenu.SetActive(false);
-        winScreen.SetActive(false);
+        winPopup.SetActive(false);
     }
 
     /// <summary>
-    /// Enable and disable the pause menu.
+    /// Enable and disable the settings menu.
     /// </summary>
-    public void TogglePauseMenu(bool isPaused)
+    public void ToggleSettingsMenu()
     {
-        settingsMenu.SetActive(isPaused);
+        GameState.instance.TogglePause();
+        settingsMenu.SetActive(GameState.instance.isPaused);
     }
 
     /// <summary>
@@ -47,6 +48,6 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void DisplayWinScreen()
     {
-        winScreen.SetActive(true);
+        winPopup.SetActive(true);
     }
 }
