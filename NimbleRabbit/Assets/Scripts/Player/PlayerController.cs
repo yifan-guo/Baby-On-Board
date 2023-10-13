@@ -25,6 +25,14 @@ public class PlayerController : MonoBehaviour
     public float backwardsSpeed;
     public float turnSpeed;
 
+    [Header("Defense")]
+
+    /// <summary>
+    /// Percentage of damage that is reduced for the package.
+    /// </summary>
+    [Range(0, 100)] 
+    public float packageDamageReduction;
+
     /// <summary>
     /// Flag for if player is stable on the ground.
     /// </summary>
@@ -56,7 +64,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        instance = this;
     }
 
     /// <summary>

@@ -35,10 +35,21 @@ public class HPDisplayUpdater : MonoBehaviour
         healthBar.fillAmount = currentHealth / 100f;
     }
 
-    void HandleHealthUpdate(float damageAmount, GameObject damagedObject)
+    void HandleHealthUpdate(
+        HealthManager hp, 
+        GameObject damagedObject)
     {
-        HealthManager healthManager = damagedObject.GetComponent<HealthManager>();
-        SetHealthDisplay(healthManager.currentHealth, healthManager.maxHealth);
+        // Only update the display if the event was for the player.
+        // At least until we have multiple health displays and 
+        // non-static HealthManager events.
+        if (damagedObject.tag != "Player")
+        {
+            return;
+        }
+
+        SetHealthDisplay(
+            hp.currentHealth, 
+            hp.maxHealth);
     }
 
 }

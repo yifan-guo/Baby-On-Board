@@ -25,17 +25,16 @@ public class IdleState : BaseState
         {
             return null;
         }
-
         
         Enemy enemy = me.GetComponent<Enemy>();
-        if (enemy != null && enemy.inCooldown) {
+        if (enemy != null && 
+            enemy.inCooldown) 
+        {
             return typeof(ApprehendedState);
         }
 
         if (PlayerController.instance != null)
         {
-            // TODO:
-            // provide transitions to other states
             if (me.role == NPC.Role.Bandit &&
                 PlayerController.instance.pc.packages.Count > 0)
             {

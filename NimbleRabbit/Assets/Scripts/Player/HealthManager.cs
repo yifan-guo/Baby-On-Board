@@ -26,7 +26,6 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     public float healingMultiplier = 1f;
 
-
     /// <summary>
     /// Amount of time that the object is invulnerable after taking damage. Helps to avoid multiple damages due to stuttering / friction on collision.
     /// </summary>
@@ -40,42 +39,56 @@ public class HealthManager : MonoBehaviour
     /// <summary>
     /// Public broadcast event for damage taken by this object.
     /// </summary>
-    public static event Action<float, GameObject> OnDamageReceived;
+    public static event Action<HealthManager, GameObject> OnDamageReceived;
 
     /// <summary>
     /// Public broadcast event for healing taken by this object.
     /// </summary>
-    public static event Action<float, GameObject> OnHealingReceived;
+    public static event Action<HealthManager, GameObject> OnHealingReceived;
 
-
-    void Start()
+    /// <summary>
+    /// Initialization Pt II.
+    /// </summary>
+    private void Start()
     {
         // Send initial empty event to notify subscribers of starting health
         HealDamage(0);
         timeLastPhysicalDamageSeconds = Time.time;
     }
 
-
+    /// <summary>
+    /// Deals damage to the attached object.
+    /// </summary>
+    /// <param name="damageAmount"></param>
     public void TakeDamage(float damageAmount)
     {
-        // Update internal state
-        float newHealth = currentHealth - damageAmount;
-        // Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
+        // Transfer damage to packages
+        if (gameObject.tag == "Player")
+        {
+            foreach (Package pkg in PlayerController.instance.pc.packages)
+            {
+                float reductionPercent = PlayerController.instance.packageDamageReduction / 100f;
+                pkg.hp.TakeDamage(damageAmount * (1 - reductionPercent));
+            }
+        }
 
-        if (newHealth < 0)
-        {
-            currentHealth = 0;
-        }
-        else
-        {
-            currentHealth = newHealth;
-        }
+        // Update internal state
+        // Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
+        currentHealth = Mathf.Max(
+            currentHealth - damageAmount,
+            0f);
 
         // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
-        OnDamageReceived?.Invoke(damageAmount, gameObject);
+        OnDamageReceived?.Invoke(
+            this, 
+            gameObject);
     }
 
+    /// <summary>
+    /// Heals health of the attached object.
+    /// </summary>
+    /// <param name="healingAmount"></param>
     public void HealDamage(float healingAmount)
     {
         // Update internal state
@@ -93,7 +106,9 @@ public class HealthManager : MonoBehaviour
 
         // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
-        OnHealingReceived?.Invoke(healingAmount, gameObject);
+        OnHealingReceived?.Invoke(
+            this, 
+            gameObject);
     }
 
     /// <summary>
