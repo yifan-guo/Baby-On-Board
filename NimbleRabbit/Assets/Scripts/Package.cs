@@ -7,6 +7,7 @@ public class Package : Collectible
     /// </summary>
     public bool isCollected {get; private set;}
 
+    
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -35,7 +36,7 @@ public class Package : Collectible
             return;
         }
 
-        PlayerController.instance.CollectPackage(this);
+        PlayerController.instance.pc.CollectPackage(this);
     }
 
     /// <summary>

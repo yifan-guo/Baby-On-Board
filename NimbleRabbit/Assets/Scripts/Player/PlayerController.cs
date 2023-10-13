@@ -11,9 +11,14 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance {get; private set;}
 
     /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    public PackageCollector pc {get; private set;}
+
     /// Time that the player can't endure another collision after one.
     /// </summary>
     private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
+
 
     [Header("Driving")]
     public float forwardSpeed;
@@ -24,11 +29,6 @@ public class PlayerController : MonoBehaviour
     /// Flag for if player is stable on the ground.
     /// </summary>
     public bool isGrounded {get; private set;}
-
-    /// <summary>
-    /// Packages that player has collected.
-    /// </summary>
-    public List<Package> packages {get; private set;}
 
     /// <summary>
     /// Reference to Rigidbody.
@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         rb = GetComponent<Rigidbody>();
+        pc = GetComponent<PackageCollector>();
     }    
 
     /// <summary>
@@ -55,7 +56,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        packages = new List<Package>();
+        instance = this;
     }
 
     /// <summary>
@@ -136,6 +137,42 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(npc.Crash(-hit.normal * force));
 
             lastCollisionTime_s = Time.time;
+
+            ReclaimPackage(hit);
+        }
+    }
+
+    /// <summary>
+    /// Reclaim the package from the colliding object if it has a PackageManager
+    /// </summary>
+    private void ReclaimPackage(RaycastHit hit) {
+
+        // get the package from the Bandit
+        GameObject other = hit.collider.gameObject;
+        PackageCollector otherPc = other.GetComponent<PackageCollector>();
+        if (otherPc != null) {
+            List<Package> pkgs = otherPc.packages;
+
+            if (pkgs.Count == 0)
+            {
+                return;
+            }
+
+            // enable the enemy to transition to cooldown state 
+            Enemy enemy = other.GetComponent<Enemy>();
+            if (enemy != null) {
+                enemy.inCooldown = true;
+            }
+
+            // Randomly pick any package the colliding object has
+            int pkgIdx = UnityEngine.Random.Range(0, pkgs.Count);
+
+            Package stolenPackage = pkgs[pkgIdx];
+            
+            // make the NPC give the package to the Player
+            otherPc.DropPackage(
+                stolenPackage,
+                this.pc);
         }
     }
 
@@ -176,54 +213,14 @@ public class PlayerController : MonoBehaviour
             transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
         }
 
+        
         // TODO:
         // This is test code to drop the package.
         // Ideally DropPackage() is called elsewhere by something like an enemy.
         if (Input.GetKeyDown(KeyCode.Space) &&
-            packages.Count > 0)
+            this.pc.packages.Count > 0)
         {
-            DropPackage(packages[0]);
-        }
-    }
-
-    /// <summary>
-    /// Add package.
-    /// </summary>
-    /// <param name="pkg"></param>
-    public void CollectPackage(Package pkg)
-    {
-        if (packages.Contains(pkg))
-        {
-            return;
-        }
-
-        packages.Add(pkg);
-        pkg.Collect(transform);
-    }
-
-    /// <summary>
-    /// Drop a package.
-    /// </summary>
-    /// <param name="pkg"></param>
-    /// <param name="thief"></param>
-    public void DropPackage(
-        Package pkg,
-        Transform thief=null)
-    {
-        if (packages.Contains(pkg) == false)
-        {
-            return;
-        }
-
-        packages.Remove(pkg);
-
-        if (thief == null)
-        {
-            pkg.Drop();
-        }
-        else
-        {
-            pkg.Collect(thief);
+            this.pc.DropPackage(this.pc.packages[0]);
         }
     }
 }

@@ -7,6 +7,8 @@ public abstract class Enemy : NPC
     /// </summary>
     public float attackRange;
 
+    public bool inCooldown;
+
     /// <summary>
     /// Determines whether or not to maintain a chase.
     /// </summary>
