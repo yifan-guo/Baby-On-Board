@@ -21,16 +21,23 @@ public class IdleState : BaseState
             return null;
         }
 
+        
+        Enemy enemy = me.GetComponent<Enemy>();
+        if (enemy != null && enemy.inCooldown) {
+            return typeof(ApprehendedState);
+        }
+
         if (PlayerController.instance != null)
         {
             // TODO:
             // provide transitions to other states
             if (me.role == NPC.Role.Bandit &&
-                PlayerController.instance.packages.Count > 0)
+                PlayerController.instance.pc.packages.Count > 0)
             {
                 return typeof(ChaseState);
             }
         }
+
 
         if (me.nav.remainingDistance < 0.1f)
         {
