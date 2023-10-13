@@ -90,6 +90,6 @@ public class IdleState : BaseState
             }
         }
 
-        return Vector3.zero;
+        return me.transform.position;
     }
 }
