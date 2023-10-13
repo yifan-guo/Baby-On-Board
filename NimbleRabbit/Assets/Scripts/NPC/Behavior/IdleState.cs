@@ -69,7 +69,7 @@ public class IdleState : BaseState
     /// <returns></returns>
     private Vector3 GetRandomNavMeshPoint()
     {
-        float wanderRange = 100f;
+        const float wanderRange = 100f;
 
         for (int i = 0; i < 30; i++)
         {
