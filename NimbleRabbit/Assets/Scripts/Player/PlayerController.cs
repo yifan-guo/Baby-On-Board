@@ -11,13 +11,19 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance {get; private set;}
 
     /// <summary>
-    /// Packages that player has collected.
+    /// Minimum force threshold to damage the player.
     /// </summary>
-    public PackageCollector pc {get; private set;}
+    public const float FORCE_MIN_THRESHOLD_TO_DMG = 10f;
 
-    /// Time that the player can't endure another collision after one.
+    /// <summary>
+    /// Maximum force that will be used to damage the player.
     /// </summary>
-    private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
+    public const float FORCE_MAX_THRESHOLD_TO_DMG = 40f;
+
+    /// <summary>
+    /// Percent of force that is used as damage.
+    /// </summary>
+    public const float FORCE_AS_DMG = 0.25f;
 
 
     [Header("Driving")]
@@ -36,6 +42,16 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb {get; private set;}
 
     /// <summary>
+    /// Reference to HealthManager.
+    /// </summary>
+    public HealthManager hp {get; private set;}
+
+    /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    public PackageCollector pc {get; private set;}
+
+    /// <summary>
     /// Time of last collision.
     /// </summary>
     private float lastCollisionTime_s;
@@ -47,6 +63,7 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         rb = GetComponent<Rigidbody>();
+        hp = GetComponent<HealthManager>();
         pc = GetComponent<PackageCollector>();
     }    
 
@@ -101,7 +118,7 @@ public class PlayerController : MonoBehaviour
         Vector3 direction,
         float distance)
     {
-        if (Time.time - lastCollisionTime_s <= COLLISION_ENDURANCE_TIME_S)
+        if (Time.time - lastCollisionTime_s <= HealthManager.PHYSICAL_DAMAGE_DEBOUNCE_S)
         {
             return;
         }
@@ -128,13 +145,11 @@ public class PlayerController : MonoBehaviour
                 npc.nav.velocity,
                 transform.position - hit.transform.position);
 
-            float force = (myVelocityDot + theirVelocityDot) / 3f;
+            float forceMagnitude = (myVelocityDot + theirVelocityDot) / 3f;
 
-            rb.AddForce(
-                hit.normal * force,
-                ForceMode.Impulse);
+            HitByNPC(hit.normal * forceMagnitude);
 
-            StartCoroutine(npc.Crash(-hit.normal * force));
+            StartCoroutine(npc.Crash(-hit.normal * forceMagnitude));
 
             lastCollisionTime_s = Time.time;
 
@@ -174,6 +189,33 @@ public class PlayerController : MonoBehaviour
                 stolenPackage,
                 this.pc);
         }
+    }
+
+    /// <summary>
+    /// Applies force to player and subsequent damage. Used for collisions with
+    /// NPCs. Hitting static or non-kinematic objects like walls or debris 
+    /// is covered by HealthManager.OnCollisionEnter().
+    /// </summary>
+    /// <param name="force"></param>
+    /// <param name="mode"></param>
+    public void HitByNPC(
+        Vector3 force,
+        ForceMode mode=ForceMode.Impulse)
+    {
+        rb.AddForce(
+            force,
+            mode);
+
+        if (force.magnitude <= FORCE_MIN_THRESHOLD_TO_DMG) 
+        {
+            return;
+        }
+
+        float dmg = Mathf.Min(
+            force.magnitude * FORCE_AS_DMG,
+            FORCE_MAX_THRESHOLD_TO_DMG);
+
+        hp.TakeDamage(dmg);
     }
 
     /// <summary>

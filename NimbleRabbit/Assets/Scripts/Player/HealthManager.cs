@@ -7,6 +7,11 @@ using UnityEngine;
 public class HealthManager : MonoBehaviour
 {
     /// <summary>
+    /// Amount of time that the object is invulnerable after taking damage. Helps to avoid multiple damages due to stuttering / friction on collision.
+    /// </summary>
+    public const float PHYSICAL_DAMAGE_DEBOUNCE_S = 0.5f;
+
+    /// <summary>
     /// The desired maximum health of the GameObject.
     /// </summary>
     public float maxHealth = 100f;
@@ -26,12 +31,6 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     public float healingMultiplier = 1f;
 
-
-    /// <summary>
-    /// Amount of time that the object is invulnerable after taking damage. Helps to avoid multiple damages due to stuttering / friction on collision.
-    /// </summary>
-    public float physicalDamageDebounceSeconds = 0.5f;
-
     /// <summary>
     /// The timestamp of the last occurrence of physical damage in seconds, e.g. damage from a physics collision with an object.
     /// </summary>
@@ -47,14 +46,12 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     public static event Action<float, GameObject> OnHealingReceived;
 
-
     void Start()
     {
         // Send initial empty event to notify subscribers of starting health
         HealDamage(0);
-        timeLastPhysicalDamageSeconds = Time.time;
+        timeLastPhysicalDamageSeconds = -1f;
     }
-
 
     public void TakeDamage(float damageAmount)
     {
@@ -70,6 +67,8 @@ public class HealthManager : MonoBehaviour
         {
             currentHealth = newHealth;
         }
+        
+        timeLastPhysicalDamageSeconds = Time.time;
 
         // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
@@ -91,6 +90,8 @@ public class HealthManager : MonoBehaviour
             currentHealth = newHealth;
         }
 
+        timeLastPhysicalDamageSeconds = Time.time;
+
         // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
         OnHealingReceived?.Invoke(healingAmount, gameObject);
@@ -102,7 +103,7 @@ public class HealthManager : MonoBehaviour
     /// <returns>Returns boolean that identifies whether the object is within the debounce window from the last time physical damage occurred.</returns>
     private bool debounceIsActive()
     {
-        return Time.time < timeLastPhysicalDamageSeconds + physicalDamageDebounceSeconds;
+        return Time.time < timeLastPhysicalDamageSeconds + PHYSICAL_DAMAGE_DEBOUNCE_S;
     }
 
     /// <summary>
@@ -119,25 +120,42 @@ public class HealthManager : MonoBehaviour
         }
 
         DamagingHealingAttributes damagingHealingAttributes = collision.gameObject.GetComponent<DamagingHealingAttributes>();
-        if (damagingHealingAttributes == null)
-        {
-            // Debug.Log("Collision with object that does not cause damage.");
-            return;
-        }
 
-        float damageAmount = damagingHealingAttributes.damagePerCollision * damageMultiplier;
-            if (damageAmount >= 0f)
+        float force = collision.impulse.magnitude;
+
+        // Only damage player if the force was strong enough
+        if (force > PlayerController.FORCE_MIN_THRESHOLD_TO_DMG)
+        {
+            // Initial force damage
+            float damageAmount = Mathf.Min(
+                force * PlayerController.FORCE_AS_DMG,
+                PlayerController.FORCE_MAX_THRESHOLD_TO_DMG);
+
+            // Check for scaled additional damage
+            if (damagingHealingAttributes != null)
             {
-                TakeDamage(damageAmount);
-                timeLastPhysicalDamageSeconds = Time.time;
+                float forceScaling = 
+                    (force - PlayerController.FORCE_MIN_THRESHOLD_TO_DMG) /
+                    (PlayerController.FORCE_MAX_THRESHOLD_TO_DMG - PlayerController.FORCE_MIN_THRESHOLD_TO_DMG);
+
+                damageAmount += (damagingHealingAttributes.damagePerCollision * forceScaling);
             }
 
+            damageAmount *= damageMultiplier;
+
+            if (damageAmount > 0f)
+            {
+                TakeDamage(damageAmount);
+            }
+        }
+
+        if (damagingHealingAttributes != null)
+        {
             float healingAmount = damagingHealingAttributes.healingPerCollision * healingMultiplier;
             if (healingAmount >= 0f)
             {
                 HealDamage(healingAmount);
-                timeLastPhysicalDamageSeconds = Time.time;
             }
+        }
     }
-
 }

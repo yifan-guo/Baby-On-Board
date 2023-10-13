@@ -99,9 +99,6 @@ public class Bandit : Enemy
 
         Vector3 force = (player.transform.position - transform.position).normalized;
         force *= nav.velocity.magnitude * 2f;
-
-        player.rb.AddForce(
-            force,
-            ForceMode.Impulse);
+        player.HitByNPC(force);
     }
 }
