@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 /// <summary>
 /// Attach to a TextMeshProGUI object to update its text with the current and max health of a GameObject using the HealthManager.
@@ -12,7 +13,8 @@ public class HPDisplayUpdater : MonoBehaviour
     /// <summary>
     /// The TextMeshProGUI component that will be updated based on HealthManager events.
     /// </summary>
-    public TextMeshProUGUI healthDisplay;
+    public TextMeshProUGUI healthText;
+    public Image healthBar;
 
     void OnEnable()
     {
@@ -29,7 +31,8 @@ public class HPDisplayUpdater : MonoBehaviour
 
     void SetHealthDisplay(float currentHealth, float maxHealth)
     {
-        healthDisplay.text = $"HP: {currentHealth}/{maxHealth}";
+        healthText.text = $"{currentHealth}";
+        healthBar.fillAmount = currentHealth / 100f;
     }
 
     void HandleHealthUpdate(float damageAmount, GameObject damagedObject)
