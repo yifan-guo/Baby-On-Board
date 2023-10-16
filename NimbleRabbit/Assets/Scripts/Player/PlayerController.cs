@@ -10,28 +10,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-    /// <summary>
-    /// Packages that player has collected.
-    /// </summary>
-    public PackageCollector pc {get; private set;}
-
     /// Time that the player can't endure another collision after one.
     /// </summary>
     private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
-
 
     [Header("Driving")]
     public float forwardSpeed;
     public float backwardsSpeed;
     public float turnSpeed;
-
-    [Header("Defense")]
-
-    /// <summary>
-    /// Percentage of damage that is reduced for the package.
-    /// </summary>
-    [Range(0, 100)] 
-    public float packageDamageReduction;
 
     /// <summary>
     /// Flag for if player is stable on the ground.
@@ -42,6 +28,16 @@ public class PlayerController : MonoBehaviour
     /// Reference to Rigidbody.
     /// </summary>
     public Rigidbody rb {get; private set;}
+
+    /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    public PackageCollector pc {get; private set;}
+
+    /// <summary>
+    /// Reference to HealthManager component.
+    /// </summary>
+    public HealthManager hp {get; private set;}
 
     /// <summary>
     /// Time of last collision.
@@ -55,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         rb = GetComponent<Rigidbody>();
+        hp = GetComponent<HealthManager>();
         pc = GetComponent<PackageCollector>();
     }    
 

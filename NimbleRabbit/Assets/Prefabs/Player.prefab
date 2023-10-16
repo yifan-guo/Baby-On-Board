@@ -494,7 +494,6 @@ MonoBehaviour:
   forwardSpeed: 20
   backwardsSpeed: 10
   turnSpeed: 90
-  packageDamageReduction: 50
 --- !u!114 &3239509135255680578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,6 +524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   packages: []
+  damageReduction: 50
 --- !u!1001 &6783861439777162863
 PrefabInstance:
   m_ObjectHideFlags: 0

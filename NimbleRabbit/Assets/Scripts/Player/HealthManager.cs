@@ -39,20 +39,13 @@ public class HealthManager : MonoBehaviour
     /// <summary>
     /// Public broadcast event for damage taken by this object.
     /// </summary>
-    public static event Action<HealthManager, GameObject> OnDamageReceived;
-
-    /// <summary>
-    /// Public broadcast event for healing taken by this object.
-    /// </summary>
-    public static event Action<HealthManager, GameObject> OnHealingReceived;
+    public event Action OnHealthChange;
 
     /// <summary>
     /// Initialization Pt II.
     /// </summary>
     private void Start()
     {
-        // Send initial empty event to notify subscribers of starting health
-        HealDamage(0);
         timeLastPhysicalDamageSeconds = Time.time;
     }
 
@@ -62,16 +55,6 @@ public class HealthManager : MonoBehaviour
     /// <param name="damageAmount"></param>
     public void TakeDamage(float damageAmount)
     {
-        // Transfer damage to packages
-        if (gameObject.tag == "Player")
-        {
-            foreach (Package pkg in PlayerController.instance.pc.packages)
-            {
-                float reductionPercent = PlayerController.instance.packageDamageReduction / 100f;
-                pkg.hp.TakeDamage(damageAmount * (1 - reductionPercent));
-            }
-        }
-
         // Update internal state
         // Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
         currentHealth = Mathf.Max(
@@ -80,9 +63,7 @@ public class HealthManager : MonoBehaviour
 
         // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
-        OnDamageReceived?.Invoke(
-            this, 
-            gameObject);
+        OnHealthChange?.Invoke();
     }
 
     /// <summary>
@@ -106,9 +87,7 @@ public class HealthManager : MonoBehaviour
 
         // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
-        OnHealingReceived?.Invoke(
-            this, 
-            gameObject);
+        OnHealthChange?.Invoke();
     }
 
     /// <summary>
@@ -141,18 +120,30 @@ public class HealthManager : MonoBehaviour
         }
 
         float damageAmount = damagingHealingAttributes.damagePerCollision * damageMultiplier;
-            if (damageAmount >= 0f)
+        if (damageAmount >= 0f)
+        {
+            TakeDamage(damageAmount);
+
+            // Transfer damage to packages if we carry them
+            PackageCollector collector = gameObject.GetComponent<PackageCollector>();
+            if (collector != null)
             {
-                TakeDamage(damageAmount);
-                timeLastPhysicalDamageSeconds = Time.time;
+                foreach (Package pkg in collector.packages)
+                {
+                    float reductionPercent = collector.damageReduction / 100f;
+                    pkg.hp.TakeDamage(damageAmount * (1 - reductionPercent));
+                }
             }
 
-            float healingAmount = damagingHealingAttributes.healingPerCollision * healingMultiplier;
-            if (healingAmount >= 0f)
-            {
-                HealDamage(healingAmount);
-                timeLastPhysicalDamageSeconds = Time.time;
-            }
+            timeLastPhysicalDamageSeconds = Time.time;
+        }
+
+        float healingAmount = damagingHealingAttributes.healingPerCollision * healingMultiplier;
+        if (healingAmount >= 0f)
+        {
+            HealDamage(healingAmount);
+            timeLastPhysicalDamageSeconds = Time.time;
+        }
     }
 
 }
