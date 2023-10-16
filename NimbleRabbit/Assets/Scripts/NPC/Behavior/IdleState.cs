@@ -5,6 +5,11 @@ using UnityEngine.AI;
 public class IdleState : BaseState
 {
     /// <summary>
+    /// When a destination has been chosen, but path is still being calculated.
+    /// </summary>
+    private bool waitingOnPath;
+
+    /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="npc"></param>
@@ -38,12 +43,21 @@ public class IdleState : BaseState
             }
         }
 
-
-        if (me.nav.remainingDistance < 0.1f)
+        if (me.nav.pathPending == false)
         {
-            Vector3 pos = GetRandomNavMeshPoint();
-            me.nav.speed = 10f;
-            me.nav.SetDestination(pos);
+            // If new path does not contain an OffMeshLink, then redo it
+            // to prevent driving against traffic flow
+            waitingOnPath &= !me.nav.nextOffMeshLinkData.valid;
+
+            // Get a new destination if new path doesn't have an OffMeshLink or
+            // if we reach the destination
+            if (waitingOnPath == true ||
+                me.nav.remainingDistance < 2f)
+            {
+                Vector3 pos = GetRandomNavMeshPoint();
+                me.nav.speed = 10f;
+                me.nav.SetDestination(pos);
+            }
         }
 
         return null;
@@ -55,7 +69,7 @@ public class IdleState : BaseState
     /// <returns></returns>
     private Vector3 GetRandomNavMeshPoint()
     {
-        float wanderRange = 50f;
+        const float wanderRange = 100f;
 
         for (int i = 0; i < 30; i++)
         {
@@ -71,10 +85,11 @@ public class IdleState : BaseState
             
             if (result == true)
             {
+                waitingOnPath = true;
                 return hit.position;
             }
         }
 
-        return Vector3.zero;
+        return me.transform.position;
     }
 }
