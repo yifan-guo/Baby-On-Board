@@ -5,6 +5,16 @@ using UnityEngine.AI;
 public class IdleState : BaseState
 {
     /// <summary>
+    /// Number of paths that will be tried before agent won't follow traffic flow.
+    /// </summary>
+    private const int PATIENCE_LIMIT = 5;
+
+    /// <summary>
+    /// Number of consecutively tested paths that don't follow traffic.
+    /// </summary>
+    private int failedPathCount;
+
+    /// <summary>
     /// When a destination has been chosen, but path is still being calculated.
     /// </summary>
     private bool waitingOnPath;
@@ -44,9 +54,21 @@ public class IdleState : BaseState
 
         if (me.nav.pathPending == false)
         {
-            // If new path does not contain an OffMeshLink, then redo it
-            // to prevent driving against traffic flow
-            waitingOnPath &= !me.nav.nextOffMeshLinkData.valid;
+            // Check how many paths drive against the traffic flow by not
+            // containing an OffMeshLink
+            failedPathCount = me.nav.nextOffMeshLinkData.valid ?
+                0 :
+                Math.Min(
+                    failedPathCount + 1,
+                    PATIENCE_LIMIT + 1);
+
+            // We will stop obeying traffic if our patience has run out
+            me.followsTraffic = failedPathCount <= PATIENCE_LIMIT;
+
+            // We will only wait for a new path if we are following traffic
+            waitingOnPath = (
+                me.nav.nextOffMeshLinkData.valid == false &&
+                me.followsTraffic == true);
 
             // Get a new destination if new path doesn't have an OffMeshLink or
             // if we reach the destination
