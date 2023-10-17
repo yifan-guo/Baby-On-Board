@@ -12,6 +12,11 @@ public class UIManager : MonoBehaviour
     /// Reference to the player's health display.
     /// </summary>
     public HPDisplayUpdater playerHP;
+    
+    /// <summary>
+    /// Indicator pool parent object.
+    /// </summary>
+    public GameObject indicators;
 
     /// <summary>
     /// Reference to parent object for the Settings menu.
@@ -23,12 +28,25 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject winPopup;
 
+    [Header("Prefabs")]
+
+    /// <summary>
+    /// Reference to Indicator Prefab that will be cloned.
+    /// </summary>
+    public Indicator indicatorPrefab;
+
+    /// <summary>
+    /// Reference to Canvas component.
+    /// </summary>
+    public Canvas canvas {get; private set;}
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
     private void Awake()
     {
         instance = this;
+        canvas = GetComponent<Canvas>();
     }
 
     /// <summary>
