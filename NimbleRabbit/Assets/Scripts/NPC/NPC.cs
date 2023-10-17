@@ -5,6 +5,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(StateMachine))]
+[RequireComponent(typeof(HealthManager))]
 public abstract class NPC : MonoBehaviour
 {
     /// <summary>
@@ -45,6 +46,11 @@ public abstract class NPC : MonoBehaviour
     protected Rigidbody rb;
 
     /// <summary>
+    /// Reference to this NPC's HealthManager component.
+    /// </summary>
+    protected HealthManager hp;
+
+    /// <summary>
     /// Reference to this NPC's state machine.
     /// </summary>
     protected StateMachine stateMachine;
@@ -56,6 +62,7 @@ public abstract class NPC : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        hp = GetComponent<HealthManager>();
         stateMachine = GetComponent<StateMachine>();
     }
 
@@ -166,9 +173,12 @@ public abstract class NPC : MonoBehaviour
         rb.isKinematic = false;
         isCrashed = true;
 
-        rb.AddForce(
-            force,
-            ForceMode.Impulse);
+        // rb.AddForce(
+        //     force,
+        //     ForceMode.Impulse);
+        hp.Hit(
+            rb,
+            force);
 
         // Regain control after coming to a stop
         while (rb.velocity.magnitude > 0.1f)

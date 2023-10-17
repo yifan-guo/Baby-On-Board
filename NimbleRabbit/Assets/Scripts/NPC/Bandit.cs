@@ -12,9 +12,6 @@ public class Bandit : Enemy
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
-    
-
-
     protected override void Awake()
     {
         base.Awake();
@@ -26,7 +23,6 @@ public class Bandit : Enemy
     protected override void Start()
     {
         base.Awake();
-
 
         pc = GetComponent<PackageCollector>();
 
@@ -99,6 +95,8 @@ public class Bandit : Enemy
 
         Vector3 force = (player.transform.position - transform.position).normalized;
         force *= nav.velocity.magnitude * 2f;
-        player.HitByNPC(force);
+        player.hp.Hit(
+            player.rb,
+            force);
     }
 }

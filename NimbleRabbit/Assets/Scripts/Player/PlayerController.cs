@@ -10,21 +10,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-    /// <summary>
-    /// Minimum force threshold to damage the player.
-    /// </summary>
-    public const float FORCE_MIN_THRESHOLD_TO_DMG = 10f;
-
-    /// <summary>
-    /// Maximum force that will be used to damage the player.
-    /// </summary>
-    public const float FORCE_MAX_THRESHOLD_TO_DMG = 40f;
-
-    /// <summary>
-    /// Percent of force that is used as damage.
-    /// </summary>
-    public const float FORCE_AS_DMG = 0.25f;
-
 
     [Header("Driving")]
     public float forwardSpeed;
@@ -147,7 +132,9 @@ public class PlayerController : MonoBehaviour
 
             float forceMagnitude = (myVelocityDot + theirVelocityDot) / 3f;
 
-            HitByNPC(hit.normal * forceMagnitude);
+            hp.Hit(
+                rb,
+                hit.normal * forceMagnitude);
 
             StartCoroutine(npc.Crash(-hit.normal * forceMagnitude));
 
@@ -189,33 +176,6 @@ public class PlayerController : MonoBehaviour
                 stolenPackage,
                 this.pc);
         }
-    }
-
-    /// <summary>
-    /// Applies force to player and subsequent damage. Used for collisions with
-    /// NPCs. Hitting static or non-kinematic objects like walls or debris 
-    /// is covered by HealthManager.OnCollisionEnter().
-    /// </summary>
-    /// <param name="force"></param>
-    /// <param name="mode"></param>
-    public void HitByNPC(
-        Vector3 force,
-        ForceMode mode=ForceMode.Impulse)
-    {
-        rb.AddForce(
-            force,
-            mode);
-
-        if (force.magnitude <= FORCE_MIN_THRESHOLD_TO_DMG) 
-        {
-            return;
-        }
-
-        float dmg = Mathf.Min(
-            force.magnitude * FORCE_AS_DMG,
-            FORCE_MAX_THRESHOLD_TO_DMG);
-
-        hp.TakeDamage(dmg);
     }
 
     /// <summary>
