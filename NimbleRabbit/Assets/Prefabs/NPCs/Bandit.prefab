@@ -682,7 +682,7 @@ GameObject:
   - component: {fileID: 6740491595264892505}
   - component: {fileID: 4370185163870834741}
   - component: {fileID: 9161132929671611794}
-  - component: {fileID: 4885964845057213000}
+  - component: {fileID: 7959737929182659339}
   m_Layer: 0
   m_Name: Bandit
   m_TagString: NPC
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db20ed502d4cf84e98a0d4737197fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4885964845057213000
+--- !u!114 &7959737929182659339
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

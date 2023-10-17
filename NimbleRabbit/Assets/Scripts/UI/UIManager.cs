@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -6,6 +7,11 @@ public class UIManager : MonoBehaviour
     /// Singleton instance of UIManager.
     /// </summary>
     public static UIManager instance {get; private set;}
+
+    /// <summary>
+    /// Reference to the player's health display.
+    /// </summary>
+    public HPDisplayUpdater playerHP;
 
     /// <summary>
     /// Reference to parent object for the Settings menu.
@@ -32,6 +38,8 @@ public class UIManager : MonoBehaviour
     {
         settingsMenu.SetActive(false);
         winPopup.SetActive(false);
+
+        playerHP.Link(PlayerController.instance.hp);
     }
 
     /// <summary>

@@ -10,15 +10,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-    /// <summary>
-    /// Packages that player has collected.
-    /// </summary>
-    public PackageCollector pc {get; private set;}
-
     /// Time that the player can't endure another collision after one.
     /// </summary>
     private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
-
 
     [Header("Driving")]
     public float forwardSpeed;
@@ -36,6 +30,16 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb {get; private set;}
 
     /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    public PackageCollector pc {get; private set;}
+
+    /// <summary>
+    /// Reference to HealthManager component.
+    /// </summary>
+    public HealthManager hp {get; private set;}
+
+    /// <summary>
     /// Time of last collision.
     /// </summary>
     private float lastCollisionTime_s;
@@ -47,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         rb = GetComponent<Rigidbody>();
+        hp = GetComponent<HealthManager>();
         pc = GetComponent<PackageCollector>();
     }    
 
@@ -56,7 +61,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        instance = this;
     }
 
     /// <summary>

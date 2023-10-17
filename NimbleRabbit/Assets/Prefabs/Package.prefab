@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7755871105328215577}
   - component: {fileID: 7755871105328215576}
   - component: {fileID: 1920648557120062396}
+  - component: {fileID: 9116065797944608627}
   m_Layer: 0
   m_Name: Package
   m_TagString: Untagged
@@ -110,3 +111,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce627f6738d472948a3c224aeeb9bf8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9116065797944608627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7755871105328215579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae44c0c39af1144bacd5647acf6c598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  damageMultiplier: 1
+  healingMultiplier: 1
+  physicalDamageDebounceSeconds: 0.5

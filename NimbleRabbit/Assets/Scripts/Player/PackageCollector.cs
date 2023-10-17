@@ -9,6 +9,14 @@ public class PackageCollector : MonoBehaviour
     /// </summary>
     public List<Package> packages;
 
+    [Header("Defense")]
+
+    /// <summary>
+    /// Percentage of damage that is reduced for the package.
+    /// </summary>
+    [Range(0, 100)] 
+    public float damageReduction;
+
     // Start is called before the first frame update
     void Start()
     {

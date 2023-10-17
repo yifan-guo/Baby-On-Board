@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12662,8 +12662,8 @@ GameObject:
   m_Component:
   - component: {fileID: 608683601}
   - component: {fileID: 608683602}
-  m_Layer: 0
-  m_Name: HealthBar
+  m_Layer: 5
+  m_Name: PlayerHP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13184,6 +13184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602012b924a9f4341a9c5129a1f97088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHP: {fileID: 608683602}
   settingsMenu: {fileID: 1088726551}
   winPopup: {fileID: 678070447}
 --- !u!1001 &634066567
@@ -17770,7 +17771,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839450166}
-  m_LocalRotation: {x: -0.000000029802322, y: -0.0000000037252903, z: 4.656613e-10, w: 1}
+  m_LocalRotation: {x: -0.000000029802319, y: -9.3132246e-10, z: 2.3283062e-10, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -17848,7 +17849,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839512884}
-  m_LocalRotation: {x: -0.036782056, y: -0.018383645, z: 0.008381771, w: 0.99911904}
+  m_LocalRotation: {x: -0.036785975, y: -0.012687145, z: 0.00578453, w: 0.9992259}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -17934,7 +17935,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 848547785}
-  m_LocalRotation: {x: 0.2301584, y: 0.019661589, z: -0.0046511237, w: 0.9729434}
+  m_LocalRotation: {x: 0.230183, y: 0.013569135, z: -0.0032098992, w: 0.9730475}
   m_LocalPosition: {x: 0, y: 3.25, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -24698,7 +24699,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123562410}
-  m_LocalRotation: {x: -0.00046484172, y: -0.018067015, z: 0.009044009, w: 0.9997958}
+  m_LocalRotation: {x: -0.00046488643, y: -0.012468664, z: 0.0062415795, w: 0.9999027}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -40472,7 +40473,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006441703}
-  m_LocalRotation: {x: 0.2301584, y: 0.019661589, z: -0.0046511237, w: 0.9729434}
+  m_LocalRotation: {x: 0.230183, y: 0.013569135, z: -0.0032098992, w: 0.9730475}
   m_LocalPosition: {x: 0, y: 3.25, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
