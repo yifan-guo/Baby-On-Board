@@ -15,6 +15,7 @@ public class Bandit : Enemy
     protected override void Awake()
     {
         base.Awake();
+        pc = GetComponent<PackageCollector>();
     }
 
     /// <summary>
@@ -22,9 +23,7 @@ public class Bandit : Enemy
     /// </summary>
     protected override void Start()
     {
-        base.Awake();
-
-        pc = GetComponent<PackageCollector>();
+        base.Start();
 
         Dictionary<Type, BaseState> states = new Dictionary<Type, BaseState>
         {

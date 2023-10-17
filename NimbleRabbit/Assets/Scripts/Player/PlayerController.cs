@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-
     [Header("Driving")]
     public float forwardSpeed;
     public float backwardsSpeed;
@@ -58,7 +57,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        instance = this;
     }
 
     /// <summary>

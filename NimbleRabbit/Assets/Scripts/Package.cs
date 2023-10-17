@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(HealthManager))]
 public class Package : Collectible
 {
     /// <summary>
@@ -9,11 +11,17 @@ public class Package : Collectible
 
     
     /// <summary>
+    /// Reference to HealthManager component.
+    /// </summary>
+    public HealthManager hp {get; private set;}
+
+    /// <summary>
     /// Initialization Pt I.
     /// </summary>
     protected override void Awake()
     {
         base.Awake();
+        hp = GetComponent<HealthManager>();
     }
 
     /// <summary>

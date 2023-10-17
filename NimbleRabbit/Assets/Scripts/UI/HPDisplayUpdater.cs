@@ -14,31 +14,56 @@ public class HPDisplayUpdater : MonoBehaviour
     /// The TextMeshProGUI component that will be updated based on HealthManager events.
     /// </summary>
     public TextMeshProUGUI healthText;
+    
+    /// <summary>
+    /// Image component for health bar.
+    /// </summary>
     public Image healthBar;
 
-    void OnEnable()
+    /// <summary>
+    /// Reference to linked HealthManager of object whose health is displayed.
+    /// </summary>
+    private HealthManager hp;
+
+    /// <summary>
+    /// Subscribe to health event and initialize.
+    /// </summary>
+    /// <param name="hp"></param>
+    public void Link(HealthManager hp)
     {
-        HealthManager.OnDamageReceived += HandleHealthUpdate;
-        HealthManager.OnHealingReceived += HandleHealthUpdate;
+        // Store reference and subscribe to event because it's preferable to 
+        // only update health when needed rather than constantly checking in 
+        // Update
+
+        this.hp = hp;
+        SetHealthDisplay();
+        hp.OnHealthChange += SetHealthDisplay;
+        
+        this.gameObject.SetActive(true);
     }
 
-
-    void OnDisable()
+    /// <summary>
+    /// Unsubscribe from health event and disable display.
+    /// </summary>
+    public void Unlink()
     {
-        HealthManager.OnDamageReceived -= HandleHealthUpdate;
-        HealthManager.OnHealingReceived -= HandleHealthUpdate;
+        this.gameObject.SetActive(false);
+
+        if (hp == null)
+        {
+            return;
+        }
+
+        hp.OnHealthChange -= SetHealthDisplay;
+        hp = null;
     }
 
-    void SetHealthDisplay(float currentHealth, float maxHealth)
+    /// <summary>
+    /// Update health text.
+    /// </summary>
+    public void SetHealthDisplay()
     {
-        healthText.text = $"{currentHealth}";
-        healthBar.fillAmount = currentHealth / 100f;
+        healthText.text = $"{hp.currentHealth}";
+        healthBar.fillAmount = hp.currentHealth / hp.maxHealth;
     }
-
-    void HandleHealthUpdate(float damageAmount, GameObject damagedObject)
-    {
-        HealthManager healthManager = damagedObject.GetComponent<HealthManager>();
-        SetHealthDisplay(healthManager.currentHealth, healthManager.maxHealth);
-    }
-
 }

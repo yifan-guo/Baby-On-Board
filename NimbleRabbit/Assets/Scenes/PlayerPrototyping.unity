@@ -12662,8 +12662,8 @@ GameObject:
   m_Component:
   - component: {fileID: 608683601}
   - component: {fileID: 608683602}
-  m_Layer: 0
-  m_Name: HealthBar
+  m_Layer: 5
+  m_Name: PlayerHP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13184,6 +13184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602012b924a9f4341a9c5129a1f97088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHP: {fileID: 608683602}
   settingsMenu: {fileID: 1088726551}
   winPopup: {fileID: 678070447}
 --- !u!1001 &634066567
