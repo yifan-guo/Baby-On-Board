@@ -36,6 +36,11 @@ public abstract class NPC : MonoBehaviour
     public bool isCrashed;
 
     /// <summary>
+    /// Whether or not NPC will follow traffic flow currently.
+    /// </summary>
+    public bool followsTraffic;
+
+    /// <summary>
     /// Reference to this NPC's nav component.
     /// </summary>
     public NavMeshAgent nav {get; protected set;}
@@ -71,6 +76,7 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     protected virtual void Start()
     {
+        followsTraffic = true;
         nav.speed = moveSpeed;
     }
 
