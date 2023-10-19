@@ -14,7 +14,7 @@ public class HPDisplayUpdater : MonoBehaviour
     /// The TextMeshProGUI component that will be updated based on HealthManager events.
     /// </summary>
     public TextMeshProUGUI healthText;
-    
+
     /// <summary>
     /// Image component for health bar.
     /// </summary>
@@ -31,14 +31,14 @@ public class HPDisplayUpdater : MonoBehaviour
     /// <param name="hp"></param>
     public void Link(HealthManager hp)
     {
-        // Store reference and subscribe to event because it's preferable to 
-        // only update health when needed rather than constantly checking in 
+        // Store reference and subscribe to event because it's preferable to
+        // only update health when needed rather than constantly checking in
         // Update
 
         this.hp = hp;
         SetHealthDisplay();
         hp.OnHealthChange += SetHealthDisplay;
-        
+
         this.gameObject.SetActive(true);
     }
 

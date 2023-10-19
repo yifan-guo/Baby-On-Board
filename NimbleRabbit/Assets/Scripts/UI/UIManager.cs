@@ -12,7 +12,12 @@ public class UIManager : MonoBehaviour
     /// Reference to the player's health display.
     /// </summary>
     public HPDisplayUpdater playerHP;
-    
+
+    /// <summary>
+    /// Reference to the package health display.
+    /// </summary>
+    public PackageHPDisplayUpdater packageHP;
+
     /// <summary>
     /// Indicator pool parent object.
     /// </summary>
@@ -58,6 +63,7 @@ public class UIManager : MonoBehaviour
         winPopup.SetActive(false);
 
         playerHP.Link(PlayerController.instance.hp);
+        packageHP.Link(hp:PlayerController.instance.hp, pc:PlayerController.instance.pc);
     }
 
     /// <summary>

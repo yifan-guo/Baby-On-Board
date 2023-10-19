@@ -105,7 +105,6 @@ public class HealthManager : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         // Update internal state
-        // Debug.Log($"Ouch! {gameObject.name} was damaged for {damageAmount}!");
         damageAmount = Mathf.Floor(damageAmount);
         currentHealth = Mathf.Max(
             currentHealth - damageAmount,
@@ -113,7 +112,6 @@ public class HealthManager : MonoBehaviour
 
         timeLastPhysicalDamageSeconds = Time.time;
 
-        // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
         OnHealthChange?.Invoke();
     }
@@ -127,7 +125,6 @@ public class HealthManager : MonoBehaviour
         // Update internal state
         healingAmount = Mathf.Floor(healingAmount);
         float newHealth = currentHealth + healingAmount;
-        // Debug.Log($"Woohoo! {gameObject.name} was healed for {healingAmount}!");
 
         if (newHealth > maxHealth)
         {
@@ -140,7 +137,6 @@ public class HealthManager : MonoBehaviour
 
         timeLastPhysicalDamageSeconds = Time.time;
 
-        // Debug.Log($"{gameObject.name} currently has {currentHealth} health points");
         // Broadcast event to notify subscribers
         OnHealthChange?.Invoke();
     }
@@ -163,7 +159,6 @@ public class HealthManager : MonoBehaviour
         // Check if we're within the debounce window to avoid stuttering / multiple damages during a single bump with a damaging object.
         if (debounceIsActive())
         {
-            // Debug.Log("Debounce check prevented damage");
             return;
         }
 
@@ -193,8 +188,6 @@ public class HealthManager : MonoBehaviour
 
             if (damageAmount > 0f)
             {
-                TakeDamage(damageAmount);
-
                 PackageCollector collector = gameObject.GetComponent<PackageCollector>();
                 if (collector != null)
                 {
@@ -204,6 +197,7 @@ public class HealthManager : MonoBehaviour
                         pkg.hp.TakeDamage(damageAmount * (1 - reductionPercent));
                     }
                 }
+                TakeDamage(damageAmount);
             }
         }
 
