@@ -17746,7 +17746,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839450166}
-  m_LocalRotation: {x: 0.0000000074505797, y: -0, z: -0.0000000074505797, w: 1}
+  m_LocalRotation: {x: -0.0000000074505797, y: -0, z: -0.000000014901159, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -17910,7 +17910,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 848547785}
-  m_LocalRotation: {x: 0.103033386, y: 0.38897604, z: -0.043828428, w: 0.91441834}
+  m_LocalRotation: {x: 0.10303339, y: 0.38897604, z: -0.043828428, w: 0.91441834}
   m_LocalPosition: {x: 104.475945, y: 4.716, z: 100.96941}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -24448,7 +24448,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123562410}
-  m_LocalRotation: {x: -0.00046488643, y: -0.01271525, z: 0.002896037, w: 0.9999149}
+  m_LocalRotation: {x: -0.00046487153, y: -0.01271522, z: 0.0028960258, w: 0.9999149}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -28204,7 +28204,7 @@ MonoBehaviour:
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings:
-    - m_Name: 1D Axis
+    - m_Name: AD Turning
       m_Id: bba5d926-d8bd-41b4-af5e-4ed40c5885b6
       m_Path: 1DAxis
       m_Interactions: 
@@ -28223,6 +28223,30 @@ MonoBehaviour:
     - m_Name: positive
       m_Id: a69e05d8-1c10-48cd-b727-c74bf82bb2bf
       m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Turn
+      m_Flags: 8
+    - m_Name: Thumbstick Turning
+      m_Id: 664923af-0dad-4e28-9c34-e29a0b077039
+      m_Path: 1DAxis
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Turn
+      m_Flags: 4
+    - m_Name: negative
+      m_Id: cc31b3ed-20fc-4cfd-a03c-e0ea929e4055
+      m_Path: <Gamepad>/leftStick/left
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Turn
+      m_Flags: 8
+    - m_Name: positive
+      m_Id: 1260ab45-fd61-4bb2-8412-6f8ae2af5fff
+      m_Path: <Gamepad>/leftStick/right
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -40008,7 +40032,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006441703}
-  m_LocalRotation: {x: 0.1030334, y: 0.38897604, z: -0.04382843, w: 0.91441834}
+  m_LocalRotation: {x: 0.10303339, y: 0.38897604, z: -0.043828428, w: 0.91441834}
   m_LocalPosition: {x: 104.475945, y: 4.716, z: 100.96941}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
