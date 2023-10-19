@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
@@ -15,10 +15,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
 
+    [Header("Input")]
+    public InputAction accelerate;
+    public InputAction decelerate;
+    public InputAction turn;
+
     [Header("Driving")]
     public float forwardSpeed;
     public float backwardsSpeed;
     public float turnSpeed;
+    public float maxSpeed;
+
+    [Header("Animation Objects")]
+    public List<GameObject> frontWheels;
+    public List<GameObject> backWheels;
+
+    [Header("Animation Controls")]
+    public float wheelRotationSpeed;
+    public float wheelTurnSpeed;
+    public float returnSpeed;
+    public float maxTurnAngle;
 
     /// <summary>
     /// Flag for if player is stable on the ground.
@@ -34,7 +50,6 @@ public class PlayerController : MonoBehaviour
     /// Reference to Rigidbody.
     /// </summary>
     public Rigidbody rb {get; private set;}
-
     /// <summary>
     /// Time of last collision.
     /// </summary>
@@ -63,19 +78,22 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // Old Input System (remove when new input system is in place)
         HandleInput();
+
+        // New Input System
+        InputSystemCalls();
     }
 
-    /// <summary>
-    /// Physics update loop.
-    /// </summary>
+    
+
     private void FixedUpdate()
     {
         // Forward
         SweepTest(
             transform.forward,
             (transform.localScale.z / 2f) + 0.1f);
-        
+
         // Backward
         SweepTest(
             -transform.forward,
@@ -91,6 +109,27 @@ public class PlayerController : MonoBehaviour
             -transform.right,
             (transform.localScale.x / 2f) + 0.1f);
     }
+
+
+    // OnEnable/OnDisable for Unity's new input system
+    private void OnEnable()
+    {
+        accelerate.Enable();
+        decelerate.Enable();
+        turn.Enable();
+    }
+
+    private void OnDisable()
+    {
+        accelerate.Disable();
+        decelerate.Disable();
+        turn.Disable();
+    }
+
+    /// <summary>
+    /// Physics update loop.
+    /// </summary>
+
 
     /// <summary>
     /// Use sweep test for fast collisions.
@@ -139,8 +178,92 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void InputSystemCalls()
+    {
+        // WORK IN PROGRESS
+        // STILL NEEDS POLISH
+        float isAccelerating = accelerate.ReadValue<float>();
+        float isDecelerating = decelerate.ReadValue<float>();
+        float turnVal = turn.ReadValue<float>();
+
+        ///////////////////////////////////////
+        // VEHICLE ACCELERATION AND TURNING //
+        //////////////////////////////////////
+        
+
+        // Adjust the velocity based on acceleration and deceleration
+        rb.velocity += transform.forward * forwardSpeed * (isAccelerating - isDecelerating) * Time.deltaTime;
+
+        // Calculate a normalized value based on current speed and modify turn speed based on the inverse of the normalized speed
+        float speedNormalized = rb.velocity.magnitude / maxSpeed;
+        float modifiedTurnSpeed = turnSpeed * (1.0f - speedNormalized);
+
+        // Apply turning only when moving forward or backward
+        if (turnVal != 0 && rb.velocity.magnitude > 0.1f)
+        {
+
+            if (isAccelerating == 0 && isDecelerating > 0)
+            {
+                transform.Rotate(Vector3.up, -turnVal * modifiedTurnSpeed * Time.deltaTime);
+            }
+            else
+            {
+                transform.Rotate(Vector3.up, turnVal * modifiedTurnSpeed * Time.deltaTime);
+            }
+        }
+
+
+        //////////////////////////////
+        // VEHICLE WHEEL ANIMATIONS //
+        //////////////////////////////
+
+        // Rotate wheels while in motion
+        float rotationSpeed = rb.velocity.magnitude * wheelRotationSpeed;
+        foreach (GameObject wheel in frontWheels)
+        {
+            //wheel.transform.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
+        }
+        foreach (GameObject wheel in backWheels)
+        {
+            wheel.transform.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
+        }
+
+        // Turn the front wheels
+        float rotationAngle = turnVal * wheelTurnSpeed * Time.deltaTime;
+        foreach (GameObject wheel in frontWheels)
+        {
+            Vector3 currentRotation = wheel.transform.localRotation.eulerAngles;
+            float currentRotationY = currentRotation.y;
+
+            // Calculate the new rotation angle
+            float newRotationY = currentRotationY + rotationAngle;
+
+            // Adjust the range from 0-360 to -180-180
+            // If not in place, issues occur when turning left
+            if (newRotationY > 180)
+            {
+                newRotationY -= 360;
+            }
+
+            // Clamp the new rotation within the desired range
+            newRotationY = Mathf.Clamp(newRotationY, -maxTurnAngle, maxTurnAngle);
+            wheel.transform.localRotation = Quaternion.Euler(currentRotation.x, newRotationY, currentRotation.z);
+        }
+
+        // Return front wheels back to neutral position when not turning
+        if (turnVal == 0)
+        {
+            foreach (GameObject wheel in frontWheels)
+            {
+                wheel.transform.localRotation = Quaternion.Lerp(wheel.transform.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
+            }
+        }
+
+    }
+
     /// <summary>
     /// Interprets user input.
+    /// REMOVE ONCE NEW INPUT SYSTEM IS FUNCTIONING
     /// </summary>
     private void HandleInput()
     {
@@ -152,28 +275,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UIManager.instance.ToggleSettingsMenu();    
-        }
-
-        if (Input.GetKey("w"))
-        {
-            rb.velocity += transform.forward * forwardSpeed * Time.deltaTime;
-        }
-
-        if (Input.GetKey("s"))
-        {
-            rb.velocity -= transform.forward * backwardsSpeed * Time.deltaTime;
-        }
-
-        // Turning left
-        if (Input.GetKey("a"))
-        {
-            transform.Rotate(Vector3.up, -turnSpeed * Time.deltaTime);
-        }
-
-        // Turning right
-        if (Input.GetKey("d"))
-        {
-            transform.Rotate(Vector3.up, turnSpeed * Time.deltaTime);
         }
 
         // TODO:
