@@ -67,6 +67,14 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Clean up UI for a fresh start.
+    /// </summary>
+    public void Restart()
+    {
+        Indicator.ClearAll();
+    }
+
+    /// <summary>
     /// Enable and disable the settings menu.
     /// </summary>
     public void ToggleSettingsMenu()

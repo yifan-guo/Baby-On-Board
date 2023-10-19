@@ -82,6 +82,15 @@ public class Indicator : MonoBehaviour
     }
 
     /// <summary>
+    /// Clear static resources.
+    /// </summary>
+    public static void ClearAll()
+    {
+        indicatorPool.Clear();
+        trackedObjectsMap.Clear();
+    }
+
+    /// <summary>
     /// Get an unused indicator or new one if all are busy.
     /// </summary>
     /// <returns>Indicator</returns>

@@ -159,12 +159,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // enable the enemy to transition to cooldown state 
-        if (npc is Enemy)
-        {
-            Enemy enemy = (Enemy) npc;
-            enemy.inCooldown = true;
-        }
+        npc.inCooldown = true;
 
         // Randomly pick any package the colliding object has
         int pkgIdx = UnityEngine.Random.Range(
