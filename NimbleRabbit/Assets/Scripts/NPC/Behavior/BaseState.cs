@@ -9,11 +9,17 @@ public abstract class BaseState
     protected NPC me;
 
     /// <summary>
+    /// Reference to PlayerController singleton instance.
+    /// </summary>
+    protected PlayerController player;
+
+    /// <summary>
     /// Default constructor.
     /// </summary>
     public BaseState(NPC npc)
     {
         me = npc;
+        player = PlayerController.instance;
     }
 
     /// <summary>

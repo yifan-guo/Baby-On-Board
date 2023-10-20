@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bandit : Enemy 
+public class Bandit : NPC 
 {
     /// <summary>
     /// Package Collector for packages that Bandit has stolen.
@@ -30,42 +30,30 @@ public class Bandit : Enemy
             {typeof(IdleState), new IdleState(this)},
             {typeof(ChaseState), new ChaseState(this)},
             {typeof(AttackState), new AttackState(this)},
-            {typeof(ApprehendedState), new ApprehendedState(this)}
+            {typeof(EngineFailureState), new EngineFailureState(this)}
         };
 
         stateMachine.SetStates(states);
     }
 
     /// <summary>
-    /// Keep chase if we need to steal a package.
+    /// Keep chase if we need to steal a package and see the player.
     /// </summary>
     /// <returns>bool</returns>
-    public override bool KeepChasing()
+    public override bool Chase()
     {
-        if (pc.packages.Count > 0)
+        if (pc.packages.Count > 0 ||
+            PlayerController.instance.pc.packages.Count == 0)
         {
             return false;
         }
 
-        return PlayerController.instance.pc.packages.Count > 0;
-    }
-
-    /// <summary>
-    /// Keep trying to steal if we haven't gotten anything and are in range.
-    /// </summary>
-    /// <returns></returns>
-    public override bool KeepAttacking()
-    {
-        if (pc.packages.Count > 0)
-        {
-            return false;
-        }
-
-        float dist = Vector3.Distance(
-            PlayerController.instance.transform.position,
-            transform.position);
-
-        return dist < attackRange;
+        return CanSee(
+                PlayerController.instance.transform.position,
+                fovMin: 0.25f,
+                visionRangeMin: 10f,
+                visionRangeMax: visionRange,
+                lineOfSight: true);
     }
 
     /// <summary>

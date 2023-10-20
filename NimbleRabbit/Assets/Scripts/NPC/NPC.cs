@@ -4,6 +4,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(HealthManager))]
 public abstract class NPC : MonoBehaviour
@@ -13,7 +14,7 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     public enum Role {Civilian, Bandit, Police};
 
-    [Header("Info")]
+    [Header("Settings")]
     
     /// <summary>
     /// Type of NPC.
@@ -21,9 +22,31 @@ public abstract class NPC : MonoBehaviour
     public Role role;
 
     /// <summary>
-    /// Move speed.
+    /// Absolute maximum move speed.
     /// </summary>
-    public int moveSpeed;
+    public float maxSpeed;
+
+    /// <summary>
+    /// Range to perform attack.
+    /// </summary>
+    public float attackRange;
+
+    /// <summary>
+    /// Range we can see objects from (i.e. distance to see player).
+    /// </summary>
+    public float visionRange;
+
+    [Header("Status")]
+
+    /// <summary>
+    /// Max move speed of the current state.
+    /// </summary>
+    public float stateSpeed;
+
+    /// <summary>
+    /// Whether this NPC has to wait before it can do anything.
+    /// </summary>
+    public bool inCooldown;
 
     /// <summary>
     /// Whether or not NPC is actively completing a turn.
@@ -46,6 +69,11 @@ public abstract class NPC : MonoBehaviour
     protected Rigidbody rb;
 
     /// <summary>
+    /// Reference to this NPC's main body collider.
+    /// </summary>
+    protected Collider coll;
+
+    /// <summary>
     /// Reference to this NPC's HealthManager component.
     /// </summary>
     protected HealthManager hp;
@@ -53,7 +81,9 @@ public abstract class NPC : MonoBehaviour
     /// <summary>
     /// Reference to this NPC's state machine.
     /// </summary>
-    protected StateMachine stateMachine;
+    public StateMachine stateMachine {get; protected set;}
+
+    public Vector3 dimensions {get; protected set;}
 
     /// <summary>
     /// Initialization Pt I.
@@ -62,6 +92,7 @@ public abstract class NPC : MonoBehaviour
     {
         nav = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
+        coll = GetComponent<Collider>();
         hp = GetComponent<HealthManager>();
         stateMachine = GetComponent<StateMachine>();
     }
@@ -71,7 +102,7 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     protected virtual void Start()
     {
-        nav.speed = moveSpeed;
+        dimensions = coll.bounds.size;
     }
 
     /// <summary>
@@ -79,14 +110,13 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     protected virtual void FixedUpdate()
     {
-        // Only drive forward if the next location
-        // is in front of you enough
-        if (CanDriveToward(nav.steeringTarget) == false)
+        // If turning on an OffMeshLink, let the turn control us
+        if (isTurning == true)
         {
-            // TODO:
-            // Slowly back up while rotating to look at next destination.
-            nav.velocity = Vector3.zero;
+            return;
         }
+
+        nav.speed = stateSpeed;
 
         // Check for a turn
         if (isTurning == false &&
@@ -94,24 +124,121 @@ public abstract class NPC : MonoBehaviour
         {
             StartCoroutine(Turn(nav.currentOffMeshLinkData));
         }
-   }
+
+        // Only drive forward if the next location
+        // is in front of you or if we're on top of it
+        float fov = GetFOV(nav.steeringTarget);
+        float dist_2 = (nav.steeringTarget - transform.position).sqrMagnitude;
+
+        if (fov < 0.5f &&
+            dist_2 > (dimensions.z * dimensions.z))
+        {
+            // Change nav velocity, not speed here
+            nav.velocity = Vector3.zero;
+        }
+    }
 
     /// <summary>
-    /// Whether or not the target destination is in front of the NPC enough.
+    /// Determines whether or not to maintain a chase.
+    /// </summary>
+    /// <returns>bool</returns>
+    public virtual bool Chase() {return false;}
+
+    /// <summary>
+    /// Attack method to implement.
+    /// </summary>
+    public virtual void Attack() {}
+
+    /// <summary>
+    /// Whether or not the target destination is visible based on the NPC's FOV,
+    /// with optional distance and LOS checks.
+    /// 
+    /// FOV interpretation:
+    /// 1 = directly in front,
+    /// 0 = directly to the left/right,
+    /// -1 = directly behind.
+    /// 
+    /// Vision interpretation:
+    /// Minimum is the radius where vision is guaranteed and ignores FOV/LOS,
+    /// Maximum is the radius where vision ends at.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="fovMin"></param>
+    /// <param name="visionRangeMax"></param>
+    /// <param name="lineOfSight"></param>
+    /// <returns></returns>
+    public bool CanSee(
+        Vector3 target,
+        float fovMin=0.5f,
+        float visionRangeMin=Mathf.NegativeInfinity,
+        float visionRangeMax=Mathf.Infinity,
+        bool lineOfSight=false)
+    {
+        Vector3 diff = target - transform.position;
+
+        // If target is too close, then guaranteed to be seen
+        if (visionRangeMin > Mathf.NegativeInfinity &&
+            diff.sqrMagnitude < visionRangeMin * visionRangeMin)
+        {
+            return true;
+        }
+
+        // Check if target is too far
+        if (visionRangeMax < Mathf.Infinity &&
+            diff.sqrMagnitude > visionRangeMax * visionRangeMax)
+        {
+            return false;
+        }
+
+        // Check if in FOV
+        float fov = GetFOV(target);
+        fovMin = Mathf.Clamp(
+            fovMin,
+            -1f,
+            1f);
+
+        if (fov < fovMin)
+        {
+            return false;
+        }
+
+        // Check if we have a direct line of sight
+        if (lineOfSight == true)
+        {
+            RaycastHit hit;
+            bool result = Physics.Raycast(
+                transform.position,
+                diff,
+                out hit,
+                this.visionRange);
+
+            // Debug.DrawRay(transform.position, diff.normalized * hit.distance, Color.yellow);
+
+            return result ? 
+                hit.collider.CompareTag("Player") :
+                false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Return FOV metric for position from NPC's perspective.
+    /// 
+    /// FOV interpretation:
+    /// 1 = directly in front,
+    /// 0 = directly to the left/right,
+    /// -1 = directly behind,
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    protected bool CanDriveToward(Vector3 target)
+    public float GetFOV(Vector3 target)
     {
-        // Dot product interpretation:
-        // 1 = directly in front
-        // 0 = directly to the left/right
-        // -1 = directly behind
         float dot = Vector3.Dot(
             (target - transform.position).normalized,
             transform.forward);
-
-        return dot > 0.5f;
+        
+        return dot;
     }
 
     /// <summary>
@@ -123,10 +250,15 @@ public abstract class NPC : MonoBehaviour
     {
         isTurning = true;
 
-        bool rotated = false;
+        // Add vehicle height to turn destination
+        Vector3 endPos = linkData.endPos;
+        endPos.y += (dimensions.y / 2f);
+
+        // Estimate turn time
         float startTime = Time.time;
-        float duration_s = (linkData.endPos - transform.position).magnitude / nav.speed;
-        while (transform.position != linkData.endPos)
+        float duration_s = (endPos - transform.position).magnitude / nav.speed;
+
+        while (transform.position != endPos)
         {
             // Immediately stop if we crashed
             if (isCrashed == true)
@@ -134,23 +266,26 @@ public abstract class NPC : MonoBehaviour
                 break;
             }
 
-            Quaternion lookRot = Quaternion.LookRotation(
-                linkData.endPos - transform.position,
-                Vector3.up);
+            // Rotate continuously unless we are on top of the end position
+            Vector3 diff = endPos - transform.position;
 
-            transform.rotation = Quaternion.Lerp(
-                transform.rotation,
-                lookRot,
-                (Time.time - startTime) / (4 * duration_s));
-
-            // Don't move toward the destination until we are rotated better
-            if (rotated == true ||
-                CanDriveToward(linkData.endPos) == true)
+            if (diff.sqrMagnitude > dimensions.z * dimensions.z)
             {
-                rotated = true;
+                Quaternion lookRot = Quaternion.LookRotation(
+                    diff,
+                    Vector3.up);
+
+                transform.rotation = Quaternion.Lerp(
+                    transform.rotation,
+                    lookRot,
+                    (Time.time - startTime) / (4 * duration_s));
+            }
+
+            if (CanSee(endPos) == true)
+            {
                 transform.position = Vector3.MoveTowards(
                     transform.position,
-                    linkData.endPos,
+                    endPos,
                     nav.speed * Time.deltaTime);
             }
 
@@ -173,9 +308,6 @@ public abstract class NPC : MonoBehaviour
         rb.isKinematic = false;
         isCrashed = true;
 
-        // rb.AddForce(
-        //     force,
-        //     ForceMode.Impulse);
         hp.Hit(
             rb,
             force);

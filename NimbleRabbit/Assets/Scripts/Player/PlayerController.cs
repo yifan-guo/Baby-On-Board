@@ -112,9 +112,6 @@ public class PlayerController : MonoBehaviour
             out hit,
             distance);
 
-        // TODO:
-        // Update this to account for any highspeed collisions with non-static
-        // objects
         if (result == true &&
             hit.collider.gameObject.tag == "NPC")
         {
@@ -138,42 +135,45 @@ public class PlayerController : MonoBehaviour
 
             lastCollisionTime_s = Time.time;
 
-            ReclaimPackage(hit);
+            ReclaimPackage(npc);
         }
     }
 
     /// <summary>
     /// Reclaim the package from the colliding object if it has a PackageManager
     /// </summary>
-    private void ReclaimPackage(RaycastHit hit) {
-
+    private void ReclaimPackage(NPC npc) 
+    {
         // get the package from the Bandit
-        GameObject other = hit.collider.gameObject;
-        PackageCollector otherPc = other.GetComponent<PackageCollector>();
-        if (otherPc != null) {
-            List<Package> pkgs = otherPc.packages;
+        PackageCollector otherPc = npc.GetComponent<PackageCollector>();
 
-            if (pkgs.Count == 0)
-            {
-                return;
-            }
-
-            // enable the enemy to transition to cooldown state 
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (enemy != null) {
-                enemy.inCooldown = true;
-            }
-
-            // Randomly pick any package the colliding object has
-            int pkgIdx = UnityEngine.Random.Range(0, pkgs.Count);
-
-            Package stolenPackage = pkgs[pkgIdx];
-            
-            // make the NPC give the package to the Player
-            otherPc.DropPackage(
-                stolenPackage,
-                this.pc);
+        if (otherPc == null) 
+        {
+            return;
         }
+
+        List<Package> pkgs = otherPc.packages;
+
+        if (pkgs.Count == 0)
+        {
+            return;
+        }
+
+        npc.inCooldown = true;
+
+        // Randomly pick any package the colliding object has
+        int pkgIdx = UnityEngine.Random.Range(
+            0, 
+            pkgs.Count);
+
+        Package stolenPackage = pkgs[pkgIdx];
+
+        Indicator.Untrack(npc.gameObject);
+        
+        // make the NPC give the package to the Player
+        otherPc.DropPackage(
+            stolenPackage,
+            this.pc);
     }
 
     /// <summary>

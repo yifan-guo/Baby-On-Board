@@ -38,6 +38,8 @@ public class GameState : MonoBehaviour
     /// </summary>
     public void Restart()
     {
+        UIManager.instance.Restart();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         if (isPaused)

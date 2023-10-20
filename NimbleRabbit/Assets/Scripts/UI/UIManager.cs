@@ -14,6 +14,16 @@ public class UIManager : MonoBehaviour
     public HPDisplayUpdater playerHP;
 
     /// <summary>
+    /// Reference to the package health display.
+    /// </summary>
+    public PackageHPDisplayUpdater packageHP;
+
+    /// <summary>
+    /// Indicator pool parent object.
+    /// </summary>
+    public GameObject indicators;
+
+    /// <summary>
     /// Reference to parent object for the Settings menu.
     /// </summary>
     public GameObject settingsMenu;
@@ -23,12 +33,25 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject winPopup;
 
+    [Header("Prefabs")]
+
+    /// <summary>
+    /// Reference to Indicator Prefab that will be cloned.
+    /// </summary>
+    public Indicator indicatorPrefab;
+
+    /// <summary>
+    /// Reference to Canvas component.
+    /// </summary>
+    public Canvas canvas {get; private set;}
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
     private void Awake()
     {
         instance = this;
+        canvas = GetComponent<Canvas>();
     }
 
     /// <summary>
@@ -40,6 +63,15 @@ public class UIManager : MonoBehaviour
         winPopup.SetActive(false);
 
         playerHP.Link(PlayerController.instance.hp);
+        packageHP.Link(hp:PlayerController.instance.hp, pc:PlayerController.instance.pc);
+    }
+
+    /// <summary>
+    /// Clean up UI for a fresh start.
+    /// </summary>
+    public void Restart()
+    {
+        Indicator.ClearAll();
     }
 
     /// <summary>

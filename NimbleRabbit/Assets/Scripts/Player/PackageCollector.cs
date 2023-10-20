@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PackageCollector : MonoBehaviour
 {
@@ -17,10 +18,13 @@ public class PackageCollector : MonoBehaviour
     [Range(0, 100)] 
     public float damageReduction;
 
+    public event Action OnInventoryChange;
+
     // Start is called before the first frame update
     void Start()
     {
         packages = new List<Package>();
+        OnInventoryChange?.Invoke();
     }
 
     // Update is called once per frame
@@ -42,7 +46,7 @@ public class PackageCollector : MonoBehaviour
 
         packages.Add(pkg);
         pkg.Collect(transform);
-        
+        OnInventoryChange?.Invoke();
     }
 
     /// <summary>
@@ -69,5 +73,6 @@ public class PackageCollector : MonoBehaviour
         {
             thief.CollectPackage(pkg);
         }
+        OnInventoryChange?.Invoke();
     }
 }

@@ -1,25 +1,23 @@
 using System;
 using UnityEngine;
 
-public class ApprehendedState : BaseState
+public class EngineFailureState : BaseState
 {
     /// <summary>
-    /// Reference to Enemy NPC using this state.
+    /// Duration of state.
     /// </summary>
-    protected new Enemy me;
+    private const float DURATION_S = 10f;
 
+    /// <summary>
+    /// Time this state began.
+    /// </summary>
     private float startTime;
-
-    public float timeUntilAgitatedResets = 10f;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="npc"></param>
-    public ApprehendedState(Enemy npc) : base(npc)
-    {
-        me = npc;
-    }
+    public EngineFailureState(NPC npc) : base(npc) {}
 
     /// <summary>
     /// Update cycle.
@@ -27,12 +25,14 @@ public class ApprehendedState : BaseState
     /// <returns></returns>
     public override Type Update()
     {
-        if (startTime == 0f) {
+        if (startTime == 0f) 
+        {
             startTime = Time.time;
         }
 
         // relax until time resets
-        if (Time.time > (startTime + timeUntilAgitatedResets)) {
+        if (Time.time > (startTime + DURATION_S)) 
+        {
             me.inCooldown = false; // reset the cooldown flag
             startTime = 0f;
             return typeof(IdleState);

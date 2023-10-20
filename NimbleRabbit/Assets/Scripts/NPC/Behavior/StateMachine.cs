@@ -41,7 +41,7 @@ public class StateMachine : MonoBehaviour
         // Default to the first
         if (currentState == null)
         {
-            currentState = states.Values.First();
+            SwitchState(states.Values.First().GetType());
         }
 
         // Check if current state wants to change

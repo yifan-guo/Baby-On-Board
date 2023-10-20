@@ -9,7 +9,6 @@ public class Package : Collectible
     /// </summary>
     public bool isCollected {get; private set;}
 
-    
     /// <summary>
     /// Reference to HealthManager component.
     /// </summary>
@@ -30,6 +29,7 @@ public class Package : Collectible
     protected void Start()
     {
         isCollected = false;
+        Indicator.Track(gameObject);
     }
 
     /// <summary>
@@ -76,9 +76,17 @@ public class Package : Collectible
         // TODO:
         // Update as placeholders for player and NPCs change.
         // Don't even know if we want it to sit on top of the vehicles.
-        transform.localPosition = (owner.tag == "Player") ?
-            new Vector3(0f, 0.35f, 0f) :
-            Vector3.up * ((owner.GetComponent<Collider>().bounds.size.y) + (transform.localScale.y / 2f));
+
+        if (owner.tag == "Player")
+        {
+            Indicator.Untrack(gameObject);
+            transform.localPosition = new Vector3(0f, 0.35f, 0f);
+        }
+        else
+        {
+            Indicator.Track(owner.gameObject);
+            transform.localPosition = Vector3.up * ((owner.GetComponent<Collider>().bounds.size.y + transform.localScale.y) / 2f);
+        }
     }
 
     /// <summary>
@@ -92,7 +100,8 @@ public class Package : Collectible
         Vector3 pos = transform.parent.position;
         pos.y = transform.localScale.y / 2f;
         transform.position = pos;
-
         transform.parent = null;
+
+        Indicator.Track(gameObject);
     }
 }

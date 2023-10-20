@@ -4,18 +4,10 @@ using UnityEngine;
 public class AttackState : BaseState
 {
     /// <summary>
-    /// Reference to Enemy NPC using this state.
-    /// </summary>
-    protected new Enemy me;
-
-    /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="npc"></param>
-    public AttackState(Enemy npc) : base(npc)
-    {
-        me = npc;
-    }
+    public AttackState(NPC npc) : base(npc) {}
 
     /// <summary>
     /// Update cycle.
@@ -23,12 +15,9 @@ public class AttackState : BaseState
     /// <returns></returns>
     public override Type Update()
     {
-        if (PlayerController.instance == null)
-        {
-            return null;
-        }
-
-        if (me.KeepAttacking() == false)
+        if (me.CanSee(
+                player.transform.position,
+                visionRangeMax: me.attackRange) == false)
         {
             return typeof(IdleState);
         }
