@@ -1,7 +1,6 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class PackageCollector : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class PackageCollector : MonoBehaviour
     /// <summary>
     /// Percentage of damage that is reduced for the package.
     /// </summary>
-    [Range(0, 100)] 
+    [Range(0, 100)]
     public float damageReduction;
 
     public event Action OnInventoryChange;
@@ -46,6 +45,7 @@ public class PackageCollector : MonoBehaviour
 
         packages.Add(pkg);
         pkg.Collect(transform);
+
         OnInventoryChange?.Invoke();
     }
 
