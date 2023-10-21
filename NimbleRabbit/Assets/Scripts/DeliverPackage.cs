@@ -7,9 +7,11 @@ public class DeliverPackage : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
 
         if (other.CompareTag("Player")) {
-            if (PlayerController.instance.packages.Count > 0) {
-                UIManager.instance.DisplayWinScreen();
-                GameState.instance.TogglePause();
+            if (PlayerController.instance.pc.packages.Count > 0) {
+                // TODO() Replace with check of Level Objective completion once implemented.
+                foreach (Package p in PlayerController.instance.pc.packages) {
+                    ((IObjective)p).CheckCompletion();
+                }
             }
         }
     }

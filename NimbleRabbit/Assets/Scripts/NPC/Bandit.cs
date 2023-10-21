@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bandit : Enemy 
+public class Bandit : NPC 
 {
     /// <summary>
-    /// Package that Bandit has stolen.
+    /// Package Collector for packages that Bandit has stolen.
     /// </summary>
-    public Package stolenPackage {get; private set;}
+    public PackageCollector pc {get; private set;} 
 
     /// <summary>
     /// Initialization Pt I.
@@ -15,6 +15,7 @@ public class Bandit : Enemy
     protected override void Awake()
     {
         base.Awake();
+        pc = GetComponent<PackageCollector>();
     }
 
     /// <summary>
@@ -22,50 +23,37 @@ public class Bandit : Enemy
     /// </summary>
     protected override void Start()
     {
-        base.Awake();
-
-        stolenPackage = null;
+        base.Start();
 
         Dictionary<Type, BaseState> states = new Dictionary<Type, BaseState>
         {
             {typeof(IdleState), new IdleState(this)},
             {typeof(ChaseState), new ChaseState(this)},
-            {typeof(AttackState), new AttackState(this)}
+            {typeof(AttackState), new AttackState(this)},
+            {typeof(EngineFailureState), new EngineFailureState(this)}
         };
 
         stateMachine.SetStates(states);
     }
 
     /// <summary>
-    /// Keep chase if we need to steal a package.
+    /// Keep chase if we need to steal a package and see the player.
     /// </summary>
     /// <returns>bool</returns>
-    public override bool KeepChasing()
+    public override bool Chase()
     {
-        if (stolenPackage != null)
+        if (pc.packages.Count > 0 ||
+            PlayerController.instance.pc.packages.Count == 0)
         {
             return false;
         }
 
-        return PlayerController.instance.packages.Count > 0;
-    }
-
-    /// <summary>
-    /// Keep trying to steal if we haven't gotten anything and are in range.
-    /// </summary>
-    /// <returns></returns>
-    public override bool KeepAttacking()
-    {
-        if (stolenPackage != null)
-        {
-            return false;
-        }
-
-        float dist = Vector3.Distance(
-            PlayerController.instance.transform.position,
-            transform.position);
-
-        return dist < attackRange;
+        return CanSee(
+                PlayerController.instance.transform.position,
+                fovMin: 0.25f,
+                visionRangeMin: 10f,
+                visionRangeMax: visionRange,
+                lineOfSight: true);
     }
 
     /// <summary>
@@ -74,7 +62,8 @@ public class Bandit : Enemy
     public override void Attack()
     {
         PlayerController player = PlayerController.instance;
-        List<Package> pkgs = player.packages;
+        List<Package> pkgs = player.pc.packages;
+
         if (pkgs.Count == 0)
         {
             return;
@@ -85,16 +74,16 @@ public class Bandit : Enemy
             0,
             pkgs.Count);
 
-        stolenPackage = pkgs[pkgIdx];
+        Package stolenPackage = pkgs[pkgIdx];
         
-        player.DropPackage(
+        player.pc.DropPackage(
             stolenPackage,
-            transform);
+            this.pc);
 
         Vector3 force = (player.transform.position - transform.position).normalized;
         force *= nav.velocity.magnitude * 2f;
-        player.rb.AddForce(
-            force,
-            ForceMode.Impulse);
+        player.hp.Hit(
+            player.rb,
+            force);
     }
 }

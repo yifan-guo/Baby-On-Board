@@ -10,11 +10,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController instance {get; private set;}
 
-    /// <summary>
-    /// Time that the player can't endure another collision after one.
-    /// </summary>
-    private const float COLLISION_ENDURANCE_TIME_S = 0.5f;
-
     [Header("Input")]
     public InputAction accelerate;
     public InputAction decelerate;
@@ -42,14 +37,19 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded {get; private set;}
 
     /// <summary>
-    /// Packages that player has collected.
-    /// </summary>
-    public List<Package> packages {get; private set;}
-
-    /// <summary>
     /// Reference to Rigidbody.
     /// </summary>
     public Rigidbody rb {get; private set;}
+    /// <summary>
+    /// Reference to HealthManager.
+    /// </summary>
+    public HealthManager hp {get; private set;}
+
+    /// <summary>
+    /// Packages that player has collected.
+    /// </summary>
+    public PackageCollector pc {get; private set;}
+
     /// <summary>
     /// Time of last collision.
     /// </summary>
@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
     {
         instance = this;
         rb = GetComponent<Rigidbody>();
+        hp = GetComponent<HealthManager>();
+        pc = GetComponent<PackageCollector>();
     }    
 
     /// <summary>
@@ -70,7 +72,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-        packages = new List<Package>();
     }
 
     /// <summary>
@@ -139,7 +140,7 @@ public class PlayerController : MonoBehaviour
         Vector3 direction,
         float distance)
     {
-        if (Time.time - lastCollisionTime_s <= COLLISION_ENDURANCE_TIME_S)
+        if (Time.time - lastCollisionTime_s <= HealthManager.PHYSICAL_DAMAGE_DEBOUNCE_S)
         {
             return;
         }
@@ -150,9 +151,6 @@ public class PlayerController : MonoBehaviour
             out hit,
             distance);
 
-        // TODO:
-        // Update this to account for any highspeed collisions with non-static
-        // objects
         if (result == true &&
             hit.collider.gameObject.tag == "NPC")
         {
@@ -166,15 +164,17 @@ public class PlayerController : MonoBehaviour
                 npc.nav.velocity,
                 transform.position - hit.transform.position);
 
-            float force = (myVelocityDot + theirVelocityDot) / 3f;
+            float forceMagnitude = (myVelocityDot + theirVelocityDot) / 3f;
 
-            rb.AddForce(
-                hit.normal * force,
-                ForceMode.Impulse);
+            hp.Hit(
+                rb,
+                hit.normal * forceMagnitude);
 
-            StartCoroutine(npc.Crash(-hit.normal * force));
+            StartCoroutine(npc.Crash(-hit.normal * forceMagnitude));
 
             lastCollisionTime_s = Time.time;
+
+            ReclaimPackage(npc);
         }
     }
 
@@ -262,6 +262,43 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// Reclaim the package from the colliding object if it has a PackageManager
+    /// </summary>
+    private void ReclaimPackage(NPC npc) 
+    {
+        // get the package from the Bandit
+        PackageCollector otherPc = npc.GetComponent<PackageCollector>();
+
+        if (otherPc == null) 
+        {
+            return;
+        }
+
+        List<Package> pkgs = otherPc.packages;
+
+        if (pkgs.Count == 0)
+        {
+            return;
+        }
+
+        npc.inCooldown = true;
+
+        // Randomly pick any package the colliding object has
+        int pkgIdx = UnityEngine.Random.Range(
+            0, 
+            pkgs.Count);
+
+        Package stolenPackage = pkgs[pkgIdx];
+
+        Indicator.Untrack(npc.gameObject);
+        
+        // make the NPC give the package to the Player
+        otherPc.DropPackage(
+            stolenPackage,
+            this.pc);
+    }
+
+    /// <summary>
     /// Interprets user input.
     /// REMOVE ONCE NEW INPUT SYSTEM IS FUNCTIONING
     /// </summary>
@@ -281,50 +318,9 @@ public class PlayerController : MonoBehaviour
         // This is test code to drop the package.
         // Ideally DropPackage() is called elsewhere by something like an enemy.
         if (Input.GetKeyDown(KeyCode.Space) &&
-            packages.Count > 0)
+            this.pc.packages.Count > 0)
         {
-            DropPackage(packages[0]);
-        }
-    }
-
-    /// <summary>
-    /// Add package.
-    /// </summary>
-    /// <param name="pkg"></param>
-    public void CollectPackage(Package pkg)
-    {
-        if (packages.Contains(pkg))
-        {
-            return;
-        }
-
-        packages.Add(pkg);
-        pkg.Collect(transform);
-    }
-
-    /// <summary>
-    /// Drop a package.
-    /// </summary>
-    /// <param name="pkg"></param>
-    /// <param name="thief"></param>
-    public void DropPackage(
-        Package pkg,
-        Transform thief=null)
-    {
-        if (packages.Contains(pkg) == false)
-        {
-            return;
-        }
-
-        packages.Remove(pkg);
-
-        if (thief == null)
-        {
-            pkg.Drop();
-        }
-        else
-        {
-            pkg.Collect(thief);
+            this.pc.DropPackage(this.pc.packages[0]);
         }
     }
 }

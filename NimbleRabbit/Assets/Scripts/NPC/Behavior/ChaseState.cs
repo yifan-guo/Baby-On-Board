@@ -4,17 +4,27 @@ using UnityEngine;
 public class ChaseState : BaseState
 {
     /// <summary>
-    /// Reference to Enemy NPC using this state.
-    /// </summary>
-    protected new Enemy me;
-
-    /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="npc"></param>
-    public ChaseState(Enemy npc) : base(npc)
+    public ChaseState(NPC npc) : base(npc)
     {
-        me = npc;
+        me.stateMachine.OnStateChanged += Reset;
+    }
+
+    /// <summary>
+    /// Reset Chase state.
+    /// </summary>
+    /// <param name="state"></param>
+    private void Reset(BaseState state)
+    {
+        if (state is not ChaseState)
+        {
+            return;
+        }
+
+        me.stateSpeed = me.maxSpeed;
+        me.nav.SetDestination(player.transform.position);
     }
 
     /// <summary>
@@ -29,34 +39,28 @@ public class ChaseState : BaseState
             return null;
         }
 
-        // If there's no player, just idle
-        if (PlayerController.instance == null)
-        {
-            return typeof(IdleState);
-        }
-
         // Attack if we can
         float dist = Vector3.Distance(
             me.transform.position,
-            PlayerController.instance.transform.position);
+            player.transform.position);
 
         if (dist < me.attackRange)
         {
             return typeof(AttackState);
         }
 
-        // Do we still want to chase
-        if (me.KeepChasing() == false)
+        // Continuously update chase location
+        if (me.Chase() == true)
+        {
+            me.nav.SetDestination(player.transform.position);
+        }
+
+        // If we lost sight of the player and have reached the 
+        // last known position, then give up
+        if (me.nav.remainingDistance < 0.1f)
         {
             return typeof(IdleState);
         }
-
-        // TODO:
-        // speed should dynamically change depending on stuff probably
-        // maybe like turns etc. need to see how much is handled by
-        // the navmeshagent component
-        me.nav.speed = me.moveSpeed;
-        me.nav.SetDestination(PlayerController.instance.transform.position);
 
         return null;
     }

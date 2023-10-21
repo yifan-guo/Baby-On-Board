@@ -1,6 +1,10 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
-public class Package : Collectible
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(HealthManager))]
+public class Package : Collectible, IObjective
 {
     /// <summary>
     /// Whether the package has been picked up or not.
@@ -8,12 +12,22 @@ public class Package : Collectible
     public bool isCollected {get; private set;}
 
     /// <summary>
+    /// Reference to HealthManager component.
+    /// </summary>
+    public HealthManager hp {get; private set;}
+
+    /// <summary>
     /// Initialization Pt I.
     /// </summary>
     protected override void Awake()
     {
         base.Awake();
+        hp = GetComponent<HealthManager>();
     }
+
+    public GameObject deliveryLocation;
+
+    public const float DELIVERY_RADIUS = 10f;
 
     /// <summary>
     /// Initialization Pt II.
@@ -21,6 +35,9 @@ public class Package : Collectible
     protected void Start()
     {
         isCollected = false;
+        Indicator.Track(gameObject);
+        // Subscribe to health change events to check if package is destroyed.
+        hp.OnHealthChange += ((IObjective)this).CheckFailure;
     }
 
     /// <summary>
@@ -35,7 +52,7 @@ public class Package : Collectible
             return;
         }
 
-        PlayerController.instance.CollectPackage(this);
+        PlayerController.instance.pc.CollectPackage(this);
     }
 
     /// <summary>
@@ -49,7 +66,7 @@ public class Package : Collectible
             return;
         }
 
-        // Package is only collectable once it is no 
+        // Package is only collectable once it is no
         // longer underneath the player
         isCollected = false;
     }
@@ -62,14 +79,24 @@ public class Package : Collectible
         isCollected = true;
         coll.enabled = false;
 
+        ((IObjective)this).StartObjective();
+
         transform.parent = owner;
 
         // TODO:
         // Update as placeholders for player and NPCs change.
         // Don't even know if we want it to sit on top of the vehicles.
-        transform.localPosition = (owner.tag == "Player") ?
-            new Vector3(0f, 0.35f, 0f) :
-            Vector3.up * ((owner.GetComponent<Collider>().bounds.size.y) + (transform.localScale.y / 2f));
+
+        if (owner.tag == "Player")
+        {
+            Indicator.Untrack(gameObject);
+            transform.localPosition = new Vector3(0f, 0.35f, 0f);
+        }
+        else
+        {
+            Indicator.Track(owner.gameObject);
+            transform.localPosition = Vector3.up * ((owner.GetComponent<Collider>().bounds.size.y + transform.localScale.y) / 2f);
+        }
     }
 
     /// <summary>
@@ -83,7 +110,89 @@ public class Package : Collectible
         Vector3 pos = transform.parent.position;
         pos.y = transform.localScale.y / 2f;
         transform.position = pos;
-
         transform.parent = null;
+
+        Indicator.Track(gameObject);
     }
+
+    public string _name;
+    public string Name
+    {
+        get { return _name; }
+    }
+
+    public string _description;
+    public string Description
+    {
+        get { return _description; }
+    }
+
+    private IObjective.Status _status = IObjective.Status.NotStarted;
+    public IObjective.Status ObjectiveStatus
+    {
+        get { return _status; }
+        set { _status = value; }
+    }
+
+    private float _startTime;
+    public float StartTime
+    {
+        get { return _startTime; }
+        set { _startTime = value; }
+    }
+
+    private float _endTime;
+    public float EndTime
+    {
+        get { return _endTime; }
+        set { _endTime = value; }
+    }
+
+    private List<IObjective> _prereqs = new List<IObjective>();
+    public List<IObjective> prereqs
+    {
+        get { return _prereqs; }
+    }
+
+    private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
+    public IObjective.PrereqOperator prereqCompletionOperator
+    {
+        get { return _prereqCompletionOperator; }
+    }
+
+    private IObjective.PrereqOperator _prereqFailureOperator = IObjective.PrereqOperator.AND;
+    public IObjective.PrereqOperator prereqFailureOperator
+    {
+        get { return _prereqFailureOperator; }
+    }
+
+    public event Action OnObjectiveUpdated;
+
+    public bool PrimaryCompletionCondition()
+    {
+        if (deliveryLocation == null)
+        {
+            Debug.Log("No delivery location set for package.");
+            return false;
+        }
+        else
+        {
+            Debug.Log("Checking distance to delivery location.");
+            float distance = Vector3.Distance(transform.position, deliveryLocation.transform.position);
+            Debug.Log("Distance: " + distance);
+            return Vector3.Distance(transform.position, deliveryLocation.transform.position) < DELIVERY_RADIUS;
+        }
+    }
+    public bool PrimaryFailureCondition()
+    {
+        Debug.Log("Checking if package is destroyed.");
+        Debug.Log("Current health: " + hp.currentHealth);
+        return hp.currentHealth <= 0f;
+    }
+
+    public void RaiseObjectiveUpdated()
+    {
+        OnObjectiveUpdated?.Invoke();
+    }
+
 }
