@@ -1,8 +1,10 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(HealthManager))]
-public class Package : Collectible
+public class Package : Collectible, IObjective
 {
     /// <summary>
     /// Whether the package has been picked up or not.
@@ -23,6 +25,10 @@ public class Package : Collectible
         hp = GetComponent<HealthManager>();
     }
 
+    public GameObject deliveryLocation;
+
+    public const float DELIVERY_RADIUS = 10f;
+
     /// <summary>
     /// Initialization Pt II.
     /// </summary>
@@ -30,6 +36,8 @@ public class Package : Collectible
     {
         isCollected = false;
         Indicator.Track(gameObject);
+        // Subscribe to health change events to check if package is destroyed.
+        hp.OnHealthChange += ((IObjective)this).CheckFailure;
     }
 
     /// <summary>
@@ -58,7 +66,7 @@ public class Package : Collectible
             return;
         }
 
-        // Package is only collectable once it is no 
+        // Package is only collectable once it is no
         // longer underneath the player
         isCollected = false;
     }
@@ -70,6 +78,8 @@ public class Package : Collectible
     {
         isCollected = true;
         coll.enabled = false;
+
+        ((IObjective)this).StartObjective();
 
         transform.parent = owner;
 
@@ -104,4 +114,85 @@ public class Package : Collectible
 
         Indicator.Track(gameObject);
     }
+
+    public string _name;
+    public string Name
+    {
+        get { return _name; }
+    }
+
+    public string _description;
+    public string Description
+    {
+        get { return _description; }
+    }
+
+    private IObjective.Status _status = IObjective.Status.NotStarted;
+    public IObjective.Status ObjectiveStatus
+    {
+        get { return _status; }
+        set { _status = value; }
+    }
+
+    private float _startTime;
+    public float StartTime
+    {
+        get { return _startTime; }
+        set { _startTime = value; }
+    }
+
+    private float _endTime;
+    public float EndTime
+    {
+        get { return _endTime; }
+        set { _endTime = value; }
+    }
+
+    private List<IObjective> _prereqs = new List<IObjective>();
+    public List<IObjective> prereqs
+    {
+        get { return _prereqs; }
+    }
+
+    private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
+    public IObjective.PrereqOperator prereqCompletionOperator
+    {
+        get { return _prereqCompletionOperator; }
+    }
+
+    private IObjective.PrereqOperator _prereqFailureOperator = IObjective.PrereqOperator.AND;
+    public IObjective.PrereqOperator prereqFailureOperator
+    {
+        get { return _prereqFailureOperator; }
+    }
+
+    public event Action OnObjectiveUpdated;
+
+    public bool PrimaryCompletionCondition()
+    {
+        if (deliveryLocation == null)
+        {
+            Debug.Log("No delivery location set for package.");
+            return false;
+        }
+        else
+        {
+            Debug.Log("Checking distance to delivery location.");
+            float distance = Vector3.Distance(transform.position, deliveryLocation.transform.position);
+            Debug.Log("Distance: " + distance);
+            return Vector3.Distance(transform.position, deliveryLocation.transform.position) < DELIVERY_RADIUS;
+        }
+    }
+    public bool PrimaryFailureCondition()
+    {
+        Debug.Log("Checking if package is destroyed.");
+        Debug.Log("Current health: " + hp.currentHealth);
+        return hp.currentHealth <= 0f;
+    }
+
+    public void RaiseObjectiveUpdated()
+    {
+        OnObjectiveUpdated?.Invoke();
+    }
+
 }

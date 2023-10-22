@@ -8,8 +8,10 @@ public class DeliverPackage : MonoBehaviour
 
         if (other.CompareTag("Player")) {
             if (PlayerController.instance.pc.packages.Count > 0) {
-                UIManager.instance.DisplayWinScreen();
-                GameState.instance.TogglePause();
+                // TODO() Replace with check of Level Objective completion once implemented.
+                foreach (Package p in PlayerController.instance.pc.packages) {
+                    ((IObjective)p).CheckCompletion();
+                }
             }
         }
     }
