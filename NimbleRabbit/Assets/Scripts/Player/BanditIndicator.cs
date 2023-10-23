@@ -47,7 +47,7 @@ public class BanditIndicator : MonoBehaviour
         //calculate the distance from bandit to player car
         distance = distVector.magnitude;
 
-        if (bandit.stateMachine.currentState.GetType()!= typeof(IdleState))
+        if (bandit.stateMachine.currentState.GetType() == typeof(ChaseState) || bandit.stateMachine.currentState.GetType() == typeof(AttackState))
         {
             rend.enabled = true;
             //find angle between the bandit and forward direction to determine the indicator's rotation
