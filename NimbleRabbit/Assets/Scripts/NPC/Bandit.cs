@@ -30,6 +30,7 @@ public class Bandit : NPC
             {typeof(IdleState), new IdleState(this)},
             {typeof(ChaseState), new ChaseState(this)},
             {typeof(AttackState), new AttackState(this)},
+            {typeof(FleeState), new FleeState(this)},
             {typeof(EngineFailureState), new EngineFailureState(this)}
         };
 

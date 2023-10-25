@@ -75,4 +75,33 @@ public class PackageCollector : MonoBehaviour
         }
         OnInventoryChange?.Invoke();
     }
+
+    /// <summary>
+    /// Finish a package's lifecycle.
+    /// </summary>
+    /// <param name="pkg"></param>
+    /// <param name="objectiveStatus"></param>
+    public void Deliver(
+        Package pkg,
+        bool objectiveStatus)
+    {
+        IObjective pkgObjective = (IObjective) pkg;
+
+        // Update objective
+        if (objectiveStatus == true)
+        {
+            pkgObjective.Complete();
+        }
+        else
+        {
+            pkgObjective.Fail();
+        }
+
+        // Untrack in case we are a bandit
+        Indicator.Untrack(pkg.transform.parent.gameObject);
+
+        // Remove from play
+        packages.Remove(pkg);
+        pkg.gameObject.SetActive(false);
+    }
 }

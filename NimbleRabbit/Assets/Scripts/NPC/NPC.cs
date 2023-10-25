@@ -83,6 +83,9 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     public StateMachine stateMachine {get; protected set;}
 
+    /// <summary>
+    /// Dimensions of the box collider used for this NPC.
+    /// </summary>
     public Vector3 dimensions {get; protected set;}
 
     /// <summary>
@@ -242,6 +245,33 @@ public abstract class NPC : MonoBehaviour
     }
 
     /// <summary>
+    /// Get a random point on the NavMesh.
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetRandomNavMeshPoint(float range = 100f)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            Vector3 direction = UnityEngine.Random.insideUnitSphere * range;
+            Vector3 pos = transform.position + direction;
+
+            NavMeshHit hit;
+            bool result = NavMesh.SamplePosition(
+                pos,
+                out hit,
+                1.0f,
+                NavMesh.AllAreas);
+            
+            if (result == true)
+            {
+                return hit.position;
+            }
+        }
+
+        return transform.position;
+    }
+
+    /// <summary>
     /// Conduct the designated turn.
     /// </summary>
     /// <param name="linkData"></param>
@@ -292,7 +322,11 @@ public abstract class NPC : MonoBehaviour
             yield return null;
         }
 
-        nav.CompleteOffMeshLink();
+        if (nav.enabled == true)
+        {
+            nav.CompleteOffMeshLink();
+        }
+
         isTurning = false;
     }
 
