@@ -35,7 +35,19 @@ public interface IObjective
     /// </summary>
     public float EndTime { get; set; }
 
-    public float ElapsedDuration
+    public float TimeElapsedSinceStart
+    {
+        get
+        {
+            if (StartTime == 0)
+            {
+                return 0f;
+            }
+            return Time.time - StartTime;
+        }
+    }
+
+    public float DurationAtComplete
     {
         get
         {
@@ -60,6 +72,7 @@ public interface IObjective
         AND,
         OR
     }
+
     /// <summary>
     /// This operator determines whether completion requires all prereqs to be complete or just one.
     /// </summary>

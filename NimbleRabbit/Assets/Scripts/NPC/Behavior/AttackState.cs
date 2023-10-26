@@ -22,7 +22,11 @@ public class AttackState : BaseState
             return typeof(IdleState);
         }
 
-        me.Attack();
+        if (me.isCrashed == true)
+        {
+            me.Attack();
+            return typeof(IdleState);
+        }
 
         return null;
     }

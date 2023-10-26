@@ -65,6 +65,15 @@ public class IdleState : BaseState
             return typeof(EngineFailureState);
         }
 
+        if (me.role == NPC.Role.Bandit)
+        {
+            Bandit bandit = (Bandit) me;
+            if (bandit.pc.packages.Count > 0)
+            {
+                return typeof(FleeState);
+            }
+        }
+
         // See if we want to chase
         if (me.Chase() == true)
         {
@@ -109,40 +118,15 @@ public class IdleState : BaseState
         if (waitingOnPath == true ||
             me.nav.remainingDistance < (me.dimensions.z / 2f))
         {
-            Vector3 pos = GetRandomNavMeshPoint();
+            Vector3 pos = me.GetRandomNavMeshPoint();
+            if (pos != me.transform.position)
+            {
+                waitingOnPath = true;
+            }
+
             me.nav.SetDestination(pos);
         }
 
         return null;
-    }
-
-    /// <summary>
-    /// Get a random point on the NavMesh.
-    /// </summary>
-    /// <returns></returns>
-    private Vector3 GetRandomNavMeshPoint()
-    {
-        const float wanderRange = 100f;
-
-        for (int i = 0; i < 30; i++)
-        {
-            Vector3 direction = UnityEngine.Random.insideUnitSphere * wanderRange;
-            Vector3 pos = me.transform.position + direction;
-
-            NavMeshHit hit;
-            bool result = NavMesh.SamplePosition(
-                pos,
-                out hit,
-                1.0f,
-                NavMesh.AllAreas);
-            
-            if (result == true)
-            {
-                waitingOnPath = true;
-                return hit.position;
-            }
-        }
-
-        return me.transform.position;
     }
 }
