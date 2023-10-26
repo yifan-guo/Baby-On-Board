@@ -212,53 +212,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
-        //////////////////////////////
-        // VEHICLE WHEEL ANIMATIONS //
-        //////////////////////////////
-
-        // Rotate wheels while in motion
-        float rotationSpeed = rb.velocity.magnitude * wheelRotationSpeed;
-        foreach (GameObject wheel in frontWheels)
-        {
-            //wheel.transform.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
-        }
-        foreach (GameObject wheel in backWheels)
-        {
-            wheel.transform.Rotate(Vector3.right, rotationSpeed * Time.deltaTime);
-        }
-
-        // Turn the front wheels
-        float rotationAngle = turnVal * wheelTurnSpeed * Time.deltaTime;
-        foreach (GameObject wheel in frontWheels)
-        {
-            Vector3 currentRotation = wheel.transform.localRotation.eulerAngles;
-            float currentRotationY = currentRotation.y;
-
-            // Calculate the new rotation angle
-            float newRotationY = currentRotationY + rotationAngle;
-
-            // Adjust the range from 0-360 to -180-180
-            // If not in place, issues occur when turning left
-            if (newRotationY > 180)
-            {
-                newRotationY -= 360;
-            }
-
-            // Clamp the new rotation within the desired range
-            newRotationY = Mathf.Clamp(newRotationY, -maxTurnAngle, maxTurnAngle);
-            wheel.transform.localRotation = Quaternion.Euler(currentRotation.x, newRotationY, currentRotation.z);
-        }
-
-        // Return front wheels back to neutral position when not turning
-        if (turnVal == 0)
-        {
-            foreach (GameObject wheel in frontWheels)
-            {
-                wheel.transform.localRotation = Quaternion.Lerp(wheel.transform.localRotation, Quaternion.identity, Time.deltaTime * returnSpeed);
-            }
-        }
-
     }
 
     /// <summary>
