@@ -110,25 +110,20 @@ public class UIManager : MonoBehaviour
     public void UpdateWinLoseDisplay()
     {
         // Placeholder until level logic is complete. We just check if any package has completed or failed.
-        foreach (Package pkg in PlayerController.instance.pc.packages)
-        {
-            if (pkg.ObjectiveStatus == IObjective.Status.Failed)
-            {
-                // TODO() Display lose screen.
-                Debug.Log("Lose screen placeholder.");
-                return;
-            }
-            if (pkg.ObjectiveStatus == IObjective.Status.Complete)
-            {
-                DisplayWinScreen();
-                GameState.instance.TogglePause();
-            }
+        if (level.PrimaryCompletionCondition()) {
+            DisplayWinScreen();
+            GameState.instance.TogglePause();
+            return;
+        } 
+        if (level.PrimaryFailureCondition()) {
+            // TODO() Display lose screen.
+            Debug.Log("Lose screen placeholder.");
+            return;
         }
     }
 
-    // TODO() UI Manager or GameState should maintain a list of Levels (Objective implementations)
-    // and listen to their failure and completion events.
+    // TODO() UI Manager or GameState should maintain a Level (Objective implementation)
+    // and listen to its failure and completion events.
     // When a level is completed, it should display the win screen.
     // When a level is failed, it should display the lose screen.
-    // Only one Level Objective can be active at a time.
 }
