@@ -115,7 +115,7 @@ public class Package : Collectible, IObjective
         Indicator.Track(gameObject);
     }
 
-    public string _name;
+    public string _name = "Package";
     public string Name
     {
         get { return _name; }

@@ -56,7 +56,13 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
 
     // make the list of interface objects visible in Unity Editor
     public void Start() {
-        _prereqs = ControlledPrereqs.SelectMany(t => GetComponents(typeof(Component))).OfType<IObjective>().ToList();
+        // assign each IObjective from the ControlledPrereqs Transform in the Unity Editor to the prereqs
+        foreach (Transform t in ControlledPrereqs) {
+            IObjective i = (IObjective) t.GetComponent(typeof(IObjective));
+            if (i != null) {
+                _prereqs.Add(i);
+            }
+        }
     }
     
     private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;

@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class DeliverPackage : MonoBehaviour
 {
+    public GameObject GameState;
+
+    private IObjective _level;
+
+    private void Start() {
+        IObjective level = (IObjective) GameState.GetComponent(typeof(IObjective));
+        if (level == null) {
+            Debug.Log("Game State is missing a IObjective component");
+        } else {
+            _level = level;
+        }
+    }
     private void OnTriggerEnter(Collider other) {
 
         if (other.CompareTag("Player")) {

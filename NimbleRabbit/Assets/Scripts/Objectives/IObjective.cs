@@ -105,7 +105,7 @@ public interface IObjective
     {
         if (ObjectiveStatus != Status.InProgress)
         {
-            Debug.Log("Objective is not in progress: " + Name);
+            Debug.Log("Objective is not in progress: " + Name + "\nStatus: " + ObjectiveStatus.ToString());
             return;
         }
         if (prereqCompletionOperator == PrereqOperator.AND)
