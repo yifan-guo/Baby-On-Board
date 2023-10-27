@@ -56,7 +56,7 @@ public class Indicator : MonoBehaviour
         indicator.gameObject.SetActive(true);
 
         trackedObjectsMap.Add(
-            obj.GetInstanceID(),        
+            id,
             indicator);
     }
 
@@ -67,6 +67,12 @@ public class Indicator : MonoBehaviour
     /// <returns></returns>
     public static void Untrack(GameObject obj)
     {
+        // Initialize object map
+        if (trackedObjectsMap == null)
+        {
+            trackedObjectsMap = new Dictionary<int, Indicator>();
+        }
+
         int id = obj.GetInstanceID();
 
         // Verify that it is actually being tracked

@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public static UIManager instance {get; private set;}
 
+    [Header("Canvas References")]
+
     /// <summary>
     /// Reference to the player's health display.
     /// </summary>
@@ -33,12 +35,24 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject winPopup;
 
+    [Header("Non-Canvas References")]
+
+    /// <summary>
+    /// Parent object for bandit indicators.
+    /// </summary>
+    public GameObject banditIndicators;
+
     [Header("Prefabs")]
 
     /// <summary>
     /// Reference to Indicator Prefab that will be cloned.
     /// </summary>
     public Indicator indicatorPrefab;
+
+    /// <summary>
+    /// Reference to BanditIndicator Prefab that will be cloned.
+    /// </summary>
+    public BanditIndicator banditIndicatorPrefab;
 
     /// <summary>
     /// Reference to Canvas component.
@@ -75,6 +89,7 @@ public class UIManager : MonoBehaviour
     public void Restart()
     {
         Indicator.ClearAll();
+        BanditIndicator.ClearAll();
     }
 
     /// <summary>

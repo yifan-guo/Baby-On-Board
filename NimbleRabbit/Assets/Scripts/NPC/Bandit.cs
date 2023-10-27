@@ -35,6 +35,22 @@ public class Bandit : NPC
         };
 
         stateMachine.SetStates(states);
+        stateMachine.OnStateChanged += SetBanditIndicator;
+    }
+
+    /// <summary>
+    /// Toggles a BanditIndicator for this bandit.
+    /// </summary>
+    protected void SetBanditIndicator(BaseState state)
+    {
+        if (BanditIndicator.ACTIVE_STATES.Contains(state.GetType()) == true)
+        {
+            BanditIndicator.Track(this);
+        }
+        else
+        {
+            BanditIndicator.Untrack(this);
+        }
     }
 
     /// <summary>
