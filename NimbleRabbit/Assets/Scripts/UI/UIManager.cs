@@ -18,6 +18,10 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public PackageHPDisplayUpdater packageHP;
 
+    private IObjective level;
+
+    public Transform ControllerLevel;
+
     /// <summary>
     /// Indicator pool parent object.
     /// </summary>
@@ -67,6 +71,7 @@ public class UIManager : MonoBehaviour
 
         PlayerController.instance.pc.OnInventoryChange += SubscribeToPackages;
 
+        level = (IObjective) ControllerLevel.GetComponent(typeof(IObjective));
     }
 
     /// <summary>

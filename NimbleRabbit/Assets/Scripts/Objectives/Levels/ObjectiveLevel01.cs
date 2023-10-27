@@ -1,8 +1,12 @@
+using UnityEngine;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
-public class ObjectiveLevel01 : IObjective
+
+public class ObjectiveLevel01 : MonoBehaviour, IObjective
 {
+    
     private string _name = "Level 1: A Simple Delivery";
     public string Name
     {
@@ -40,12 +44,21 @@ public class ObjectiveLevel01 : IObjective
     ///  This is where we'll support multiple packages. A level is basically just a set of packages,
     ///  which are also objectives.
     /// </summary>
+
     private List<IObjective> _prereqs = new List<IObjective>();
+    
     public List<IObjective> prereqs
     {
         get { return _prereqs; }
     }
 
+    public Transform[] ControlledPrereqs;
+
+    // make the list of interface objects visible in Unity Editor
+    public void Start() {
+        _prereqs = ControlledPrereqs.SelectMany(t => GetComponents(typeof(Component))).OfType<IObjective>().ToList();
+    }
+    
     private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
     public IObjective.PrereqOperator prereqCompletionOperator
     {
@@ -76,6 +89,4 @@ public class ObjectiveLevel01 : IObjective
     {
         OnObjectiveUpdated?.Invoke();
     }
-
-
 }
