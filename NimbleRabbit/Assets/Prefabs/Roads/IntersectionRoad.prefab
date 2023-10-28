@@ -60,7 +60,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3941237695982806800}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6423751513512721400}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: End
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -429,6 +429,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1127345876892524626, guid: 8b8be6d5d0ad7bc40a4309f000698b1b, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1729142184187970274, guid: 8b8be6d5d0ad7bc40a4309f000698b1b, type: 3}
       propertyPath: m_Bidirectional
       value: 0
@@ -484,6 +488,10 @@ PrefabInstance:
     - target: {fileID: 8932661319949491003, guid: 8b8be6d5d0ad7bc40a4309f000698b1b, type: 3}
       propertyPath: m_Bidirectional
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8964141664307881354, guid: 8b8be6d5d0ad7bc40a4309f000698b1b, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b8be6d5d0ad7bc40a4309f000698b1b, type: 3}

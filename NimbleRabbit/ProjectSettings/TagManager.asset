@@ -6,8 +6,6 @@ TagManager:
   tags:
   - NPC
   - Road
-  - Sidewalk
-  - Building
   - Ground
   layers:
   - Default
@@ -17,8 +15,8 @@ TagManager:
   - Water
   - UI
   - Minimap
-  - RoadPavement
   - 
+  - PostProcessing
   - 
   - 
   - 

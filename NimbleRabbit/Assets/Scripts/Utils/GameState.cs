@@ -40,6 +40,8 @@ public class GameState : MonoBehaviour
     {
         UIManager.instance.Restart();
 
+        BanditHQ.Restart();
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         if (isPaused)

@@ -30,10 +30,27 @@ public class Bandit : NPC
             {typeof(IdleState), new IdleState(this)},
             {typeof(ChaseState), new ChaseState(this)},
             {typeof(AttackState), new AttackState(this)},
+            {typeof(FleeState), new FleeState(this)},
             {typeof(EngineFailureState), new EngineFailureState(this)}
         };
 
         stateMachine.SetStates(states);
+        stateMachine.OnStateChanged += SetBanditIndicator;
+    }
+
+    /// <summary>
+    /// Toggles a BanditIndicator for this bandit.
+    /// </summary>
+    protected void SetBanditIndicator(BaseState state)
+    {
+        if (BanditIndicator.ACTIVE_STATES.Contains(state.GetType()) == true)
+        {
+            BanditIndicator.Track(this);
+        }
+        else
+        {
+            BanditIndicator.Untrack(this);
+        }
     }
 
     /// <summary>
