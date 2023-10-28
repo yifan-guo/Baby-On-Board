@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2363655056809029823}
   - component: {fileID: 2363655056810134931}
   - component: {fileID: 4936348306833448621}
+  - component: {fileID: 3706867043740800465}
   m_Layer: 0
   m_Name: Box_Destructible
   m_TagString: Untagged
@@ -96,4 +97,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06755f322c76ed8499e5060d2e823df0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particlePrefab: {fileID: 3045793923467689969, guid: b941b5c5fabb24a42adb75906bfa0821, type: 3}
+  particlePrefab: {fileID: 135163782849937220, guid: b941b5c5fabb24a42adb75906bfa0821, type: 3}
+--- !u!65 &3706867043740800465
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2363655056807979921}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5543213, y: 1.5543231, z: 1.5543232}
+  m_Center: {x: 0, y: 0.77716154, z: 0}
