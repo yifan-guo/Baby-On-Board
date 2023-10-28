@@ -24,7 +24,6 @@ public class ChaseState : BaseState
         }
 
         me.stateSpeed = me.maxSpeed;
-        me.nav.SetDestination(player.transform.position);
     }
 
     /// <summary>
