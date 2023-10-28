@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 578518276289691974}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Wheel_rr
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,7 +133,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2, y: 1.5, z: 5.25}
-  m_Center: {x: 0, y: -0.25, z: 0.1}
+  m_Center: {x: 0, y: 0.75, z: 0.1}
 --- !u!195 &2168951672934985437
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -152,9 +152,9 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 0
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 9
+  m_Height: 1.5
+  m_BaseOffset: 0
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!54 &7495266101085905962
 Rigidbody:
@@ -213,12 +213,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   role: 0
-  maxSpeed: 0
+  maxSpeed: 10
   attackRange: 0
   visionRange: 0
   stateSpeed: 0
   inCooldown: 0
-  isTurning: 0
+  isLinking: 0
   isCrashed: 0
 --- !u!1 &578518276291735628
 GameObject:
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 578518276289697644}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Glass
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 578518276289667974}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Plates
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -399,7 +399,7 @@ GameObject:
   - component: {fileID: 578518276290022564}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Wheel_fl
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -482,7 +482,7 @@ GameObject:
   - component: {fileID: 578518276290008094}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_SteeringW
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 578518276290033916}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Wheel_fr
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -648,7 +648,7 @@ GameObject:
   - component: {fileID: 578518276290049042}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Wheel_rl
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -729,7 +729,7 @@ GameObject:
   - component: {fileID: 5521230394767916688}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -742,7 +742,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2805045838968460399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.17, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -770,7 +770,7 @@ GameObject:
   - component: {fileID: 6721455458636688739}
   m_Layer: 0
   m_Name: SM_Veh_Car_Taxi_Body
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

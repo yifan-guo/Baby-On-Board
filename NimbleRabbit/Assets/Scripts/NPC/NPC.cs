@@ -51,7 +51,7 @@ public abstract class NPC : MonoBehaviour
     /// <summary>
     /// Whether or not NPC is actively completing a turn.
     /// </summary>
-    public bool isTurning;
+    public bool isLinking;
 
     /// <summary>
     /// Whether or not NPC just suffered a crash.
@@ -114,7 +114,7 @@ public abstract class NPC : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         // If turning on an OffMeshLink, let the turn control us
-        if (isTurning == true)
+        if (isLinking == true)
         {
             return;
         }
@@ -122,10 +122,10 @@ public abstract class NPC : MonoBehaviour
         nav.speed = stateSpeed;
 
         // Check for a turn
-        if (isTurning == false &&
+        if (isLinking == false &&
             nav.isOnOffMeshLink == true)
         {
-            StartCoroutine(Turn(nav.currentOffMeshLinkData));
+            StartCoroutine(TakeLink(nav.currentOffMeshLinkData));
         }
 
         // Only drive forward if the next location
@@ -248,7 +248,7 @@ public abstract class NPC : MonoBehaviour
     /// Get a random point on the NavMesh.
     /// </summary>
     /// <returns></returns>
-    public Vector3 GetRandomNavMeshPoint(float range = 100f)
+    public Vector3 GetRandomNavMeshPoint(float range = 200f)
     {
         for (int i = 0; i < 30; i++)
         {
@@ -272,17 +272,15 @@ public abstract class NPC : MonoBehaviour
     }
 
     /// <summary>
-    /// Conduct the designated turn.
+    /// Traverse the designated link.
     /// </summary>
     /// <param name="linkData"></param>
     /// <returns></returns>
-    public IEnumerator Turn(OffMeshLinkData linkData)
+    public IEnumerator TakeLink(OffMeshLinkData linkData)
     {
-        isTurning = true;
+        isLinking = true;
 
-        // Add vehicle height to turn destination
         Vector3 endPos = linkData.endPos;
-        endPos.y += (dimensions.y / 2f);
 
         // Estimate turn time
         float startTime = Time.time;
@@ -311,13 +309,10 @@ public abstract class NPC : MonoBehaviour
                     (Time.time - startTime) / (4 * duration_s));
             }
 
-            if (CanSee(endPos) == true)
-            {
-                transform.position = Vector3.MoveTowards(
-                    transform.position,
-                    endPos,
-                    nav.speed * Time.deltaTime);
-            }
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                endPos,
+                nav.speed * Time.deltaTime);
 
             yield return null;
         }
@@ -327,7 +322,7 @@ public abstract class NPC : MonoBehaviour
             nav.CompleteOffMeshLink();
         }
 
-        isTurning = false;
+        isLinking = false;
     }
 
     /// <summary>
