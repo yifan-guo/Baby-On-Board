@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// Require Collider
-// Require AudioSource
+
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Rigidbody))]
 public class Destructible : MonoBehaviour
 {
-    //public GameObject particlePrefab;
 
     public ParticleSystem particlePrefab;
+    public Vector3 particleSpawnOffset;
 
 
     void Start()
@@ -24,13 +26,16 @@ public class Destructible : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //Transform particleTransform = new Transform();
-        // Spawn particle prefab
-    
-        //GameObject particle = Instantiate(particlePrefab, gameObject.transform.position, Quaternion.identity);
-        ParticleSystem psPrefab = Instantiate(particlePrefab, gameObject.transform.position, Quaternion.identity) as ParticleSystem;
-        Destroy(psPrefab, psPrefab.main.duration);
-        Destroy(gameObject);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // Spawn particle prefab
+            Quaternion spawnRotation = Quaternion.Euler(-90f, 0f, 0f);
+            Vector3 spawnPosition = gameObject.transform.position + particleSpawnOffset;
+            ParticleSystem psPrefab = Instantiate(particlePrefab, spawnPosition, spawnRotation) as ParticleSystem;
+            Destroy(psPrefab, psPrefab.main.duration);
+            Destroy(gameObject);
+        }
+        
 
     }
 }
