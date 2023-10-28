@@ -35,19 +35,7 @@ public interface IObjective
     /// </summary>
     public float EndTime { get; set; }
 
-    public float TimeElapsedSinceStart
-    {
-        get
-        {
-            if (StartTime == 0)
-            {
-                return 0f;
-            }
-            return Time.time - StartTime;
-        }
-    }
-
-    public float DurationAtComplete
+    public float ElapsedDuration
     {
         get
         {
@@ -72,7 +60,6 @@ public interface IObjective
         AND,
         OR
     }
-
     /// <summary>
     /// This operator determines whether completion requires all prereqs to be complete or just one.
     /// </summary>
@@ -118,7 +105,6 @@ public interface IObjective
     {
         if (ObjectiveStatus != Status.InProgress)
         {
-            Debug.Log("Objective is not in progress: " + Name);
             return;
         }
         if (prereqCompletionOperator == PrereqOperator.AND)

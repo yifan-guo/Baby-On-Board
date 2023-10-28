@@ -20,6 +20,10 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public PackageHPDisplayUpdater packageHP;
 
+    private IObjective level;
+
+    public Transform ControllerLevel;
+
     /// <summary>
     /// Indicator pool parent object.
     /// </summary>
@@ -81,6 +85,10 @@ public class UIManager : MonoBehaviour
 
         PlayerController.instance.pc.OnInventoryChange += SubscribeToPackages;
 
+        // interface objects are not visible in the Unity Editor, so the workaround is to
+        // get the level from a Transform and assign it to the interface object
+        level = (IObjective) ControllerLevel.GetComponent(typeof(IObjective));
+        level.StartObjective();
     }
 
     /// <summary>
@@ -117,28 +125,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// UI Manager or GameState maintains a Level (Objective implementation)
+    /// and listens to its failure and completion events.
+    /// When a level is completed, it should display the win screen.
+    /// When a level is failed, it should display the lose screen.
+    /// </summary>
     public void UpdateWinLoseDisplay()
     {
-        // Placeholder until level logic is complete. We just check if any package has completed or failed.
-        foreach (Package pkg in PlayerController.instance.pc.packages)
-        {
-            if (pkg.ObjectiveStatus == IObjective.Status.Failed)
-            {
-                // TODO() Display lose screen.
-                Debug.Log("Lose screen placeholder.");
-                return;
-            }
-            if (pkg.ObjectiveStatus == IObjective.Status.Complete)
-            {
-                DisplayWinScreen();
-                GameState.instance.TogglePause();
-            }
+        level.CheckCompletion();
+        if (level.ObjectiveStatus == IObjective.Status.Complete) {
+            DisplayWinScreen();
+            GameState.instance.TogglePause();
+            return;
+        } 
+        level.CheckFailure();
+        if (level.ObjectiveStatus == IObjective.Status.Failed) {
+            // TODO() Display lose screen.
+            Debug.Log("Lose screen placeholder.");
+            return;
         }
     }
-
-    // TODO() UI Manager or GameState should maintain a list of Levels (Objective implementations)
-    // and listen to their failure and completion events.
-    // When a level is completed, it should display the win screen.
-    // When a level is failed, it should display the lose screen.
-    // Only one Level Objective can be active at a time.
 }
