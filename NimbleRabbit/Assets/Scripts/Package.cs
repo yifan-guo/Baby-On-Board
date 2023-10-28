@@ -29,6 +29,8 @@ public class Package : Collectible, IObjective
 
     public const float DELIVERY_RADIUS = 10f;
 
+    public float TTLAfterPickupSeconds = 12f;
+
     /// <summary>
     /// Initialization Pt II.
     /// </summary>
@@ -80,6 +82,8 @@ public class Package : Collectible, IObjective
         coll.enabled = false;
 
         ((IObjective)this).StartObjective();
+        // Deferred check to see if the package is delivered by TTL
+        Invoke("CheckCompletionOnTTL", TTLAfterPickupSeconds + 0.01f);
 
         transform.parent = owner;
 
@@ -185,14 +189,41 @@ public class Package : Collectible, IObjective
     }
     public bool PrimaryFailureCondition()
     {
+        bool healthFailed = false;
         Debug.Log("Checking if package is destroyed.");
         Debug.Log("Current health: " + hp.currentHealth);
-        return hp.currentHealth <= 0f;
+        healthFailed = hp.currentHealth <= 0f;
+        if (healthFailed) {
+            Debug.Log("FAIL: package health below zero");
+        }
+
+        Debug.Log("Checking TTL");
+        Debug.Log("TTL: " + TTLAfterPickupSeconds);
+        Debug.Log("Time elapsed since start: " + ((IObjective)(this)).ElapsedDuration);
+        Debug.Log("Start time: " + ((IObjective)(this)).StartTime);
+        Debug.Log("Current time: " + Time.time);
+        bool ttlFailed = false;
+        if (isCollected)
+        {
+             ttlFailed = ((IObjective)(this)).ElapsedDuration > TTLAfterPickupSeconds;
+        }
+        if (ttlFailed) {
+            Debug.Log("FAIL: package TTL exceeded");
+        }
+
+        return healthFailed || ttlFailed;
+
     }
 
     public void RaiseObjectiveUpdated()
     {
         OnObjectiveUpdated?.Invoke();
+    }
+
+    public void CheckCompletionOnTTL()
+    {
+        Debug.Log("Checking failure on TTL");
+        ((IObjective)this).CheckFailure();
     }
 
 }
