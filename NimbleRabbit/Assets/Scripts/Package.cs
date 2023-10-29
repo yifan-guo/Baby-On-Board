@@ -27,7 +27,7 @@ public class Package : Collectible, IObjective
 
     public GameObject deliveryLocation;
 
-    public const float DELIVERY_RADIUS = 10f;
+    public const float DELIVERY_RADIUS = 20f;
 
     public float TTLAfterPickupSeconds = 12f;
 
