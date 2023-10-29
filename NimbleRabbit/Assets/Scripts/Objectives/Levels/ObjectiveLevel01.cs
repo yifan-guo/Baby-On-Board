@@ -64,7 +64,7 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
             }
         }
     }
-    
+
     private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
     public IObjective.PrereqOperator prereqCompletionOperator
     {
@@ -87,8 +87,8 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
 
     public bool PrimaryFailureCondition()
     {
-        // defer to prereqs
-        return false;
+        // if player dead, level failed
+        return PlayerController.instance.hp.currentHealth <= 0;
     }
 
     public void RaiseObjectiveUpdated()

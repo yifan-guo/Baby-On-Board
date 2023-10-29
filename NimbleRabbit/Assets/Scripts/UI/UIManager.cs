@@ -85,6 +85,8 @@ public class UIManager : MonoBehaviour
 
         PlayerController.instance.pc.OnInventoryChange += SubscribeToPackages;
 
+        PlayerController.instance.hp.OnHealthChange += UpdateWinLoseDisplay;
+
         // interface objects are not visible in the Unity Editor, so the workaround is to
         // get the level from a Transform and assign it to the interface object
         level = (IObjective) ControllerLevel.GetComponent(typeof(IObjective));
@@ -138,7 +140,7 @@ public class UIManager : MonoBehaviour
             DisplayWinScreen();
             GameState.instance.TogglePause();
             return;
-        } 
+        }
         level.CheckFailure();
         if (level.ObjectiveStatus == IObjective.Status.Failed) {
             // TODO() Display lose screen.

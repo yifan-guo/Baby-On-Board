@@ -181,6 +181,12 @@ public interface IObjective
         Debug.Log("Checking failure for " + Name);
         if (prereqs != null && prereqs.Count > 0)
         {
+            Debug.Log("Checking primary failure condition for " + Name);
+            if (PrimaryFailureCondition())
+            {
+                Fail();
+            }
+
             if (prereqFailureOperator == PrereqOperator.AND)
             {
                 foreach (IObjective prereq in prereqs)
@@ -207,10 +213,6 @@ public interface IObjective
                     }
                 }
             }
-        }
-        if (PrimaryFailureCondition())
-        {
-            Fail();
         }
     }
 
