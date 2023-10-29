@@ -14,11 +14,35 @@ public class GameState : MonoBehaviour
     public bool isPaused {get; private set;}
 
     /// <summary>
+    /// Level objectives.
+    /// </summary>
+    public Level level {get; private set;}
+
+    /// <summary>
     /// Initialization Pt I.
     /// </summary>
     private void Awake()
     {
         instance = this;
+        level = GetComponent<Level>();
+    }
+
+    /// <summary>
+    /// Add a prerequisite objective at runtime.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddObjective(IObjective obj)
+    {
+        level.AddPrereq(obj);
+        UIManager.instance.objList.AddEntry(obj);
+    }
+
+    /// <summary>
+    /// Initialization Pt II.
+    /// </summary>
+    private void Start()
+    {
+        ((IObjective)level).StartObjective();
     }
 
     /// <summary>
@@ -39,8 +63,9 @@ public class GameState : MonoBehaviour
     public void Restart()
     {
         UIManager.instance.Restart();
-
         BanditHQ.Restart();
+
+        DeliveryLocation.ClearAll();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 

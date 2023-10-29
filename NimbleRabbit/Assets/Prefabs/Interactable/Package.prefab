@@ -111,6 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce627f6738d472948a3c224aeeb9bf8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deliveryLocation: {fileID: 0}
+  TTLAfterPickupSeconds: 30
+  _name: 
+  _description: 
 --- !u!114 &9116065797944608627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,4 +131,3 @@ MonoBehaviour:
   currentHealth: 100
   damageMultiplier: 1
   healingMultiplier: 1
-  physicalDamageDebounceSeconds: 0.5

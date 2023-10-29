@@ -89,8 +89,8 @@ public class BanditIndicator : MonoBehaviour
     /// </summary>
     public static void ClearAll()
     {
-        pool.Clear();
-        trackedBandits.Clear();
+        pool?.Clear();
+        trackedBandits?.Clear();
     }
 
     /// <summary>

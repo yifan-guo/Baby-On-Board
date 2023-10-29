@@ -177,7 +177,9 @@ public abstract class NPC : MonoBehaviour
         float visionRangeMax=Mathf.Infinity,
         bool lineOfSight=false)
     {
-        Vector3 diff = target - transform.position;
+        // Add half of our height so that this is from the center of the NPC
+        Vector3 pos = transform.position + Vector3.up * (dimensions.y / 2f);
+        Vector3 diff = target - pos;
 
         // If target is too close, then guaranteed to be seen
         if (visionRangeMin > Mathf.NegativeInfinity &&
@@ -210,12 +212,12 @@ public abstract class NPC : MonoBehaviour
         {
             RaycastHit hit;
             bool result = Physics.Raycast(
-                transform.position,
+                pos,
                 diff,
                 out hit,
                 this.visionRange);
 
-            // Debug.DrawRay(transform.position, diff.normalized * hit.distance, Color.yellow);
+            // Debug.DrawRay(pos, diff.normalized * hit.distance, Color.yellow);
 
             return result ? 
                 hit.collider.CompareTag("Player") :

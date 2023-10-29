@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.SocialPlatforms.Impl;
 
 
-public class ObjectiveLevel01 : MonoBehaviour, IObjective
+public class Level : MonoBehaviour, IObjective
 {
 
     private string _name = "Level 1: A Simple Delivery";
@@ -53,20 +53,13 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
         get { return _prereqs; }
     }
 
-    public Transform[] ControlledPrereqs;
-
-    // make the list of interface objects visible in Unity Editor
-    public void Start()
+    /// <summary>
+    /// Add a prerequisite objective.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void AddPrereq(IObjective obj)
     {
-        // assign each IObjective from the ControlledPrereqs Transform in the Unity Editor to the prereqs
-        foreach (Transform t in ControlledPrereqs)
-        {
-            IObjective i = (IObjective)t.GetComponent(typeof(IObjective));
-            if (i != null)
-            {
-                _prereqs.Add(i);
-            }
-        }
+        _prereqs.Add(obj);
     }
 
     private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
@@ -99,4 +92,5 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
     {
         OnObjectiveUpdated?.Invoke();
     }
+
 }

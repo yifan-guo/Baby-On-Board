@@ -23,7 +23,7 @@ public class GameStarter : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("PlayerPrototyping");
+        SceneManager.LoadScene("Level1");
         Time.timeScale=1.0f;
     }
 

@@ -63,24 +63,18 @@ public class Audio_PlayerCar : MonoBehaviour
     //when car hits buildings, trees or healing pickups, play a sound for crashing or healing
     public void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Building") 
-            || collision.gameObject.CompareTag("Tree") 
-            || collision.gameObject.CompareTag("NPC") 
-            || collision.gameObject.CompareTag("Destructible"))
-        {
-            playCrash(); 
-        }
-
         if (collision.gameObject.CompareTag("Package"))
         {
             playPackage();
         }
-
-        if (collision.gameObject.CompareTag("Healing"))
+        else if (collision.gameObject.CompareTag("Healing"))
         {
             playHealing();
         }
-
+        else
+        {
+            playCrash(); 
+        }
     }
 
     public void playCrash()
