@@ -78,7 +78,7 @@ public class UIManager : MonoBehaviour
     {
         instance = this;
         canvas = GetComponent<Canvas>();
-        sm = new ScoreManager();
+        sm = ScriptableObject.CreateInstance<ScoreManager>();
     }
 
     /// <summary>
@@ -184,7 +184,7 @@ public class UIManager : MonoBehaviour
         };
         sm.scoringCategories = scoringCategories;
         string scoreSummaryText = sm.GetScoreSummaryText();
-        
+
         // Get the TextMeshPro component with the name "WinText" in the children of WinPopup
         Component[] textMeshes = winPopup.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
         TMPro.TextMeshProUGUI winTextMesh = (TMPro.TextMeshProUGUI)Array.Find(textMeshes, tm => tm.name == "WinText");

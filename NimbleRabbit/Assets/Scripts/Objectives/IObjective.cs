@@ -35,11 +35,23 @@ public interface IObjective
     /// </summary>
     public float EndTime { get; set; }
 
-    public float ElapsedDuration
+    public float TimeElapsedSinceStart
     {
         get
         {
-            if (StartTime == 0 || EndTime == 0)
+            if (StartTime == 0)
+            {
+                return 0f;
+            }
+            return Time.time - StartTime;
+        }
+    }
+
+    public float TimeElapsedStartToFinish
+    {
+        get
+        {
+            if (EndTime == 0)
             {
                 return 0f;
             }
@@ -178,15 +190,14 @@ public interface IObjective
             Debug.Log("Objective is not in progress: " + Name);
             return;
         }
-        Debug.Log("Checking failure for " + Name);
+        Debug.Log("Checking primary failure for " + Name);
+        if (PrimaryFailureCondition())
+        {
+            Fail();
+        }
+        Debug.Log("Checking prereq failure for " + Name);
         if (prereqs != null && prereqs.Count > 0)
         {
-            Debug.Log("Checking primary failure condition for " + Name);
-            if (PrimaryFailureCondition())
-            {
-                Fail();
-            }
-
             if (prereqFailureOperator == PrereqOperator.AND)
             {
                 foreach (IObjective prereq in prereqs)

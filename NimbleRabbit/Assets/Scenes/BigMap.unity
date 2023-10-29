@@ -50086,6 +50086,10 @@ PrefabInstance:
       propertyPath: deliveryLocation
       value: 
       objectReference: {fileID: 511253066}
+    - target: {fileID: 1920648557120062396, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
+      propertyPath: TTLAfterPickupSeconds
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 7755871105328215575, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
       propertyPath: m_RootOrder
       value: 8

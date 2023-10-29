@@ -29,7 +29,7 @@ public class Package : Collectible, IObjective
 
     public const float DELIVERY_RADIUS = 20f;
 
-    public float TTLAfterPickupSeconds = 12f;
+    public float TTLAfterPickupSeconds = 120f;
 
     /// <summary>
     /// Initialization Pt II.
@@ -199,13 +199,13 @@ public class Package : Collectible, IObjective
 
         Debug.Log("Checking TTL");
         Debug.Log("TTL: " + TTLAfterPickupSeconds);
-        Debug.Log("Time elapsed since start: " + ((IObjective)(this)).ElapsedDuration);
+        Debug.Log("Time elapsed since start: " + ((IObjective)(this)).TimeElapsedSinceStart);
         Debug.Log("Start time: " + ((IObjective)(this)).StartTime);
         Debug.Log("Current time: " + Time.time);
         bool ttlFailed = false;
         if (isCollected)
         {
-             ttlFailed = ((IObjective)(this)).ElapsedDuration > TTLAfterPickupSeconds;
+             ttlFailed = ((IObjective)(this)).TimeElapsedSinceStart > TTLAfterPickupSeconds;
         }
         if (ttlFailed) {
             Debug.Log("FAIL: package TTL exceeded");
