@@ -35,6 +35,9 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject settingsMenu;
 
+    public GameObject mainMenu;
+    public GameObject controlsMenu;
+
     /// <summary>
     /// Reference to the parent object for the Win Screen.
     /// </summary>
@@ -118,6 +121,22 @@ public class UIManager : MonoBehaviour
     {
         GameState.instance.TogglePause();
         settingsMenu.SetActive(GameState.instance.isPaused);
+        if (settingsMenu.activeSelf) {
+            mainMenu.SetActive(true);
+            controlsMenu.SetActive(false);
+        }
+    }
+
+    public void ToggleControlsMenu()
+    {
+        bool ControlsActive = controlsMenu.activeSelf;
+        if (ControlsActive) {
+            mainMenu.SetActive(true);
+            controlsMenu.SetActive(false);
+        } else {
+            mainMenu.SetActive(false);
+            controlsMenu.SetActive(true);
+        }
     }
 
     /// <summary>

@@ -61,4 +61,8 @@ public class GameState : MonoBehaviour
             Application.Quit();
         #endif
     }
+
+    public void Controls() {
+        UIManager.instance.ToggleControlsMenu();
+    }
 }
