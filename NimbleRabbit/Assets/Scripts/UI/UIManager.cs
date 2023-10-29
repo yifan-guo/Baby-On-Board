@@ -40,6 +40,11 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject winPopup;
 
+    /// <summary>
+    /// Reference to the parent object for the Lose Screen.
+    /// </summary>
+    public GameObject losePopup;
+
     [Header("Non-Canvas References")]
 
     /// <summary>
@@ -124,6 +129,14 @@ public class UIManager : MonoBehaviour
         winPopup.SetActive(true);
     }
 
+    /// <summary>
+    /// Show the lose screen.
+    /// </summary>
+    public void DisplayLoseScreen()
+    {
+        losePopup.SetActive(true);
+    }
+
     public void SubscribeToPackages()
     {
         foreach (Package pkg in PlayerController.instance.pc.packages)
@@ -148,10 +161,9 @@ public class UIManager : MonoBehaviour
             return;
         }
         level.CheckFailure();
-        if (level.ObjectiveStatus == IObjective.Status.Failed)
-        {
-            // TODO() Display lose screen.
-            Debug.Log("Lose screen placeholder.");
+        if (level.ObjectiveStatus == IObjective.Status.Failed) {
+            DisplayLoseScreen();
+            GameState.instance.TogglePause();
             return;
         }
     }
