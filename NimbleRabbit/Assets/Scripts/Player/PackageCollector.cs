@@ -46,6 +46,12 @@ public class PackageCollector : MonoBehaviour
         packages.Add(pkg);
         pkg.Collect(transform);
 
+        if (gameObject.CompareTag("Player"))
+        {
+            Audio_PlayerCar playerCar = GetComponent<Audio_PlayerCar>();
+            playerCar.playPackage();
+        }
+
         OnInventoryChange?.Invoke();
     }
 

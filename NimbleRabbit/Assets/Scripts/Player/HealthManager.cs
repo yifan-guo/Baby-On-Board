@@ -86,6 +86,13 @@ public class HealthManager : MonoBehaviour
             return;
         }
 
+        //play crash sound when hits
+        if (gameObject.CompareTag("Player"))
+        {
+            Audio_PlayerCar playerCar = GetComponent<Audio_PlayerCar>();
+            playerCar.playCrash();
+        }
+
         rb.AddForce(
             force,
             mode);
