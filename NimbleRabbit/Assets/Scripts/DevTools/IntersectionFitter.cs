@@ -98,7 +98,7 @@ public class IntersectionFitter : MonoBehaviour
     /// How close to the edge the link is.
     /// Sometimes they aren't reachable if it's the exact edge.
     /// </summary>
-    private const float linkOffset = 1f;
+    private const float linkOffset = 2f;
 
     /// <summary>
     /// Initialization Pt I.
@@ -191,33 +191,10 @@ public class IntersectionFitter : MonoBehaviour
             leftRoad,
             leftRoadLength);
         
-        // Top road as top
-        LinkRoads(
-            topRoad,
-            rightRoad,
-            bottomRoad,
-            leftRoad);
-
-        // Right road as top
-        LinkRoads(
-            rightRoad,
-            bottomRoad,
-            leftRoad,
-            topRoad);
-
-        // Bottom road as top
-        LinkRoads(
-            bottomRoad,
-            leftRoad,
-            topRoad,
-            rightRoad);
-
-        // Left road as top
-        LinkRoads(
-            leftRoad,
-            topRoad,
-            rightRoad,
-            bottomRoad);
+        LinkToCenter(topRoad);
+        LinkToCenter(rightRoad);
+        LinkToCenter(bottomRoad);
+        LinkToCenter(leftRoad);
     }
 
     /// <summary>
@@ -378,7 +355,7 @@ public class IntersectionFitter : MonoBehaviour
         Vector3 scale = new Vector3(
             stopLineThickness / leftLaneLength,                             // Set to user specified thickness
             1f,                                                             // Keep defaulted to 1 to avoid factoring in height positioning 
-            1f + laneLineThickness / (2f * leftLaneWidth));                 // Always be long enough to cover the lane and lane line
+            (1f + laneLineThickness / (2f * leftLaneWidth)) + 0.001f);      // Always be long enough to cover the lane and lane line
 
         Vector3 pos = new Vector3(
             (leftLaneLength - stopLineThickness) / (2f * leftLaneLength),   // Half of road length but pushed back by half of stop line thickness
@@ -390,88 +367,23 @@ public class IntersectionFitter : MonoBehaviour
     }
 
     /// <summary>
-    /// Toggle OffMeshLinks depending on top road's status.
-    /// Pass roads in via relative directions.
+    /// Provides a link past the stop line into the center of the intersection.
     /// </summary>
-    private void LinkRoads(
-        Transform top,
-        Transform right,
-        Transform bottom,
-        Transform left)
+    private void LinkToCenter(Transform road)
     {
-        // Lanes in the top road
-        Transform rightLane = top?.Find("RightLane");
-        Transform leftLane = top?.Find("LeftLane");
+        Transform leftLane = road.Find("LeftLane");
+        OffMeshLink centerEntry = leftLane.Find("CenterEntryLink").GetComponent<OffMeshLink>();
 
-        // Turns from other roads that turn onto the top road
-        OffMeshLink straightIntoMe = bottom?.Find("LeftLane/StraightLink").GetComponent<OffMeshLink>();
-        OffMeshLink rightTurnIntoMe = right?.Find("LeftLane/RightTurnLink").GetComponent<OffMeshLink>();
-        OffMeshLink leftTurnIntoMe = left?.Find("LeftLane/LeftTurnLink").GetComponent<OffMeshLink>();
-
-        // Other roads can only turn into top road if right lane is active
-        bool status = (top == null) ? 
-            false :
-            rightLane.gameObject.activeInHierarchy;
-
-        straightIntoMe.gameObject.SetActive(status);
-        rightTurnIntoMe.gameObject.SetActive(status);
-        leftTurnIntoMe.gameObject.SetActive(status);
-
-        // If entire top road is disabled then we're done
-        if (top.gameObject.activeInHierarchy == false)
-        {
-            return;
-        }
-
-        // Turns that a car in the top road can do
-        OffMeshLink rightLaneUTurn = rightLane.Find("UTurnLink").GetComponent<OffMeshLink>();
-        OffMeshLink leftLaneUTurn = leftLane.Find("UTurnLink").GetComponent<OffMeshLink>();
-        OffMeshLink leftLaneStraight = leftLane.Find("StraightLink").GetComponent<OffMeshLink>();
-        OffMeshLink leftLaneRightTurn = leftLane.Find("RightTurnLink").GetComponent<OffMeshLink>();
-        OffMeshLink leftLaneLeftTurn = leftLane.Find("LeftTurnLink").GetComponent<OffMeshLink>();
-
-        // Road lanes that a car in the top road can turn into
-        Transform iGoStraightHere = bottom.Find("RightLane");
-        Transform iRightTurnHere = left.Find("RightLane");
-        Transform iLeftTurnHere = right.Find("RightLane");
-
-        float roadLength = leftLane.localScale.x * top.localScale.x;
-        float rightLaneWidth = rightLane.localScale.z * top.localScale.z;
-        float leftLaneWidth = leftLane.localScale.z * top.localScale.z;
-        float centerHeight = (iRightTurnHere.localScale.z * left.localScale.z) + (iLeftTurnHere.localScale.z * right.localScale.z);
-
-        // Position top road's link's starting points
+        // Position link
+        float roadLength = leftLane.localScale.x * road.localScale.x;
         Vector3 pos = new Vector3(
             (((roadLength / 2f) - linkOffset) / roadLength),
             0.5f,
             0f);
 
-        rightLaneUTurn.transform.localPosition = pos;
-        leftLaneUTurn.transform.localPosition = pos;
-        leftLaneStraight.transform.localPosition = pos;
-        leftLaneRightTurn.transform.localPosition = pos;
-        leftLaneLeftTurn.transform.localPosition = pos;
-
-        rightLaneUTurn.startTransform.localPosition = Vector3.zero;
-        leftLaneUTurn.startTransform.localPosition = Vector3.zero;
-        leftLaneStraight.startTransform.localPosition = Vector3.zero;
-        leftLaneRightTurn.startTransform.localPosition = Vector3.zero;
-        leftLaneLeftTurn.startTransform.localPosition = Vector3.zero;
-
-        // Position top road's link's ending points
-        rightLaneUTurn.endTransform.localPosition = Vector3.forward * (leftLaneWidth + rightLaneWidth) / (2f * rightLaneWidth);
-        leftLaneUTurn.endTransform.localPosition = Vector3.forward * (leftLaneWidth + rightLaneWidth) / (2f * leftLaneWidth);
-        leftLaneStraight.endTransform.localPosition = Vector3.right * (centerHeight + 2 * linkOffset) / (roadLength);
-
-        leftLaneRightTurn.endTransform.localPosition = new Vector3(
-            ((iRightTurnHere.localScale.z * left.localScale.z / 2f) + linkOffset) / roadLength,                                                         // Go forward half the width of the destination lane
-            0f,                                                                                                                                         // By default the link does not have any verticality yet
-            ((-leftLaneWidth / 2f) - linkOffset) / leftLaneWidth);                                                                                      // Go right by half the width of our lane
-
-        leftLaneLeftTurn.endTransform.localPosition = new Vector3(
-            ((iRightTurnHere.localScale.z * right.localScale.z) + (iLeftTurnHere.localScale.z * right.localScale.z / 2f) + linkOffset) / roadLength,    // Go forward by the full width of the left lane and half the right lane of the destination road
-            0f,                                                                                                                                         // By default the link does not have any verticality yet
-            ((leftLaneWidth / 2f) + rightLaneWidth + linkOffset) / leftLaneWidth);                                                                      // Go left by half the width of our lane and full width of our right lane
+        centerEntry.transform.localPosition = pos;
+        centerEntry.startTransform.localPosition = Vector3.zero;
+        centerEntry.endTransform.localPosition = Vector3.right * (2 * linkOffset) / (roadLength);
     }
 
     #endif

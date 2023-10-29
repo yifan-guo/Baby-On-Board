@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7818299110763075996}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Glass
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7613953574648507053}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Door_r
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 3053338300996234967}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -191,7 +191,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793671732024415060}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.17, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -221,7 +221,7 @@ GameObject:
   - component: {fileID: 1416274478937520724}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Wheel_rl
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 5507122243056586323}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Door_l
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 6355304682552440382}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Wheel_rr
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -637,7 +637,7 @@ GameObject:
   - component: {fileID: 420268416365037692}
   m_Layer: 6
   m_Name: BanditSphere
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -720,7 +720,7 @@ GameObject:
   - component: {fileID: 7856404051384858099}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_SteeringW
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -820,8 +820,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5793821951287302617}
-  m_LocalRotation: {x: 0, y: 0.7077324, z: 0, w: -0.7064806}
-  m_LocalPosition: {x: -54.8, y: 0, z: -117.2}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -857,8 +857,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 4.85}
-  m_Center: {x: 0, y: 0, z: 0.1}
+  m_Size: {x: 2, y: 2, z: 4.8808155}
+  m_Center: {x: 0, y: 1, z: 0.115407944}
 --- !u!195 &6740491595264892505
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -878,8 +878,8 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 9
+  m_BaseOffset: 0
+  m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!114 &4370185163870834741
 MonoBehaviour:
@@ -899,7 +899,7 @@ MonoBehaviour:
   visionRange: 50
   stateSpeed: 0
   inCooldown: 0
-  isTurning: 0
+  isLinking: 0
   isCrashed: 0
 --- !u!114 &9161132929671611794
 MonoBehaviour:
@@ -956,7 +956,7 @@ GameObject:
   - component: {fileID: 374473414732791937}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Plates
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1039,7 +1039,7 @@ GameObject:
   - component: {fileID: 2454406602114964245}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Wheel_fr
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1205,7 +1205,7 @@ GameObject:
   - component: {fileID: 1017894238013435623}
   m_Layer: 0
   m_Name: SM_Veh_Car_Van_Wheel_fl
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

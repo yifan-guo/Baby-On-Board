@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class UIManager : MonoBehaviour
 {
     /// <summary>
     /// Singleton instance of UIManager.
     /// </summary>
-    public static UIManager instance {get; private set;}
+    public static UIManager instance { get; private set; }
 
     [Header("Canvas References")]
 
@@ -39,6 +40,11 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject winPopup;
 
+    /// <summary>
+    /// Reference to the parent object for the Lose Screen.
+    /// </summary>
+    public GameObject losePopup;
+
     [Header("Non-Canvas References")]
 
     /// <summary>
@@ -61,7 +67,9 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Reference to Canvas component.
     /// </summary>
-    public Canvas canvas {get; private set;}
+    public Canvas canvas { get; private set; }
+
+    public ScoreManager sm;
 
     /// <summary>
     /// Initialization Pt I.
@@ -70,6 +78,7 @@ public class UIManager : MonoBehaviour
     {
         instance = this;
         canvas = GetComponent<Canvas>();
+        sm = ScriptableObject.CreateInstance<ScoreManager>();
     }
 
     /// <summary>
@@ -81,11 +90,16 @@ public class UIManager : MonoBehaviour
         winPopup.SetActive(false);
 
         playerHP.Link(PlayerController.instance.hp);
-        packageHP.Link(hp:PlayerController.instance.hp, pc:PlayerController.instance.pc);
+        packageHP.Link(hp: PlayerController.instance.hp, pc: PlayerController.instance.pc);
 
         PlayerController.instance.pc.OnInventoryChange += SubscribeToPackages;
 
-        level = (IObjective) ControllerLevel.GetComponent(typeof(IObjective));
+        PlayerController.instance.hp.OnHealthChange += UpdateWinLoseDisplay;
+
+        // interface objects are not visible in the Unity Editor, so the workaround is to
+        // get the level from a Transform and assign it to the interface object
+        level = (IObjective)ControllerLevel.GetComponent(typeof(IObjective));
+        level.StartObjective();
     }
 
     /// <summary>
@@ -111,7 +125,16 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void DisplayWinScreen()
     {
+        SetWinText();
         winPopup.SetActive(true);
+    }
+
+    /// <summary>
+    /// Show the lose screen.
+    /// </summary>
+    public void DisplayLoseScreen()
+    {
+        losePopup.SetActive(true);
     }
 
     public void SubscribeToPackages()
@@ -122,23 +145,49 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// UI Manager or GameState maintains a Level (Objective implementation)
+    /// and listens to its failure and completion events.
+    /// When a level is completed, it should display the win screen.
+    /// When a level is failed, it should display the lose screen.
+    /// </summary>
     public void UpdateWinLoseDisplay()
     {
-        // Placeholder until level logic is complete. We just check if any package has completed or failed.
-        if (level.PrimaryCompletionCondition()) {
+        level.CheckCompletion();
+        if (level.ObjectiveStatus == IObjective.Status.Complete)
+        {
             DisplayWinScreen();
             GameState.instance.TogglePause();
             return;
-        } 
-        if (level.PrimaryFailureCondition()) {
-            // TODO() Display lose screen.
-            Debug.Log("Lose screen placeholder.");
+        }
+        level.CheckFailure();
+        if (level.ObjectiveStatus == IObjective.Status.Failed) {
+            DisplayLoseScreen();
+            GameState.instance.TogglePause();
             return;
         }
     }
 
-    // TODO() UI Manager or GameState should maintain a Level (Objective implementation)
-    // and listen to its failure and completion events.
-    // When a level is completed, it should display the win screen.
-    // When a level is failed, it should display the lose screen.
+    public void SetWinText()
+    {
+        if (level.ObjectiveStatus != IObjective.Status.Complete)
+        {
+            throw new InvalidOperationException("Cannot get score for an incomplete objective.");
+        }
+        // Calculate score
+        // I wanted to do this in the level class, but since it's an IObjective here I can't access the non-interface methods
+        // TODO() refactor this later to make score calculation part of the level class
+        List<ScoreCategory> scoringCategories = new List<ScoreCategory>() {
+        new ScoreCategory() { displayName = "Package Health", weightingPercent = 40, targetValue = 100, currentValue=(int)Math.Round(PlayerController.instance.pc.packages[0].hp.currentHealth)},
+        new ScoreCategory() { displayName = "Player Health", weightingPercent = 20, targetValue = 100, currentValue=(int)Math.Round(PlayerController.instance.hp.currentHealth)},
+        new ScoreCategory() { displayName = "Completion Time", weightingPercent = 40, targetValue = 0, targetHigh = false, missZeroTargetPenaltyExponent=0.999f, currentValue=(int)Math.Round(level.EndTime - level.StartTime)},
+        };
+        sm.scoringCategories = scoringCategories;
+        string scoreSummaryText = sm.GetScoreSummaryText();
+
+        // Get the TextMeshPro component with the name "WinText" in the children of WinPopup
+        Component[] textMeshes = winPopup.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+        TMPro.TextMeshProUGUI winTextMesh = (TMPro.TextMeshProUGUI)Array.Find(textMeshes, tm => tm.name == "WinText");
+        winTextMesh.text = scoreSummaryText;
+    }
 }

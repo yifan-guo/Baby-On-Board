@@ -47,11 +47,11 @@ public interface IObjective
         }
     }
 
-    public float DurationAtComplete
+    public float TimeElapsedStartToFinish
     {
         get
         {
-            if (StartTime == 0 || EndTime == 0)
+            if (EndTime == 0)
             {
                 return 0f;
             }
@@ -72,7 +72,6 @@ public interface IObjective
         AND,
         OR
     }
-
     /// <summary>
     /// This operator determines whether completion requires all prereqs to be complete or just one.
     /// </summary>
@@ -118,7 +117,6 @@ public interface IObjective
     {
         if (ObjectiveStatus != Status.InProgress)
         {
-            Debug.Log("Objective is not in progress: " + Name);
             return;
         }
         if (prereqCompletionOperator == PrereqOperator.AND)
@@ -192,7 +190,12 @@ public interface IObjective
             Debug.Log("Objective is not in progress: " + Name);
             return;
         }
-        Debug.Log("Checking failure for " + Name);
+        Debug.Log("Checking primary failure for " + Name);
+        if (PrimaryFailureCondition())
+        {
+            Fail();
+        }
+        Debug.Log("Checking prereq failure for " + Name);
         if (prereqs != null && prereqs.Count > 0)
         {
             if (prereqFailureOperator == PrereqOperator.AND)
@@ -221,10 +224,6 @@ public interface IObjective
                     }
                 }
             }
-        }
-        if (PrimaryFailureCondition())
-        {
-            Fail();
         }
     }
 

@@ -8,7 +8,7 @@ using System.Linq;
 /// Upon level completion, invoke the ScoreManager with the scoring categories for the level to calculate the letter grade.
 /// In the future the ScoreManager could subscribe to events from other components to keep a running tab of certain events.
 /// </summary>
-public class ScoreManager : MonoBehaviour
+public class ScoreManager : ScriptableObject
 {
     /// <summary>
     /// Performance ranked from highest to lowest. S-tier performance is above or equal to 100 points.
@@ -28,15 +28,12 @@ public class ScoreManager : MonoBehaviour
 
     public string grade { get; private set; }
 
-    public List<ScoreCategory> scoringCategories = new List<ScoreCategory>() {
-        new ScoreCategory() { displayName = "Package Health", weightingPercent = 25, targetValue = 100},
-        new ScoreCategory() { displayName = "Player Health", weightingPercent = 25, targetValue = 100},
-        // Time-based zero-target score categories need a softer miss zero penalty, hence overriding the default to 0.999 here.
-        new ScoreCategory() { displayName = "Completion Time", weightingPercent = 25, targetValue = 0, targetHigh = false, missZeroTargetPenaltyExponent=0.999f},
-        new ScoreCategory() { displayName = "Police Pullovers", weightingPercent = 25, targetValue = 0, targetHigh = false},
-    };
+    /// <summary>
+    /// List of scoring categories for the level.
+    /// </summary>
+    public List<ScoreCategory> scoringCategories;
 
-    public (int, string) CalculateGrade()
+    public (int score, string grade) CalculateGrade()
     {
         // Calculate the score by summing the scores of each category
         score = 0;
@@ -66,5 +63,24 @@ public class ScoreManager : MonoBehaviour
         }
 
         return (score, grade);
+    }
+
+    public string GetScoreSummaryText()
+    {
+        (int score, string grade) result = CalculateGrade();
+
+        string wonOrLost = result.grade == "F" ? "FAILED" : "WON";
+
+        string winText = $@"LEVEL COMPLETE
+
+You {wonOrLost}!
+
+Score: {result.score}
+Grade: {result.grade}
+
+SCORE BREAKDOWN
+
+{string.Join("\n", scoringCategories.ConvertAll<string>(sc => $"{sc.displayName}: {sc.currentValue}"))}";
+        return winText;
     }
 }

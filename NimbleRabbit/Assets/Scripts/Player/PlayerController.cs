@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
         InputSystemCalls();
     }
 
-    
+
 
     private void FixedUpdate()
     {
@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
             float myVelocityDot = Vector3.Dot(
                 rb.velocity,
                 hit.transform.position - transform.position);
-            
+
             float theirVelocityDot = Vector3.Dot(
                 npc.nav.velocity,
                 transform.position - hit.transform.position);
@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
         ///////////////////////////////////////
         // VEHICLE ACCELERATION AND TURNING //
         //////////////////////////////////////
-        
+
 
         // Adjust the velocity based on acceleration and deceleration
         rb.velocity += transform.forward * forwardSpeed * (isAccelerating - isDecelerating) * Time.deltaTime;
@@ -264,7 +264,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            UIManager.instance.ToggleSettingsMenu();    
+            UIManager.instance.ToggleSettingsMenu();
         }
 
         // TODO:

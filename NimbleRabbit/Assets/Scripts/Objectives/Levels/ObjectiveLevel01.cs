@@ -2,11 +2,12 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SocialPlatforms.Impl;
 
 
 public class ObjectiveLevel01 : MonoBehaviour, IObjective
 {
-    
+
     private string _name = "Level 1: A Simple Delivery";
     public string Name
     {
@@ -46,7 +47,7 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
     /// </summary>
 
     private List<IObjective> _prereqs = new List<IObjective>();
-    
+
     public List<IObjective> prereqs
     {
         get { return _prereqs; }
@@ -55,10 +56,19 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
     public Transform[] ControlledPrereqs;
 
     // make the list of interface objects visible in Unity Editor
-    public void Start() {
-        _prereqs = ControlledPrereqs.SelectMany(t => GetComponents(typeof(Component))).OfType<IObjective>().ToList();
+    public void Start()
+    {
+        // assign each IObjective from the ControlledPrereqs Transform in the Unity Editor to the prereqs
+        foreach (Transform t in ControlledPrereqs)
+        {
+            IObjective i = (IObjective)t.GetComponent(typeof(IObjective));
+            if (i != null)
+            {
+                _prereqs.Add(i);
+            }
+        }
     }
-    
+
     private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
     public IObjective.PrereqOperator prereqCompletionOperator
     {
@@ -81,8 +91,8 @@ public class ObjectiveLevel01 : MonoBehaviour, IObjective
 
     public bool PrimaryFailureCondition()
     {
-        // defer to prereqs
-        return false;
+        // if player dead, level failed
+        return PlayerController.instance.hp.currentHealth <= 0;
     }
 
     public void RaiseObjectiveUpdated()

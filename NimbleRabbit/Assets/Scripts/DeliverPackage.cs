@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class DeliverPackage : MonoBehaviour
 {
+
     /// <summary>
     /// Handles objects entering the trigger collider.
     /// </summary>

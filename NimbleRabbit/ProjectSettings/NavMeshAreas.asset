@@ -11,9 +11,9 @@ NavMeshProjectSettings:
     cost: 1
   - name: Jump
     cost: 2
-  - name: Turn
+  - name: LaneLine
     cost: 1
-  - name: 
+  - name: StopLine
     cost: 1
   - name: 
     cost: 1

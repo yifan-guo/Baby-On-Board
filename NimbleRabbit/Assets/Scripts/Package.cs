@@ -27,9 +27,9 @@ public class Package : Collectible, IObjective
 
     public GameObject deliveryLocation;
 
-    public const float DELIVERY_RADIUS = 10f;
+    public const float DELIVERY_RADIUS = 20f;
 
-    public float TTLAfterPickupSeconds = 12f;
+    public float TTLAfterPickupSeconds = 120f;
 
     /// <summary>
     /// Initialization Pt II.
@@ -119,7 +119,7 @@ public class Package : Collectible, IObjective
         Indicator.Track(gameObject);
     }
 
-    public string _name;
+    public string _name = "Package";
     public string Name
     {
         get { return _name; }
@@ -193,6 +193,9 @@ public class Package : Collectible, IObjective
         Debug.Log("Checking if package is destroyed.");
         Debug.Log("Current health: " + hp.currentHealth);
         healthFailed = hp.currentHealth <= 0f;
+        if (healthFailed) {
+            Debug.Log("FAIL: package health below zero");
+        }
 
         Debug.Log("Checking TTL");
         Debug.Log("TTL: " + TTLAfterPickupSeconds);
@@ -203,6 +206,9 @@ public class Package : Collectible, IObjective
         if (isCollected)
         {
              ttlFailed = ((IObjective)(this)).TimeElapsedSinceStart > TTLAfterPickupSeconds;
+        }
+        if (ttlFailed) {
+            Debug.Log("FAIL: package TTL exceeded");
         }
 
         return healthFailed || ttlFailed;

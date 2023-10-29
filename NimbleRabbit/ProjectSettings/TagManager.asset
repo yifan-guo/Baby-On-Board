@@ -5,8 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - NPC
-  - Road
   - Ground
+  - Building
+  - Tree
+  - Healing
+  - Package
+  - Destructible
   layers:
   - Default
   - TransparentFX
