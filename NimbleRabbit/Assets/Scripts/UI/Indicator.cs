@@ -143,6 +143,7 @@ public class Indicator : MonoBehaviour
     {
         img = GetComponent<Image>();
         arrowImg = transform.Find("Arrow").GetComponent<Image>();
+        this.transform.position = Vector3.zero;
     }
 
     /// <summary>
@@ -231,7 +232,7 @@ public class Indicator : MonoBehaviour
 
         screenPos = PositionInView(screenPos);
 
-        transform.position += (screenPos - transform.position) * Time.deltaTime * 100;
+        transform.position = screenPos;
     }
 
     /// <summary>
