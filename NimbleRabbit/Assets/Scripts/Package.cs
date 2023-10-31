@@ -29,7 +29,12 @@ public class Package : Collectible, IObjective
 
     public const float DELIVERY_RADIUS = 20f;
 
-    public float TTLAfterPickupSeconds = 120f;
+    public float TTLAfterPickupSeconds;
+
+    /// <summary>
+    /// Reference to IObjective cast of self.
+    /// </summary>
+    public IObjective obj {get; private set;}
 
     /// <summary>
     /// Initialization Pt II.
@@ -37,9 +42,23 @@ public class Package : Collectible, IObjective
     protected void Start()
     {
         isCollected = false;
-        Indicator.Track(gameObject);
-        // Subscribe to health change events to check if package is destroyed.
-        hp.OnHealthChange += ((IObjective)this).CheckFailure;
+        obj = (IObjective) this;
+
+        // Assign a random delivery location
+        int roll = UnityEngine.Random.Range(
+            0,
+            DeliveryLocation.destinations.Count);
+        
+        deliveryLocation = DeliveryLocation.destinations[roll].gameObject;
+
+        // Add self to objectives and subscribe to health 
+        // change events to check if package is destroyed.
+        GameState.instance.AddObjective(obj);
+        hp.OnHealthChange += obj.CheckFailure;
+
+        Indicator.Track(
+            gameObject,
+            obj);
     }
 
     /// <summary>
@@ -81,7 +100,12 @@ public class Package : Collectible, IObjective
         isCollected = true;
         coll.enabled = false;
 
-        ((IObjective)this).StartObjective();
+        // Only start the objective once
+        if (obj.ObjectiveStatus == IObjective.Status.NotStarted)
+        {
+            obj.StartObjective();
+        }
+
         // Deferred check to see if the package is delivered by TTL
         Invoke("CheckCompletionOnTTL", TTLAfterPickupSeconds + 0.01f);
 
@@ -93,14 +117,22 @@ public class Package : Collectible, IObjective
 
         if (owner.tag == "Player")
         {
+            // If player picks it up, track the delivery location
             Indicator.Untrack(gameObject);
-            transform.localPosition = new Vector3(0f, 0.35f, 0f);
+            Indicator.Track(
+                deliveryLocation,
+                obj);
         }
         else
         {
-            Indicator.Track(owner.gameObject);
-            transform.localPosition = Vector3.up * ((owner.GetComponent<Collider>().bounds.size.y + transform.localScale.y) / 2f);
+            // If someone else picks it up, track the package
+            Indicator.Untrack(deliveryLocation);
+            Indicator.Track(
+                gameObject,
+                obj);
         }
+
+        transform.localPosition = Vector3.up * (owner.GetComponent<Collider>().bounds.size.y + (transform.localScale.y / 2f));
     }
 
     /// <summary>
@@ -116,7 +148,9 @@ public class Package : Collectible, IObjective
         transform.position = pos;
         transform.parent = null;
 
-        Indicator.Track(gameObject);
+        Indicator.Track(
+            gameObject,
+            obj);
     }
 
     public string _name = "Package";
@@ -199,13 +233,13 @@ public class Package : Collectible, IObjective
 
         Debug.Log("Checking TTL");
         Debug.Log("TTL: " + TTLAfterPickupSeconds);
-        Debug.Log("Time elapsed since start: " + ((IObjective)(this)).TimeElapsedSinceStart);
-        Debug.Log("Start time: " + ((IObjective)(this)).StartTime);
+        Debug.Log("Time elapsed since start: " + obj.TimeElapsedSinceStart);
+        Debug.Log("Start time: " + obj.StartTime);
         Debug.Log("Current time: " + Time.time);
         bool ttlFailed = false;
         if (isCollected)
         {
-             ttlFailed = ((IObjective)(this)).TimeElapsedSinceStart > TTLAfterPickupSeconds;
+             ttlFailed = obj.TimeElapsedSinceStart > TTLAfterPickupSeconds;
         }
         if (ttlFailed) {
             Debug.Log("FAIL: package TTL exceeded");
@@ -223,7 +257,7 @@ public class Package : Collectible, IObjective
     public void CheckCompletionOnTTL()
     {
         Debug.Log("Checking failure on TTL");
-        ((IObjective)this).CheckFailure();
+        obj.CheckFailure();
     }
 
 }

@@ -9,51 +9,49 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public static UIManager instance { get; private set; }
 
-    [Header("Canvas References")]
-
     /// <summary>
     /// Reference to the player's health display.
     /// </summary>
-    public HPDisplayUpdater playerHP;
+    private HPDisplayUpdater playerHP;
 
     /// <summary>
     /// Reference to the package health display.
     /// </summary>
-    public PackageHPDisplayUpdater packageHP;
+    private PackageHPDisplayUpdater packageHP;
 
-    private IObjective level;
-
-    public Transform ControllerLevel;
+    /// <summary>
+    /// Reference to the objective list.
+    /// </summary>
+    public ObjectivesList objList {get; private set;}
 
     /// <summary>
     /// Indicator pool parent object.
     /// </summary>
-    public GameObject indicators;
+    public GameObject indicators {get; private set;}
 
     /// <summary>
     /// Reference to parent object for the Settings menu.
     /// </summary>
+
     public GameObject settingsMenu;
 
     public GameObject mainMenu;
     public GameObject controlsMenu;
 
     /// <summary>
-    /// Reference to the parent object for the Win Screen.
-    /// </summary>
-    public GameObject winPopup;
-
-    /// <summary>
     /// Reference to the parent object for the Lose Screen.
     /// </summary>
-    public GameObject losePopup;
+    private GameObject losePopup;
 
-    [Header("Non-Canvas References")]
+    /// <summary>
+    /// Reference to the parent object for the End Screen.
+    /// </summary>
+    public GameObject endScreen {get; private set;}
 
     /// <summary>
     /// Parent object for bandit indicators.
     /// </summary>
-    public GameObject banditIndicators;
+    public GameObject banditIndicators {get; private set;}
 
     [Header("Prefabs")]
 
@@ -68,11 +66,16 @@ public class UIManager : MonoBehaviour
     public BanditIndicator banditIndicatorPrefab;
 
     /// <summary>
+    /// Reference to objective list entry Prefab that will be cloned.
+    /// </summary>
+    public ObjectiveEntry entryPrefab;
+
+    /// <summary>
     /// Reference to Canvas component.
     /// </summary>
     public Canvas canvas { get; private set; }
 
-    public ScoreManager sm;
+    public ScoreManager sm {get; private set;}
 
     /// <summary>
     /// Initialization Pt I.
@@ -81,6 +84,14 @@ public class UIManager : MonoBehaviour
     {
         instance = this;
         canvas = GetComponent<Canvas>();
+        playerHP = transform.Find("PlayerHP").GetComponent<HPDisplayUpdater>();
+        packageHP = transform.Find("PackageHPAnchor").GetComponent<PackageHPDisplayUpdater>();
+        objList = transform.Find("ObjectivesList").GetComponent<ObjectivesList>();
+        indicators = transform.Find("Indicators").gameObject;
+        settingsMenu = transform.Find("SettingsMenu").gameObject;
+        losePopup = transform.Find("LosePopup").gameObject;
+        endScreen = transform.Find("EndScreen").gameObject;
+
         sm = ScriptableObject.CreateInstance<ScoreManager>();
     }
 
@@ -89,20 +100,17 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // Get this reference in Start because PlayerController instance is set in Awake
+        banditIndicators = PlayerController.instance.transform.Find("BanditIndicators").gameObject;
+
         settingsMenu.SetActive(false);
-        winPopup.SetActive(false);
+        endScreen.SetActive(false);
 
         playerHP.Link(PlayerController.instance.hp);
         packageHP.Link(hp: PlayerController.instance.hp, pc: PlayerController.instance.pc);
 
         PlayerController.instance.pc.OnInventoryChange += SubscribeToPackages;
-
         PlayerController.instance.hp.OnHealthChange += UpdateWinLoseDisplay;
-
-        // interface objects are not visible in the Unity Editor, so the workaround is to
-        // get the level from a Transform and assign it to the interface object
-        level = (IObjective)ControllerLevel.GetComponent(typeof(IObjective));
-        level.StartObjective();
     }
 
     /// <summary>
@@ -112,6 +120,7 @@ public class UIManager : MonoBehaviour
     {
         Indicator.ClearAll();
         BanditIndicator.ClearAll();
+        ObjectivesList.ClearAll();
     }
 
     /// <summary>
@@ -145,7 +154,7 @@ public class UIManager : MonoBehaviour
     public void DisplayWinScreen()
     {
         SetWinText();
-        winPopup.SetActive(true);
+        endScreen.SetActive(true);
     }
 
     /// <summary>
@@ -158,6 +167,9 @@ public class UIManager : MonoBehaviour
 
     public void SubscribeToPackages()
     {
+        // TODO:
+        // Pretty sure this will add repeats of the listener if the player loses
+        // and then regains the package
         foreach (Package pkg in PlayerController.instance.pc.packages)
         {
             pkg.OnObjectiveUpdated += UpdateWinLoseDisplay;
@@ -165,22 +177,30 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// UI Manager or GameState maintains a Level (Objective implementation)
+    /// GameState maintains a Level (Objective implementation)
     /// and listens to its failure and completion events.
     /// When a level is completed, it should display the win screen.
     /// When a level is failed, it should display the lose screen.
     /// </summary>
     public void UpdateWinLoseDisplay()
     {
-        level.CheckCompletion();
-        if (level.ObjectiveStatus == IObjective.Status.Complete)
+        // TODO:
+        // Move some of this code to GameState, leave only UI code here
+
+        IObjective levelObj = (IObjective) GameState.instance.level;
+        levelObj.CheckCompletion();
+
+        if (levelObj.ObjectiveStatus == IObjective.Status.Complete) 
         {
             DisplayWinScreen();
             GameState.instance.TogglePause();
             return;
-        }
-        level.CheckFailure();
-        if (level.ObjectiveStatus == IObjective.Status.Failed) {
+        } 
+
+        levelObj.CheckFailure();
+
+        if (levelObj.ObjectiveStatus == IObjective.Status.Failed) 
+        {
             DisplayLoseScreen();
             GameState.instance.TogglePause();
             return;
@@ -189,7 +209,9 @@ public class UIManager : MonoBehaviour
 
     public void SetWinText()
     {
-        if (level.ObjectiveStatus != IObjective.Status.Complete)
+        IObjective levelObj = (IObjective) GameState.instance.level;
+
+        if (levelObj.ObjectiveStatus != IObjective.Status.Complete)
         {
             throw new InvalidOperationException("Cannot get score for an incomplete objective.");
         }
@@ -199,13 +221,13 @@ public class UIManager : MonoBehaviour
         List<ScoreCategory> scoringCategories = new List<ScoreCategory>() {
         new ScoreCategory() { displayName = "Package Health", weightingPercent = 40, targetValue = 100, currentValue=(int)Math.Round(PlayerController.instance.pc.packages[0].hp.currentHealth)},
         new ScoreCategory() { displayName = "Player Health", weightingPercent = 20, targetValue = 100, currentValue=(int)Math.Round(PlayerController.instance.hp.currentHealth)},
-        new ScoreCategory() { displayName = "Completion Time", weightingPercent = 40, targetValue = 0, targetHigh = false, missZeroTargetPenaltyExponent=0.999f, currentValue=(int)Math.Round(level.EndTime - level.StartTime)},
-        };
+        new ScoreCategory() { displayName = "Completion Time", weightingPercent = 40, targetValue = 0, targetHigh = false, missZeroTargetPenaltyExponent=0.999f, currentValue=(int)Math.Round(levelObj.EndTime - levelObj.StartTime)}};
+
         sm.scoringCategories = scoringCategories;
         string scoreSummaryText = sm.GetScoreSummaryText();
-
-        // Get the TextMeshPro component with the name "WinText" in the children of WinPopup
-        Component[] textMeshes = winPopup.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+        
+        // Get the TextMeshPro component with the name "WinText" in the children of EndScreen 
+        Component[] textMeshes = endScreen.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
         TMPro.TextMeshProUGUI winTextMesh = (TMPro.TextMeshProUGUI)Array.Find(textMeshes, tm => tm.name == "WinText");
         winTextMesh.text = scoreSummaryText;
     }

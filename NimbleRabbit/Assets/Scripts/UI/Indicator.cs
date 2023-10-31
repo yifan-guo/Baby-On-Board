@@ -34,7 +34,9 @@ public class Indicator : MonoBehaviour
     /// Provide new object to track with indicator.
     /// </summary>
     /// <param name="obj"></param>
-    public static void Track(GameObject obj)
+    public static void Track(
+        GameObject go,
+        IObjective obj = null)
     {
         // Initialize object map
         if (trackedObjectsMap == null)
@@ -42,7 +44,7 @@ public class Indicator : MonoBehaviour
             trackedObjectsMap = new Dictionary<int, Indicator>();
         }
 
-        int id = obj.GetInstanceID();
+        int id = go.GetInstanceID();
 
         // Check if there's already an active indicator for the obj
         if (trackedObjectsMap.ContainsKey(id) == true)
@@ -52,8 +54,16 @@ public class Indicator : MonoBehaviour
 
         // Activate indicator
         Indicator indicator = GetIndicator();
-        indicator.target = obj;
+        indicator.target = go;
         indicator.gameObject.SetActive(true);
+
+        // Color it based on the objective entry
+        Color color = (obj == null) ?
+            Color.white :
+            ObjectivesList.GetColor(obj);
+
+        indicator.img.color = color;
+        indicator.arrowImg.color = color;
 
         trackedObjectsMap.Add(
             id,
@@ -221,7 +231,7 @@ public class Indicator : MonoBehaviour
 
         screenPos = PositionInView(screenPos);
 
-        transform.position = screenPos;
+        transform.position += (screenPos - transform.position) * Time.deltaTime * 100;
     }
 
     /// <summary>

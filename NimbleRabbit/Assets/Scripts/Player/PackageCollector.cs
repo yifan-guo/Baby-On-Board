@@ -79,7 +79,9 @@ public class PackageCollector : MonoBehaviour
         {
             thief.CollectPackage(pkg);
         }
+
         OnInventoryChange?.Invoke();
+        pkg.RaiseObjectiveUpdated();
     }
 
     /// <summary>

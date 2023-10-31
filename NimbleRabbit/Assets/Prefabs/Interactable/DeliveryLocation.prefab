@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1437229952438546455}
   - component: {fileID: 1437229952438546448}
   m_Layer: 0
-  m_Name: WinZone
+  m_Name: DeliveryLocation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

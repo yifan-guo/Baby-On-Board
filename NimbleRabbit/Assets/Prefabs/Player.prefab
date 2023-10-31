@@ -1034,7 +1034,7 @@ GameObject:
   - component: {fileID: 2732682631941891923}
   - component: {fileID: 8832103275312978113}
   m_Layer: 0
-  m_Name: NewPlayer
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1531,10 +1531,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   engineSound: {fileID: 30991668321902106}
-  crashSound: {fileID: 0}
-  pickupSound: {fileID: 0}
+  crashSound: {fileID: 2732682631941891923}
+  packageSound: {fileID: 8832103275312978113}
+  healingSound: {fileID: 8832103275312978113}
   soundPitch: 0
-  playerController: {fileID: 0}
   carSpeed: 0
   totalTime: 0
 --- !u!82 &2732682631941891923

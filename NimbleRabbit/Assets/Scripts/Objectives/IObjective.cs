@@ -5,6 +5,12 @@ using UnityEngine;
 public interface IObjective
 {
     /// <summary>
+    /// Reference to GameObject component 
+    /// (assumes MonoBehaviours will be implementing this interface.)
+    /// </summary>
+    public GameObject gameObject {get;}
+
+    /// <summary>
     /// Simple name for the objective.
     /// </summary>
     public string Name { get; }
@@ -72,6 +78,7 @@ public interface IObjective
         AND,
         OR
     }
+
     /// <summary>
     /// This operator determines whether completion requires all prereqs to be complete or just one.
     /// </summary>
@@ -98,7 +105,6 @@ public interface IObjective
     /// Example implementation: OnObjectiveUpdated?.Invoke();
     /// </summary>
     public void RaiseObjectiveUpdated();
-
 
     /// <summary>
     /// Default method to start the objective and begin tracking time.

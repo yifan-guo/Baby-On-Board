@@ -13,17 +13,26 @@ public class HPDisplayUpdater : MonoBehaviour
     /// <summary>
     /// The TextMeshProGUI component that will be updated based on HealthManager events.
     /// </summary>
-    public TextMeshProUGUI healthText;
+    private TextMeshProUGUI healthText;
 
     /// <summary>
     /// Image component for health bar.
     /// </summary>
-    public Image healthBar;
+    private Image healthBar;
 
     /// <summary>
     /// Reference to linked HealthManager of object whose health is displayed.
     /// </summary>
     private HealthManager hp;
+
+    /// <summary>
+    /// Initialization Pt I.
+    /// </summary>
+    private void Awake()
+    {
+        healthText = transform.Find("HP Numeric").GetComponent<TextMeshProUGUI>();
+        healthBar = transform.Find("HP Visual").GetComponent<Image>();
+    }
 
     /// <summary>
     /// Subscribe to health event and initialize.

@@ -895,7 +895,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   role: 1
   maxSpeed: 25
-  attackRange: 10
+  attackRange: 7
   visionRange: 50
   stateSpeed: 0
   inCooldown: 0
