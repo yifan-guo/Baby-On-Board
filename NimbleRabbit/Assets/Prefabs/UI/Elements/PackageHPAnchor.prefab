@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4501517862142821621}
   - component: {fileID: 4501517862142821620}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PackageHPAnchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
