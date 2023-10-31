@@ -34,6 +34,16 @@ public class SettingsMenu : MonoBehaviour
     public Button quitButton;
 
     /// <summary>
+    /// Reference to the Controls button.
+    ///</summary
+    public Button controlsButton;
+
+    /// <summary>
+    /// Reference to the Controls Back button.
+    ///</summary
+    public Button controlsBackButton;
+
+    /// <summary>
     /// Initialization Pt II.
     /// </summary>
     private void Start()
@@ -48,6 +58,8 @@ public class SettingsMenu : MonoBehaviour
         resumeButton.onClick.AddListener(UIManager.instance.ToggleSettingsMenu);
         restartButton.onClick.AddListener(GameState.instance.Restart);
         quitButton.onClick.AddListener(GameState.instance.Quit);
+        controlsButton.onClick.AddListener(GameState.instance.Controls);
+        controlsBackButton.onClick.AddListener(GameState.instance.Controls);
     }
 
     /// <summary>
