@@ -81,15 +81,15 @@ public class PlayerController : MonoBehaviour
     {
         // Old Input System (remove when new input system is in place)
         HandleInput();
-
-        // New Input System
-        InputSystemCalls();
     }
 
 
 
     private void FixedUpdate()
     {
+        // New Input System
+        InputSystemCalls();
+
         // Forward
         SweepTest(
             transform.forward,
