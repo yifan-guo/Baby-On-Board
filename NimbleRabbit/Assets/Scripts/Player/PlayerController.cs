@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+
 public class PlayerController : MonoBehaviour
 {
     /// <summary>
@@ -32,14 +33,10 @@ public class PlayerController : MonoBehaviour
     public float maxTurnAngle;
 
     /// <summary>
-    /// Flag for if player is stable on the ground.
-    /// </summary>
-    public bool isGrounded {get; private set;}
-
-    /// <summary>
     /// Reference to Rigidbody.
     /// </summary>
     public Rigidbody rb {get; private set;}
+
     /// <summary>
     /// Reference to HealthManager.
     /// </summary>
@@ -49,6 +46,21 @@ public class PlayerController : MonoBehaviour
     /// Packages that player has collected.
     /// </summary>
     public PackageCollector pc {get; private set;}
+
+    /// <summary>
+    /// Audio manager for player sounds.
+    /// </summary>
+    public PlayerAudio pa {get; private set;}
+
+    /// <summary>
+    /// Whether or not the car is started.
+    /// </summary>
+    public bool started {get; private set;}
+
+    /// <summary>
+    /// Time that engine startup was initiated.
+    /// </summary>
+    private float startEngineTime = -1f;
 
     /// <summary>
     /// Time of last collision.
@@ -64,6 +76,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         hp = GetComponent<HealthManager>();
         pc = GetComponent<PackageCollector>();
+        pa = GetComponent<PlayerAudio>();
     }    
 
     /// <summary>
@@ -83,8 +96,9 @@ public class PlayerController : MonoBehaviour
         HandleInput();
     }
 
-
-
+    /// <summary>
+    /// Physics update loop.
+    /// </summary>
     private void FixedUpdate()
     {
         // New Input System
@@ -111,7 +125,6 @@ public class PlayerController : MonoBehaviour
             (transform.localScale.x / 2f) + 0.1f);
     }
 
-
     // OnEnable/OnDisable for Unity's new input system
     private void OnEnable()
     {
@@ -126,11 +139,6 @@ public class PlayerController : MonoBehaviour
         decelerate.Disable();
         turn.Disable();
     }
-
-    /// <summary>
-    /// Physics update loop.
-    /// </summary>
-
 
     /// <summary>
     /// Use sweep test for fast collisions.
@@ -185,6 +193,33 @@ public class PlayerController : MonoBehaviour
         float isAccelerating = accelerate.ReadValue<float>();
         float isDecelerating = decelerate.ReadValue<float>();
         float turnVal = turn.ReadValue<float>();
+
+        // Startup mechanism
+        if (started == false)
+        {
+            if (isAccelerating > 0f)
+            {
+                if (startEngineTime < 0f)
+                {
+                    pa.PlayStartup();
+                    startEngineTime = Time.time;
+                }
+
+                started = (Time.time - startEngineTime) > PlayerAudio.STARTUP_TIME_S;
+            }
+            else
+            {
+                pa.StopEngine();
+                startEngineTime = -1f;
+            }
+
+            if (started == true)
+            {
+                pa.PlayEngine();
+            }
+
+            return;
+        }
 
         ///////////////////////////////////////
         // VEHICLE ACCELERATION AND TURNING //
@@ -265,15 +300,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UIManager.instance.ToggleSettingsMenu();
-        }
-
-        // TODO:
-        // This is test code to drop the package.
-        // Ideally DropPackage() is called elsewhere by something like an enemy.
-        if (Input.GetKeyDown(KeyCode.Space) &&
-            this.pc.packages.Count > 0)
-        {
-            this.pc.DropPackage(this.pc.packages[0]);
         }
     }
 }

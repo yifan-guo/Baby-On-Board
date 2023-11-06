@@ -86,6 +86,8 @@ public class Bandit : NPC
             return;
         }
 
+        na.PlayHonk();
+
         // Randomly pick any package the player has
         int pkgIdx = UnityEngine.Random.Range(
             0,
