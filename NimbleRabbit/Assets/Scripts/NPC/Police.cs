@@ -9,7 +9,7 @@ public class Police : NPC
     private float ARREST_TIME = 5.0f;
     private float SLEEP_TIME = 10.0f;
     
-    private float SPEED_LIMIT = 5.0f;
+    private float SPEED_LIMIT = 35.0f;
 
     private bool PULLED_PLAYER_OVER = false;
 
