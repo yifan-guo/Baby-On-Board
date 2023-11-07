@@ -51,13 +51,12 @@ public class Police : NPC
 
     public override bool Chase()
     {
-        // Debug.Log($"Player Speed: {PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude}");
         // do not chase if player is under speed limit
         if (PULLED_PLAYER_OVER) {
             return false;
         }
 
-        if (PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude < SPEED_LIMIT) 
+        if (PlayerController.instance.rb.velocity.magnitude < SPEED_LIMIT) 
         {
             return false;
         }
@@ -83,11 +82,10 @@ public class Police : NPC
         // unity is a single-threaded application
         // sleeping on the main thread will freeze the game
         // Coroutines are not threads. They run on the main thread
-        // StartCoroutine(WaitForTime(PlayerController.instance.GetComponent<Rigidbody>(), ARREST_TIME));
         StartCoroutine(FreezePlayer(ARREST_TIME));
 
         // police should rest before making another arrest
-        StartCoroutine(WaitForTime(GetComponent<Rigidbody>(), SLEEP_TIME));
+        StartCoroutine(WaitForTime(this.rb, SLEEP_TIME));
     }
 
     IEnumerator FreezePlayer(float sleep_time) 
