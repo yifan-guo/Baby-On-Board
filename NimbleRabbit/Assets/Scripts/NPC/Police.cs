@@ -74,9 +74,7 @@ public class Police : NPC
 
     public override void Attack()
     {
-        Debug.Log("Inside Attack");
         if (PULLED_PLAYER_OVER) {
-            Debug.Log("player not enabled, skipping Attack()");
             return;
         }
         // unity is a single-threaded application
