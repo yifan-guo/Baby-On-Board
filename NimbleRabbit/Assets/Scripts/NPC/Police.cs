@@ -7,6 +7,11 @@ using UnityEngine;
 public class Police : NPC
 {
     private float ARREST_TIME = 5.0f;
+    private float SLEEP_TIME = 10.0f;
+    
+    private float SPEED_LIMIT = 5.0f;
+
+    private bool PULLED_PLAYER_OVER = false;
 
     protected override void Awake() {
         base.Awake();
@@ -46,9 +51,13 @@ public class Police : NPC
 
     public override bool Chase()
     {
-        Debug.Log($"Player Speed: {PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude}");
+        // Debug.Log($"Player Speed: {PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude}");
         // do not chase if player is under speed limit
-        if (PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude < 0.0f) 
+        if (PULLED_PLAYER_OVER) {
+            return false;
+        }
+
+        if (PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude < SPEED_LIMIT) 
         {
             return false;
         }
@@ -60,42 +69,60 @@ public class Police : NPC
                 visionRangeMax: visionRange,
                 lineOfSight: true);
         
-        Debug.Log("Can see. going after the player");
+        // Debug.Log($"Can see. going after the player: {see}");
         return see;
     }
 
     public override void Attack()
     {
-        PlayerController player = PlayerController.instance;
-
-        // player.rigidbody.velocity = Vector3.zero;
-        // player.rigidbody.angularVelocity = Vector3.zero;
-        // rigidbody.Sleep(); # https://discussions.unity.com/t/how-do-i-zero-out-the-velocity-of-an-object/2025
-
-        // freeze the position of the player until the ARREST_TIME elapses
-        player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
-
+        Debug.Log("Inside Attack");
+        if (PULLED_PLAYER_OVER) {
+            Debug.Log("player not enabled, skipping Attack()");
+            return;
+        }
         // unity is a single-threaded application
         // sleeping on the main thread will freeze the game
         // Coroutines are not threads. They run on the main thread
-        // Suspend the coroutine execution for a given amount of seconds using scaled time
-        StartCoroutine(WaitForArrestTime());
-        // unfreeze the player
-        player.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        // StartCoroutine(WaitForTime(PlayerController.instance.GetComponent<Rigidbody>(), ARREST_TIME));
+        StartCoroutine(FreezePlayer(ARREST_TIME));
+
+        // police should rest before making another arrest
+        StartCoroutine(WaitForTime(GetComponent<Rigidbody>(), SLEEP_TIME));
+    }
+
+    IEnumerator FreezePlayer(float sleep_time) 
+    {   
+         PlayerController.instance.enabled = false;
+
+         yield return new WaitForSeconds(sleep_time);
+
+         PlayerController.instance.enabled = true;
     }
 
     /// <summary>
     /// Coroutine to suspend player movement while ARRESTED
     /// </summary>
-    IEnumerator WaitForArrestTime()
+    IEnumerator WaitForTime(Rigidbody rb, float sleep_time)
     {
+        PULLED_PLAYER_OVER = true;
+        this.nav.enabled = false;
+        rb.constraints = RigidbodyConstraints.FreezePosition;
         // Print the time of when the function is called
-        Debug.Log($"Started Coroutine at timestamp : {Time.time}");
 
         // yield on a new YieldInstruction that waits for ARREST_TIME seconds
-        yield return new WaitForSeconds(ARREST_TIME);
+        yield return new WaitForSeconds(sleep_time);
 
         // After we waited ARREST_TIEM seoncds print the time again
-        Debug.Log($"Finished Coroutine at timestamp: {Time.time}");
+        PULLED_PLAYER_OVER = false;
+        this.nav.enabled = true;
+        rb.constraints = RigidbodyConstraints.None;
+    }
+
+    /// <summary>
+    /// Coroutine to suspend police from making successive arrests
+    /// </summary>
+    IEnumerator WaitForSleepTime()
+    {
+        yield return new WaitForSeconds(SLEEP_TIME);
     }
 }

@@ -51,6 +51,7 @@ public class ChaseState : BaseState
         // Continuously update chase location
         if (me.Chase() == true)
         {
+            // Debug.Log("setting destination to player");
             me.nav.SetDestination(player.transform.position);
         }
 
