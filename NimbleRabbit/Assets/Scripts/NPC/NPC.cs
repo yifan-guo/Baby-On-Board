@@ -351,6 +351,6 @@ public abstract class NPC : MonoBehaviour
 
         nav.enabled = true;
         rb.isKinematic = true;
-        // isCrashed = false;
+        isCrashed = false;
     }
 }
