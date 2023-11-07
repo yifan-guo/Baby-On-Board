@@ -48,17 +48,20 @@ public class Police : NPC
     {
         Debug.Log($"Player Speed: {PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude}");
         // do not chase if player is under speed limit
-        if (PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude < 50.0f) 
+        if (PlayerController.instance.GetComponent<Rigidbody>().velocity.magnitude < 0.0f) 
         {
             return false;
         }
 
-        return CanSee(
+        bool see = CanSee(
                 PlayerController.instance.transform.position,
                 fovMin: 0.25f,
                 visionRangeMin: 10f,
                 visionRangeMax: visionRange,
                 lineOfSight: true);
+        
+        Debug.Log("Can see. going after the player");
+        return see;
     }
 
     public override void Attack()

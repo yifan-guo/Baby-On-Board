@@ -77,6 +77,7 @@ public class IdleState : BaseState
         // See if we want to chase
         if (me.Chase() == true)
         {
+            Debug.Log("going to Chase state");
             return typeof(ChaseState);
         }
 
