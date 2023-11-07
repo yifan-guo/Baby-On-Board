@@ -96,29 +96,21 @@ public class Police : NPC
     }
 
     /// <summary>
-    /// Coroutine to suspend player movement while ARRESTED
+    /// Coroutine to suspend GameObject movement while ARRESTED
     /// </summary>
     IEnumerator WaitForTime(Rigidbody rb, float sleep_time)
     {
+        // When police pulls player over, make the police stop driving around
         PULLED_PLAYER_OVER = true;
         this.nav.enabled = false;
         rb.constraints = RigidbodyConstraints.FreezePosition;
-        // Print the time of when the function is called
 
         // yield on a new YieldInstruction that waits for ARREST_TIME seconds
         yield return new WaitForSeconds(sleep_time);
 
-        // After we waited ARREST_TIEM seoncds print the time again
+        // After police wakes up, let it be able to arrest player and move around again
         PULLED_PLAYER_OVER = false;
         this.nav.enabled = true;
         rb.constraints = RigidbodyConstraints.None;
-    }
-
-    /// <summary>
-    /// Coroutine to suspend police from making successive arrests
-    /// </summary>
-    IEnumerator WaitForSleepTime()
-    {
-        yield return new WaitForSeconds(SLEEP_TIME);
     }
 }
