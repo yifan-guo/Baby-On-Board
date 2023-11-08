@@ -87,7 +87,6 @@ GameObject:
   - component: {fileID: 5378150740611240406}
   - component: {fileID: 5620859110135894421}
   - component: {fileID: 5937514375774064614}
-  - component: {fileID: 1504296310841235766}
   m_Layer: 5
   m_Name: MPH
   m_TagString: Untagged
@@ -212,21 +211,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &1504296310841235766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3350468320983724400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee7c2038edacfb847a5e5b891a822b5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  textMPH: {fileID: 5937514375774064614}
-  carSpeed: 0
 --- !u!1 &6449423287116400627
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +379,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 159202820985888799}
+  - component: {fileID: 8327282423831856220}
   m_Layer: 5
   m_Name: Speedometer
   m_TagString: Untagged
@@ -425,6 +410,18 @@ RectTransform:
   m_AnchoredPosition: {x: 724, y: -342}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8327282423831856220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8215354782544992286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff47af3257e9f547993cdba9fc63686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8265473932146090823
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,7 +433,6 @@ GameObject:
   - component: {fileID: 4847413569259092869}
   - component: {fileID: 4007573087760581714}
   - component: {fileID: 7712632184584707180}
-  - component: {fileID: 1494387579542988615}
   m_Layer: 5
   m_Name: Needle
   m_TagString: Untagged
@@ -502,21 +498,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1494387579542988615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8265473932146090823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff47af3257e9f547993cdba9fc63686, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  carSpeed: 0
-  angle: 0
 --- !u!1001 &1640739158843537590
 PrefabInstance:
   m_ObjectHideFlags: 0
