@@ -36,6 +36,10 @@ public class Package : Collectible, IObjective
     /// </summary>
     public IObjective obj {get; private set;}
 
+    //package animator and mesh renderer
+    private Animator packageAnimator;
+    private MeshRenderer modelRenderer;
+
     /// <summary>
     /// Initialization Pt II.
     /// </summary>
@@ -59,6 +63,11 @@ public class Package : Collectible, IObjective
         Indicator.Track(
             gameObject,
             obj);
+
+        //get package animator
+        packageAnimator = GetComponent<Animator>();
+        modelRenderer = transform.Find("Model").GetComponent<MeshRenderer>();
+
     }
 
     /// <summary>
@@ -132,7 +141,24 @@ public class Package : Collectible, IObjective
                 obj);
         }
 
+        modelRenderer.enabled = false;
         transform.localPosition = Vector3.up * (owner.GetComponent<Collider>().bounds.size.y + (transform.localScale.y / 2f));
+
+        //play animation of package reassembling
+        packageAnimator.SetBool("IsCollected", true);
+        
+    }
+
+    //called by the animation when it's starting. enable the renderer
+    public void EnableModelRenderer()
+    {
+        modelRenderer.enabled = true;
+    }
+
+    //called by the animation when it's ending. reset the bool value for animation so the state will be Idle again and will be waiting for the next collecting action
+    public void ResetAnimationState()
+    {
+        packageAnimator.SetBool("IsCollected", false);
     }
 
     /// <summary>
