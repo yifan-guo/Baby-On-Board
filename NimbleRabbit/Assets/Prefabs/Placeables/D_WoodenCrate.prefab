@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06755f322c76ed8499e5060d2e823df0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particlePrefab: {fileID: 135163782849937220, guid: b941b5c5fabb24a42adb75906bfa0821, type: 3}
+  particlePrefab: {fileID: 135163782849937220, guid: 4406e0f03fd767e4ab27b01c6e87f930, type: 3}
   particleSpawnOffset: {x: 0, y: 0, z: 0}
 --- !u!65 &1684262612118622732
 BoxCollider:

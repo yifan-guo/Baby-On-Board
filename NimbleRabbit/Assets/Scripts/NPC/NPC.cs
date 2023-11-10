@@ -79,6 +79,11 @@ public abstract class NPC : MonoBehaviour
     protected HealthManager hp;
 
     /// <summary>
+    /// Reference to this NPC's audio component.
+    /// </summary>
+    public NPCAudio na {get; protected set;}
+
+    /// <summary>
     /// Reference to this NPC's state machine.
     /// </summary>
     public StateMachine stateMachine {get; protected set;}
@@ -97,6 +102,7 @@ public abstract class NPC : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         coll = GetComponent<Collider>();
         hp = GetComponent<HealthManager>();
+        na = GetComponent<NPCAudio>();
         stateMachine = GetComponent<StateMachine>();
     }
 
@@ -342,6 +348,12 @@ public abstract class NPC : MonoBehaviour
         hp.Hit(
             rb,
             force);
+
+        if (force.magnitude > 40f)
+        {
+            na.PlayShatter();
+            na.PlayHonk();
+        }
 
         // Regain control after coming to a stop
         while (rb.velocity.magnitude > 0.1f)

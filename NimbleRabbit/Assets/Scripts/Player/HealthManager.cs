@@ -89,8 +89,7 @@ public class HealthManager : MonoBehaviour
         //play crash sound when hits
         if (gameObject.CompareTag("Player"))
         {
-            Audio_PlayerCar playerCar = GetComponent<Audio_PlayerCar>();
-            playerCar.playCrash();
+            PlayerController.instance.pa.PlayCrash();
         }
 
         rb.AddForce(
