@@ -37,11 +37,25 @@ public class NPCAudio : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        engineSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+        otherSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+
         otherSource.playOnAwake = false;
         otherSource.pitch = 1f;
         otherSource.loop = false;
 
+        UIManager.instance.settingsMenu.OnSoundVolumeChanged += SetSoundVolume;
+
         PlayEngine();
+    }
+
+    /// <summary>
+    /// Settings sound audio bar slider listener.
+    /// </summary>
+    private void SetSoundVolume(float value)
+    {
+        engineSource.volume = value;
+        otherSource.volume = value;
     }
 
     /// <summary>

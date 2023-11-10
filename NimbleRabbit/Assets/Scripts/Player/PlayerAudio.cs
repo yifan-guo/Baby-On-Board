@@ -56,6 +56,9 @@ public class PlayerAudio : MonoBehaviour
     /// </summary>
     private void Start() 
     {
+        engineSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+        otherSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+
         engineSource.playOnAwake = false;
         engineSource.pitch = 1f;
         engineSource.loop = false;
@@ -63,6 +66,8 @@ public class PlayerAudio : MonoBehaviour
         otherSource.playOnAwake = false;
         otherSource.pitch = 1f;
         otherSource.loop = false;
+
+        UIManager.instance.settingsMenu.OnSoundVolumeChanged += SetSoundVolume;
     }
 
     /// <summary>
@@ -94,7 +99,6 @@ public class PlayerAudio : MonoBehaviour
 
             engineSource.pitch = pitch;
         }
-
     }
 
     /// <summary>
@@ -114,6 +118,16 @@ public class PlayerAudio : MonoBehaviour
                 PlayCrash();
                 break;
         }
+    }
+
+    /// <summary>
+    /// Settings sound audio slider bar listener.
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetSoundVolume(float value)
+    {
+        engineSource.volume = value;
+        otherSource.volume = value;
     }
 
     /// <summary>

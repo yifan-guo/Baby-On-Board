@@ -18,8 +18,8 @@ public class EndScreen : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        restartButton = transform.Find("RestartButton").GetComponent<Button>();
-        exitButton = transform.Find("ExitButton").GetComponent<Button>();
+        restartButton = transform.Find("Restart").GetComponent<Button>();
+        exitButton = transform.Find("Quit").GetComponent<Button>();
     }
 
     /// <summary>

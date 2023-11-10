@@ -28,6 +28,14 @@ public class GameState : MonoBehaviour
     }
 
     /// <summary>
+    /// Initialization Pt II.
+    /// </summary>
+    private void Start()
+    {
+        ((IObjective)level).StartObjective();
+    }
+
+    /// <summary>
     /// Add a prerequisite objective at runtime.
     /// </summary>
     /// <param name="obj"></param>
@@ -35,14 +43,6 @@ public class GameState : MonoBehaviour
     {
         level.AddPrereq(obj);
         UIManager.instance.objList.AddEntry(obj);
-    }
-
-    /// <summary>
-    /// Initialization Pt II.
-    /// </summary>
-    private void Start()
-    {
-        ((IObjective)level).StartObjective();
     }
 
     /// <summary>
@@ -85,9 +85,5 @@ public class GameState : MonoBehaviour
         #else
             Application.Quit();
         #endif
-    }
-
-    public void Controls() {
-        UIManager.instance.ToggleControlsMenu();
     }
 }

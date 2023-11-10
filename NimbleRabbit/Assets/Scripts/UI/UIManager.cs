@@ -32,11 +32,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Reference to parent object for the Settings menu.
     /// </summary>
-
-    public GameObject settingsMenu;
-
-    public GameObject mainMenu;
-    public GameObject controlsMenu;
+    public SettingsMenu settingsMenu {get; private set;}
 
     /// <summary>
     /// Reference to the parent object for the Lose Screen.
@@ -52,6 +48,11 @@ public class UIManager : MonoBehaviour
     /// Parent object for bandit indicators.
     /// </summary>
     public GameObject banditIndicators {get; private set;}
+
+    /// <summary>
+    /// Audio source for music.
+    /// </summary>
+    private AudioSource musicSource;
 
     [Header("Prefabs")]
 
@@ -88,9 +89,10 @@ public class UIManager : MonoBehaviour
         packageHP = transform.Find("PackageHPAnchor").GetComponent<PackageHPDisplayUpdater>();
         objList = transform.Find("ObjectivesList").GetComponent<ObjectivesList>();
         indicators = transform.Find("Indicators").gameObject;
-        settingsMenu = transform.Find("SettingsMenu").gameObject;
+        settingsMenu = transform.Find("SettingsMenu").GetComponent<SettingsMenu>();
         losePopup = transform.Find("LosePopup").gameObject;
         endScreen = transform.Find("EndScreen").gameObject;
+        musicSource = GetComponent<AudioSource>();
 
         sm = ScriptableObject.CreateInstance<ScoreManager>();
     }
@@ -103,12 +105,15 @@ public class UIManager : MonoBehaviour
         // Get this reference in Start because PlayerController instance is set in Awake
         banditIndicators = PlayerController.instance.transform.Find("BanditIndicators").gameObject;
 
-        settingsMenu.SetActive(false);
+        musicSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+
+        settingsMenu.gameObject.SetActive(false);
         endScreen.SetActive(false);
 
         playerHP.Link(PlayerController.instance.hp);
         packageHP.Link(hp: PlayerController.instance.hp, pc: PlayerController.instance.pc);
 
+        settingsMenu.OnMusicVolumeChanged += SetMusicVolume;
         PlayerController.instance.pc.OnInventoryChange += SubscribeToPackages;
         PlayerController.instance.hp.OnHealthChange += UpdateWinLoseDisplay;
     }
@@ -129,22 +134,12 @@ public class UIManager : MonoBehaviour
     public void ToggleSettingsMenu()
     {
         GameState.instance.TogglePause();
-        settingsMenu.SetActive(GameState.instance.isPaused);
-        if (settingsMenu.activeSelf) {
-            mainMenu.SetActive(true);
-            controlsMenu.SetActive(false);
-        }
-    }
+        settingsMenu.gameObject.SetActive(GameState.instance.isPaused);
 
-    public void ToggleControlsMenu()
-    {
-        bool ControlsActive = controlsMenu.activeSelf;
-        if (ControlsActive) {
-            mainMenu.SetActive(true);
-            controlsMenu.SetActive(false);
-        } else {
-            mainMenu.SetActive(false);
-            controlsMenu.SetActive(true);
+        if (settingsMenu.gameObject.activeSelf) 
+        {
+            settingsMenu.settings.SetActive(true);
+            settingsMenu.controls.SetActive(false);
         }
     }
 
@@ -230,5 +225,14 @@ public class UIManager : MonoBehaviour
         Component[] textMeshes = endScreen.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
         TMPro.TextMeshProUGUI winTextMesh = (TMPro.TextMeshProUGUI)Array.Find(textMeshes, tm => tm.name == "WinText");
         winTextMesh.text = scoreSummaryText;
+    }
+    
+    /// <summary>
+    /// Settings music audio bar slider listener.
+    /// </summary>
+    /// <param name="value"></param>
+    private void SetMusicVolume(float value)
+    {
+        musicSource.volume = value;
     }
 }
