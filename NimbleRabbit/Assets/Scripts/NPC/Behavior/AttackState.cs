@@ -22,6 +22,7 @@ public class AttackState : BaseState
             return typeof(IdleState);
         }
 
+        Debug.Log("In Attack Update");
         if (me.isCrashed == true)
         {
             me.Attack();
