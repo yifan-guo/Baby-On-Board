@@ -737,8 +737,12 @@ MonoBehaviour:
   startup: {fileID: 8300000, guid: 56ad14cf6ac79e64ca4804c8c93fece0, type: 3}
   engine: {fileID: 8300000, guid: aaddb94424c9c014a9e4b2df9ad95200, type: 3}
   crash: {fileID: 8300000, guid: ee552f07e549cd64ba479bf43e53010b, type: 3}
-  shatters: []
-  honks: []
+  shatters:
+  - {fileID: 8300000, guid: b77e432eedeaf804dad01c55a2c4dfc6, type: 3}
+  honks:
+  - {fileID: 8300000, guid: e0dba759b465ed14ca283208744943eb, type: 3}
+  - {fileID: 8300000, guid: f4cf5c8db0c14654e850e489f979bd69, type: 3}
+  - {fileID: 8300000, guid: 92d3e97ac3510134a82e99590080832b, type: 3}
 --- !u!82 &681656550
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1769,7 +1773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009313226
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1777,7 +1781,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000037252903
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
