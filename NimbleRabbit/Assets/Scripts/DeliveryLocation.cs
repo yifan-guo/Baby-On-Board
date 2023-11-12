@@ -37,19 +37,33 @@ public class DeliveryLocation : MonoBehaviour
     /// <param name="other"></param>
     protected virtual void OnTriggerEnter(Collider other) 
     {
-        // TODO:
-        // This needs to complete the objective even if it isn't the only one.
-        // Currently won't complete an objective if it doesn't beat the level.
-
-        if (other.CompareTag("Player")) 
+        if (other.CompareTag("Player") == false)
         {
-            if (PlayerController.instance.pc.packages.Count > 0) 
+            return;
+        }
+
+        if (PlayerController.instance.pc.packages.Count <= 0)
+        {
+            return;
+        }
+
+        // Loop backwards so that we can remove packages from list as we iterate
+        for (int i = PlayerController.instance.pc.packages.Count - 1;
+            i >= 0;
+            i--)
+        {
+            Package p = PlayerController.instance.pc.packages[i];
+
+            if (p.deliveryLocation != gameObject)
             {
-                // TODO() Replace with check of Level Objective completion once implemented.
-                foreach (Package p in PlayerController.instance.pc.packages) 
-                {
-                    ((IObjective)p).CheckCompletion();
-                }
+                continue;
+            }
+
+            p.obj.CheckCompletion();
+
+            if (p.obj.ObjectiveStatus == IObjective.Status.Complete)
+            {
+                PlayerController.instance.pc.Deliver(p);
             }
         }
     }
