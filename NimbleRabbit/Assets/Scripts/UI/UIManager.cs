@@ -133,6 +133,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ToggleSettingsMenu()
     {
+        //disable this menu when game is over
+        if(!PlayerController.instance.enableControl)
+        {
+            return;
+        }
+
         GameState.instance.TogglePause();
         settingsMenu.gameObject.SetActive(GameState.instance.isPaused);
 
@@ -197,7 +203,9 @@ public class UIManager : MonoBehaviour
         if (levelObj.ObjectiveStatus == IObjective.Status.Failed) 
         {
             DisplayLoseScreen();
-            GameState.instance.TogglePause();
+            //disable player control so the player car can't move anymore because game is over
+            PlayerController.instance.enableControl = false;
+            //GameState.instance.TogglePause();
             return;
         }
     }
