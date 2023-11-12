@@ -149,14 +149,22 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ToggleSettingsMenu()
     {
+        //disable this menu when game is over
+        if(!PlayerController.instance.enableControl)
+        {
+            return;
+        }
+
         GameState.instance.TogglePause();
         settingsMenu.gameObject.SetActive(GameState.instance.isPaused);
 
-        if (settingsMenu.gameObject.activeSelf) 
+        if (settingsMenu.gameObject.activeInHierarchy) 
         {
             settingsMenu.settings.SetActive(true);
             settingsMenu.controls.SetActive(false);
         }
+
+        Cursor.visible = settingsMenu.gameObject.activeInHierarchy;
     }
 
     /// <summary>
@@ -164,6 +172,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void DisplayWinScreen()
     {
+        Cursor.visible = true;
         SetWinText();
         endScreen.SetActive(true);
     }
@@ -173,6 +182,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void DisplayLoseScreen()
     {
+        Cursor.visible = true;
         losePopup.SetActive(true);
     }
 
@@ -213,7 +223,9 @@ public class UIManager : MonoBehaviour
         if (levelObj.ObjectiveStatus == IObjective.Status.Failed) 
         {
             DisplayLoseScreen();
-            GameState.instance.TogglePause();
+            //disable player control so the player car can't move anymore because game is over
+            PlayerController.instance.enableControl = false;
+            //GameState.instance.TogglePause();
             return;
         }
     }

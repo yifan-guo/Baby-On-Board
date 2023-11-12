@@ -16,15 +16,6 @@ public class Package : Collectible, IObjective
     /// </summary>
     public HealthManager hp {get; private set;}
 
-    /// <summary>
-    /// Initialization Pt I.
-    /// </summary>
-    protected override void Awake()
-    {
-        base.Awake();
-        hp = GetComponent<HealthManager>();
-    }
-
     public GameObject deliveryLocation;
 
     public const float DELIVERY_RADIUS = 20f;
@@ -39,6 +30,70 @@ public class Package : Collectible, IObjective
     //package animator and mesh renderer
     private Animator packageAnimator;
     private MeshRenderer modelRenderer;
+
+    public string _name = "Package";
+    public string Name
+    {
+        get { return _name; }
+    }
+
+    public string _description;
+    public string Description
+    {
+        get { return _description; }
+    }
+
+    private IObjective.Status _status = IObjective.Status.NotStarted;
+    public IObjective.Status ObjectiveStatus
+    {
+        get { return _status; }
+        set { _status = value; }
+    }
+
+    private float _startTime;
+    public float StartTime
+    {
+        get { return _startTime; }
+        set { _startTime = value; }
+    }
+
+    private float _endTime;
+    public float EndTime
+    {
+        get { return _endTime; }
+        set { _endTime = value; }
+    }
+
+    private List<IObjective> _prereqs = new List<IObjective>();
+    public List<IObjective> prereqs
+    {
+        get { return _prereqs; }
+    }
+
+    private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
+    public IObjective.PrereqOperator prereqCompletionOperator
+    {
+        get { return _prereqCompletionOperator; }
+    }
+
+    private IObjective.PrereqOperator _prereqFailureOperator = IObjective.PrereqOperator.AND;
+    public IObjective.PrereqOperator prereqFailureOperator
+    {
+        get { return _prereqFailureOperator; }
+    }
+
+    public event Action OnObjectiveUpdated;
+
+    /// <summary>
+    /// Initialization Pt I.
+    /// </summary>
+    protected override void Awake()
+    {
+        base.Awake();
+        hp = GetComponent<HealthManager>();
+        packageAnimator = GetComponent<Animator>();
+        modelRenderer = transform.Find("Model").GetComponent<MeshRenderer>();
+    }
 
     /// <summary>
     /// Initialization Pt II.
@@ -63,11 +118,6 @@ public class Package : Collectible, IObjective
         Indicator.Track(
             gameObject,
             obj);
-
-        //get package animator
-        packageAnimator = GetComponent<Animator>();
-        modelRenderer = transform.Find("Model").GetComponent<MeshRenderer>();
-
     }
 
     /// <summary>
@@ -178,59 +228,6 @@ public class Package : Collectible, IObjective
             gameObject,
             obj);
     }
-
-    public string _name = "Package";
-    public string Name
-    {
-        get { return _name; }
-    }
-
-    public string _description;
-    public string Description
-    {
-        get { return _description; }
-    }
-
-    private IObjective.Status _status = IObjective.Status.NotStarted;
-    public IObjective.Status ObjectiveStatus
-    {
-        get { return _status; }
-        set { _status = value; }
-    }
-
-    private float _startTime;
-    public float StartTime
-    {
-        get { return _startTime; }
-        set { _startTime = value; }
-    }
-
-    private float _endTime;
-    public float EndTime
-    {
-        get { return _endTime; }
-        set { _endTime = value; }
-    }
-
-    private List<IObjective> _prereqs = new List<IObjective>();
-    public List<IObjective> prereqs
-    {
-        get { return _prereqs; }
-    }
-
-    private IObjective.PrereqOperator _prereqCompletionOperator = IObjective.PrereqOperator.AND;
-    public IObjective.PrereqOperator prereqCompletionOperator
-    {
-        get { return _prereqCompletionOperator; }
-    }
-
-    private IObjective.PrereqOperator _prereqFailureOperator = IObjective.PrereqOperator.AND;
-    public IObjective.PrereqOperator prereqFailureOperator
-    {
-        get { return _prereqFailureOperator; }
-    }
-
-    public event Action OnObjectiveUpdated;
 
     public bool PrimaryCompletionCondition()
     {

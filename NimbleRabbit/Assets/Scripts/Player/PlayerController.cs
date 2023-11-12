@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private float lastCollisionTime_s;
 
+    //bool value to enable or disable control
+    public bool enableControl = true;
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -101,6 +104,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        //if enableControl == false, then pause control
+        if(!enableControl)
+        {
+            return;
+        }
+        
         // New Input System
         InputSystemCalls();
 

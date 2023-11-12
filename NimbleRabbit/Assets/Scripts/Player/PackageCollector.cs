@@ -26,12 +26,6 @@ public class PackageCollector : MonoBehaviour
         OnInventoryChange?.Invoke();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     /// <summary>
     /// Add package.
     /// </summary>
@@ -90,25 +84,26 @@ public class PackageCollector : MonoBehaviour
     /// <param name="objectiveStatus"></param>
     public void Deliver(
         Package pkg,
-        bool objectiveStatus)
+        bool objectiveStatus = true)
     {
-        IObjective pkgObjective = (IObjective) pkg;
-
         // Update objective
-        if (objectiveStatus == true)
+        if (objectiveStatus == false)
         {
-            pkgObjective.Complete();
-        }
-        else
-        {
+            IObjective pkgObjective = (IObjective) pkg;
             pkgObjective.Fail();
         }
 
         // Untrack in case we are a bandit
         Indicator.Untrack(pkg.transform.parent.gameObject);
 
+        // Untrack if we delivered it
+        Indicator.Untrack(pkg.deliveryLocation.gameObject);
+
         // Remove from play
         packages.Remove(pkg);
         pkg.gameObject.SetActive(false);
+
+        // Update inventory
+        OnInventoryChange?.Invoke();
     }
 }
