@@ -43,24 +43,6 @@ public class Police : NPC
         }
     }
 
-    public float StartTime {get; set;}
-
-    public float EndTime {get; set;}
-
-    public float TimeElapsedSinceStart
-    {
-        get
-        {
-            if (StartTime == 0)
-            {
-                return 0f;
-            }
-            return Time.time - StartTime;
-        }
-    }
-
-
-
     public override bool Chase()
     {
         // do not chase if player is under speed limit
