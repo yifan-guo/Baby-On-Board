@@ -33,7 +33,7 @@ public class Police : NPC
 
     protected void SetPoliceIndicator(BaseState state)
     {
-        if (SetPoliceIndicator.ACTIVE_STATES.Contains(state.GetType()) == true)
+        if (PoliceIndicator.ACTIVE_STATES.Contains(state.GetType()) == true)
         {
             PoliceIndicator.Track(this);
         }

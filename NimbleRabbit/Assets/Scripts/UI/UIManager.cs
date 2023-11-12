@@ -49,6 +49,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject banditIndicators {get; private set;}
 
+    public GameObject policeIndicators {get; private set;}
+
     /// <summary>
     /// Audio source for music.
     /// </summary>
@@ -65,6 +67,11 @@ public class UIManager : MonoBehaviour
     /// Reference to BanditIndicator Prefab that will be cloned.
     /// </summary>
     public BanditIndicator banditIndicatorPrefab;
+
+    /// <summary>
+    ///  <Reference to PoliceIndicator Prefab that will be cloned.
+    /// </summary>
+    public PoliceIndicator policeIndicatorPrefab;
 
     /// <summary>
     /// Reference to objective list entry Prefab that will be cloned.
@@ -104,6 +111,7 @@ public class UIManager : MonoBehaviour
     {
         // Get this reference in Start because PlayerController instance is set in Awake
         banditIndicators = PlayerController.instance.transform.Find("BanditIndicators").gameObject;
+        policeIndicators = PlayerController.instance.transform.Find("PoliceIndicators").gameObject;
 
         musicSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
 

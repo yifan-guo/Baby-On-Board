@@ -6,9 +6,9 @@ using UnityEngine;
 public class PoliceIndicator : MonoBehaviour
 {
     public static readonly HashSet<Type> ACTIVE_STATES = new HashSet<Type>(){
-        typeof(ChaseState);
-        typeof(AttackState);
-    }
+        typeof(ChaseState),
+        typeof(AttackState)
+    };
 
     private static List<PoliceIndicator> pool;
 
@@ -55,7 +55,7 @@ public class PoliceIndicator : MonoBehaviour
         }
 
         PoliceIndicator ind = trackedPolice[id];
-        ind.disable();
+        ind.Disable();
     }
 
     public static void ClearAll()
@@ -67,7 +67,7 @@ public class PoliceIndicator : MonoBehaviour
     private static PoliceIndicator GetIndicator()
     {
         if (pool == null) {
-            PoliceIndicator = new List<PoliceIndicator>();
+            pool = new List<PoliceIndicator>();
         }
 
         foreach (PoliceIndicator ind in pool)
@@ -105,7 +105,7 @@ public class PoliceIndicator : MonoBehaviour
             PlayerController player = PlayerController.instance;
 
             // this is the vector from police to player car
-            Vector3 distVector = bandit.transform.position - player.transform.position;
+            Vector3 distVector = police.transform.position - player.transform.position;
 
             // find angle between the police and forward direction to determine the indicator's rotation
             float angle = Vector3.SignedAngle(

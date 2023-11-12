@@ -144,11 +144,13 @@ public class NPCAudio : MonoBehaviour
 
     public void PlaySiren()
     {
+        Debug.Log("play siren");
         sirenSource.PlayOneShot(sirens[0]);
     }
 
     public void StopSiren()
     {
+        Debug.Log("stop siren");
         sirenSource.Stop();
     }
 }

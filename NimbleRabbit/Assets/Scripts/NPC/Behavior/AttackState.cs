@@ -22,7 +22,9 @@ public class AttackState : BaseState
             return typeof(IdleState);
         }
 
-        if (me.role == NPC.Role.Police && me.nav.remainingDistance < me.attackRange) {
+        if (me.role == NPC.Role.Police 
+            && me.nav.enabled 
+            && me.nav.remainingDistance < me.attackRange) {
             me.Attack();
             return typeof(IdleState);
         }
