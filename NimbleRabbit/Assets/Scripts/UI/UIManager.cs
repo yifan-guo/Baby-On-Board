@@ -44,6 +44,12 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject endScreen {get; private set;}
 
+
+    /// <summary>
+    /// Reference to the parent object for the Pull Over Screen.
+    /// </summary>
+    public GameObject pullOverScreen {get; private set;}
+
     /// <summary>
     /// Parent object for bandit indicators.
     /// </summary>
@@ -99,6 +105,8 @@ public class UIManager : MonoBehaviour
         settingsMenu = transform.Find("SettingsMenu").GetComponent<SettingsMenu>();
         losePopup = transform.Find("LosePopup").gameObject;
         endScreen = transform.Find("EndScreen").gameObject;
+        pullOverScreen = transform.Find("PulledOverScreen").gameObject;
+
         musicSource = GetComponent<AudioSource>();
 
         sm = ScriptableObject.CreateInstance<ScoreManager>();

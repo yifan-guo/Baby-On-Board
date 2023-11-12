@@ -10,6 +10,8 @@ public class Police : NPC
     
     private float SPEED_LIMIT = 15.0f;
 
+    private GameObject pullOverScreen;
+
     protected override void Awake() {
         base.Awake();
     }
@@ -29,6 +31,9 @@ public class Police : NPC
 
         stateMachine.SetStates(states);
         stateMachine.OnStateChanged += SetPoliceIndicator;
+
+        pullOverScreen = UIManager.instance.pullOverScreen;
+
     }
 
     protected void SetPoliceIndicator(BaseState state)
@@ -68,6 +73,8 @@ public class Police : NPC
         // Coroutines are not threads. They run on the main thread
         StartCoroutine(FreezePlayer());
 
+        pullOverScreen.SetActive(true);
+
         // police should rest before making another arrest
         inCooldown = true;
     }
@@ -75,9 +82,13 @@ public class Police : NPC
     IEnumerator FreezePlayer() 
     {   
         PlayerController.instance.rb.constraints = RigidbodyConstraints.FreezePosition;
+        this.rb.constraints = RigidbodyConstraints.FreezePosition;
 
-         yield return new WaitForSeconds(ARREST_TIME);
+        yield return new WaitForSeconds(ARREST_TIME);
+
+        pullOverScreen.SetActive(false);
 
         PlayerController.instance.rb.constraints = RigidbodyConstraints.None;
+        this.rb.constraints = RigidbodyConstraints.None;
     }
 }
