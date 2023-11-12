@@ -142,11 +142,13 @@ public class UIManager : MonoBehaviour
         GameState.instance.TogglePause();
         settingsMenu.gameObject.SetActive(GameState.instance.isPaused);
 
-        if (settingsMenu.gameObject.activeSelf) 
+        if (settingsMenu.gameObject.activeInHierarchy) 
         {
             settingsMenu.settings.SetActive(true);
             settingsMenu.controls.SetActive(false);
         }
+
+        Cursor.visible = settingsMenu.gameObject.activeInHierarchy;
     }
 
     /// <summary>
@@ -154,6 +156,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void DisplayWinScreen()
     {
+        Cursor.visible = true;
         SetWinText();
         endScreen.SetActive(true);
     }
@@ -163,6 +166,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void DisplayLoseScreen()
     {
+        Cursor.visible = true;
         losePopup.SetActive(true);
     }
 
