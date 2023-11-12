@@ -62,7 +62,6 @@ public class Police : NPC
                 visionRangeMax: visionRange,
                 lineOfSight: true);
         
-        // Debug.Log($"Can see. going after the player: {see}");
         return see;
     }
 
@@ -71,7 +70,6 @@ public class Police : NPC
         // unity is a single-threaded application
         // sleeping on the main thread will freeze the game
         // Coroutines are not threads. They run on the main thread
-        Debug.Log("Start Couroutine");
         StartCoroutine(FreezePlayer());
 
         // police should rest before making another arrest
@@ -80,7 +78,6 @@ public class Police : NPC
 
     IEnumerator FreezePlayer() 
     {   
-        Debug.Log("freeze player");
         PlayerController.instance.rb.constraints = RigidbodyConstraints.FreezePosition;
 
          yield return new WaitForSeconds(ARREST_TIME);

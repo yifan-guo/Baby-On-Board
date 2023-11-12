@@ -46,6 +46,10 @@ public class IdleState : BaseState
             return;
         }
 
+        if (me.role == NPC.Role.Police) {
+            me.na.StopSiren();
+        }
+
         isTrafficCompliant = true;
         waitingOnPath = true;
         failedPathCount = 0;
@@ -77,6 +81,10 @@ public class IdleState : BaseState
         // See if we want to chase
         if (me.Chase() == true)
         {
+            // play the siren
+            if (me.role == NPC.Role.Police) {
+                me.na.PlaySiren();
+            }
             return typeof(ChaseState);
         }
 
