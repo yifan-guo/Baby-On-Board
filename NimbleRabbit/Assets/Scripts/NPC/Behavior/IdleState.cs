@@ -84,6 +84,7 @@ public class IdleState : BaseState
             // play the siren
             if (me.role == NPC.Role.Police) {
                 me.na.PlaySiren();
+                me.na.TurnOnLights();
             }
             return typeof(ChaseState);
         }

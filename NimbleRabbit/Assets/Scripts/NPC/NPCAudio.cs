@@ -28,12 +28,15 @@ public class NPCAudio : MonoBehaviour
 
     private NPC npc;
 
+    public LightManager lightManager {get; private set;}
 
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
     private void Awake()
     {
+        lightManager = GetComponent<LightManager>();
+
         npc = GetComponent<NPC>();
 
         AudioSource[] sources = GetComponents<AudioSource>();
@@ -152,5 +155,15 @@ public class NPCAudio : MonoBehaviour
     {
         Debug.Log("stop siren");
         sirenSource.Stop();
+    }
+
+    public void TurnOnLights()
+    {
+        lightManager.TurnOnLights();
+    }
+
+    public void TurnOffLights()
+    {
+        lightManager.TurnOffLights();
     }
 }
