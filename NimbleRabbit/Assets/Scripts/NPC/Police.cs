@@ -14,6 +14,7 @@ public class Police : NPC
         base.Awake();
     }
 
+
     protected override void Start()
     {
         base.Start();
@@ -27,6 +28,19 @@ public class Police : NPC
         };
 
         stateMachine.SetStates(states);
+        stateMachine.OnStateChanged += SetPoliceIndicator;
+    }
+
+    protected void SetPoliceIndicator(BaseState state)
+    {
+        if (SetPoliceIndicator.ACTIVE_STATES.Contains(state.GetType()) == true)
+        {
+            PoliceIndicator.Track(this);
+        }
+        else
+        {
+            PoliceIndicator.Untrack(this);
+        }
     }
 
     public float StartTime {get; set;}
