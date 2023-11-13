@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class Police : NPC
 {
-    private float ARREST_TIME = 5.0f;
+    public const float ARREST_TIME = 5.0f;
     
-    private float SPEED_LIMIT = 15.0f;
+    public const float SPEED_LIMIT = 15.0f;
 
     private GameObject pullOverScreen;
 
