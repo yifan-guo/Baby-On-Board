@@ -345,9 +345,10 @@ public abstract class NPC : MonoBehaviour
         rb.isKinematic = false;
         isCrashed = true;
 
+
         hp.Hit(
-            rb,
-            force);
+        rb,
+        force);
 
         if (force.magnitude > 40f)
         {
@@ -361,8 +362,10 @@ public abstract class NPC : MonoBehaviour
             yield return null;
         }
 
+
         nav.enabled = true;
         rb.isKinematic = true;
         isCrashed = false;
+        
     }
 }

@@ -45,10 +45,18 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject endScreen {get; private set;}
 
+
+    /// <summary>
+    /// Reference to the parent object for the Pull Over Screen.
+    /// </summary>
+    public GameObject pullOverScreen {get; private set;}
+
     /// <summary>
     /// Parent object for bandit indicators.
     /// </summary>
     public GameObject banditIndicators {get; private set;}
+
+    public GameObject policeIndicators {get; private set;}
 
     /// <summary>
     /// Audio source for music.
@@ -66,6 +74,11 @@ public class UIManager : MonoBehaviour
     /// Reference to BanditIndicator Prefab that will be cloned.
     /// </summary>
     public BanditIndicator banditIndicatorPrefab;
+
+    /// <summary>
+    ///  <Reference to PoliceIndicator Prefab that will be cloned.
+    /// </summary>
+    public PoliceIndicator policeIndicatorPrefab;
 
     /// <summary>
     /// Reference to objective list entry Prefab that will be cloned.
@@ -93,6 +106,8 @@ public class UIManager : MonoBehaviour
         settingsMenu = transform.Find("SettingsMenu").GetComponent<SettingsMenu>();
         losePopup = transform.Find("LosePopup").gameObject;
         endScreen = transform.Find("EndScreen").gameObject;
+        pullOverScreen = transform.Find("PulledOverScreen").gameObject;
+
         musicSource = GetComponent<AudioSource>();
 
         sm = ScriptableObject.CreateInstance<ScoreManager>();
@@ -105,6 +120,7 @@ public class UIManager : MonoBehaviour
     {
         // Get this reference in Start because PlayerController instance is set in Awake
         banditIndicators = PlayerController.instance.transform.Find("BanditIndicators").gameObject;
+        policeIndicators = PlayerController.instance.transform.Find("PoliceIndicators").gameObject;
 
         musicSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
 
@@ -127,6 +143,7 @@ public class UIManager : MonoBehaviour
         Indicator.ClearAll();
         BanditIndicator.ClearAll();
         ObjectivesList.ClearAll();
+        PoliceIndicator.ClearAll();
     }
 
     /// <summary>

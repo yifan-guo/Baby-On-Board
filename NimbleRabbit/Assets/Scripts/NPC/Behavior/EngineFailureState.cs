@@ -67,6 +67,10 @@ public class EngineFailureState : BaseState
         {
             me.inCooldown = false; // reset the cooldown flag
             me.na.PlayEngine();
+
+            if (me.role == NPC.Role.Police) {
+                me.na.TurnOffLights();
+            }
             return typeof(IdleState);
         }
 

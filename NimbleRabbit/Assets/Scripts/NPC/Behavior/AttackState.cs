@@ -22,7 +22,12 @@ public class AttackState : BaseState
             return typeof(IdleState);
         }
 
-        Debug.Log("In Attack Update");
+        if (me.role == NPC.Role.Police 
+            && me.nav.enabled 
+            && me.nav.remainingDistance < me.attackRange) {
+            me.Attack();
+            return typeof(IdleState);
+        }
         if (me.isCrashed == true)
         {
             me.Attack();

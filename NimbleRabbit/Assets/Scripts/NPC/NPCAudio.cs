@@ -12,6 +12,8 @@ public class NPCAudio : MonoBehaviour
 
     public AudioClip[] honks;
 
+    public AudioClip[] sirens;
+
     /// <summary>
     /// Engine audio source component.
     /// </summary>
@@ -22,14 +24,28 @@ public class NPCAudio : MonoBehaviour
     /// </summary>
     private AudioSource otherSource;
 
+    private AudioSource sirenSource;
+
+    private NPC npc;
+
+    public LightManager lightManager {get; private set;}
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
     private void Awake()
     {
+        lightManager = GetComponent<LightManager>();
+
+        npc = GetComponent<NPC>();
+
         AudioSource[] sources = GetComponents<AudioSource>();
         engineSource = sources[0];
         otherSource = sources[1];
+
+        if (npc.role == NPC.Role.Police) {
+            sirenSource = sources[2];
+        }
     }
 
     /// <summary>
@@ -44,6 +60,14 @@ public class NPCAudio : MonoBehaviour
         otherSource.pitch = 1f;
         otherSource.loop = false;
 
+        if (npc.role == NPC.Role.Police) {
+            sirenSource.velocityUpdateMode = AudioVelocityUpdateMode.Dynamic;
+            sirenSource.playOnAwake = false;
+            sirenSource.pitch = 1f;
+            sirenSource.loop = true;
+        }
+        
+
         UIManager.instance.settingsMenu.OnSoundVolumeChanged += SetSoundVolume;
 
         PlayEngine();
@@ -56,6 +80,10 @@ public class NPCAudio : MonoBehaviour
     {
         engineSource.volume = value;
         otherSource.volume = value;
+
+        if (npc.role == NPC.Role.Police) {
+            sirenSource.volume = value;
+        }
     }
 
     /// <summary>
@@ -115,5 +143,27 @@ public class NPCAudio : MonoBehaviour
             honks.Length);
         
         otherSource.PlayOneShot(honks[roll]);
+    }
+
+    public void PlaySiren()
+    {
+        Debug.Log("play siren");
+        sirenSource.PlayOneShot(sirens[0]);
+    }
+
+    public void StopSiren()
+    {
+        Debug.Log("stop siren");
+        sirenSource.Stop();
+    }
+
+    public void TurnOnLights()
+    {
+        lightManager.TurnOnLights();
+    }
+
+    public void TurnOffLights()
+    {
+        lightManager.TurnOffLights();
     }
 }
