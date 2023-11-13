@@ -1618,7 +1618,7 @@ PrefabInstance:
     - target: {fileID: 6545030753709497714, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 335666909}
+      objectReference: {fileID: 0}
     - target: {fileID: 6545030753789158390, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Navigation.m_Mode
       value: 0
@@ -1634,7 +1634,7 @@ PrefabInstance:
     - target: {fileID: 6545030753883224594, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 335666909}
+      objectReference: {fileID: 0}
     - target: {fileID: 6545030753883224594, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Colors.m_SelectedColor.b
       value: 0
@@ -1686,7 +1686,7 @@ PrefabInstance:
     - target: {fileID: 6545030753944593194, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 1912249038}
+      objectReference: {fileID: 0}
     - target: {fileID: 6545030753974467723, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Name
       value: Settings
@@ -1702,7 +1702,7 @@ PrefabInstance:
     - target: {fileID: 6545030754207907591, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1912249038}
+      objectReference: {fileID: 0}
     - target: {fileID: 6545030754207907591, guid: d46d429f0ef3f9542a61766b66f26231, type: 3}
       propertyPath: m_Colors.m_SelectedColor.b
       value: 0
