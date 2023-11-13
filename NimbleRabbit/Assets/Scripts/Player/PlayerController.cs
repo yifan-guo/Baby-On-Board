@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public InputAction accelerate;
     public InputAction decelerate;
     public InputAction turn;
+    public InputAction quitGame;
+    public InputAction pauseGame;
 
     [Header("Driving")]
     public float forwardSpeed;
@@ -80,7 +83,10 @@ public class PlayerController : MonoBehaviour
         hp = GetComponent<HealthManager>();
         pc = GetComponent<PackageCollector>();
         pa = GetComponent<PlayerAudio>();
-    }    
+
+        quitGame.performed += OnQuitGame;
+        pauseGame.performed += OnPauseGame;
+    }
 
     /// <summary>
     /// Initialization Pt II.
@@ -88,15 +94,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
-    }
-
-    /// <summary>
-    /// Every frame update loop.
-    /// </summary>
-    private void Update()
-    {
-        // Old Input System (remove when new input system is in place)
-        HandleInput();
     }
 
     /// <summary>
@@ -109,7 +106,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        
+
         // New Input System
         InputSystemCalls();
 
@@ -139,6 +136,8 @@ public class PlayerController : MonoBehaviour
     {
         accelerate.Enable();
         decelerate.Enable();
+        quitGame.Enable();
+        pauseGame.Enable();
         turn.Enable();
     }
 
@@ -146,6 +145,8 @@ public class PlayerController : MonoBehaviour
     {
         accelerate.Disable();
         decelerate.Disable();
+        quitGame.Disable();
+        pauseGame.Disable();
         turn.Disable();
     }
 
@@ -197,8 +198,6 @@ public class PlayerController : MonoBehaviour
 
     private void InputSystemCalls()
     {
-        // WORK IN PROGRESS
-        // STILL NEEDS POLISH
         float isAccelerating = accelerate.ReadValue<float>();
         float isDecelerating = decelerate.ReadValue<float>();
         float turnVal = turn.ReadValue<float>();
@@ -261,12 +260,12 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Reclaim the package from the colliding object if it has a PackageManager
     /// </summary>
-    private void ReclaimPackage(NPC npc) 
+    private void ReclaimPackage(NPC npc)
     {
         // get the package from the Bandit
         PackageCollector otherPc = npc.GetComponent<PackageCollector>();
 
-        if (otherPc == null) 
+        if (otherPc == null)
         {
             return;
         }
@@ -282,33 +281,37 @@ public class PlayerController : MonoBehaviour
 
         // Randomly pick any package the colliding object has
         int pkgIdx = UnityEngine.Random.Range(
-            0, 
+            0,
             pkgs.Count);
 
         Package stolenPackage = pkgs[pkgIdx];
 
         Indicator.Untrack(npc.gameObject);
-        
+
         // make the NPC give the package to the Player
         otherPc.DropPackage(
             stolenPackage,
             this.pc);
     }
 
-    /// <summary>
-    /// Interprets user input.
-    /// REMOVE ONCE NEW INPUT SYSTEM IS FUNCTIONING
-    /// </summary>
-    private void HandleInput()
+    void OnQuitGame(InputAction.CallbackContext context)
     {
-        if (Input.GetKeyDown("q"))
-        {
-            Application.Quit();
-        }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        Debug.Log("Quit action fired");
+        Debug.Log($"context.Interaction: {context.interaction}");
+        if (context.interaction is HoldInteraction)
         {
-            UIManager.instance.ToggleSettingsMenu();
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
         }
+    }
+
+    void OnPauseGame(InputAction.CallbackContext context)
+    {
+        Debug.Log("Pause action fired");
+        UIManager.instance.ToggleSettingsMenu();
     }
 }

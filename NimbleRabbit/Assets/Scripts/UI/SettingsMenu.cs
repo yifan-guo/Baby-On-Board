@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class SettingsMenu : MonoBehaviour
     /// <summary>
     /// Reference to Resume button.
     /// </summary>
-    private Button resumeButton;
+    public Button resumeButton;
 
     /// <summary>
     /// Reference to Restart button.
@@ -58,7 +59,7 @@ public class SettingsMenu : MonoBehaviour
     /// Event for when music volume is changed.
     /// </summary>
     public event Action<float> OnMusicVolumeChanged;
-    
+
     /// <summary>
     /// Event for when sound effects volume is changed.
     /// </summary>
@@ -102,7 +103,7 @@ public class SettingsMenu : MonoBehaviour
     private void AdjustMusicVolume(float value)
     {
         OnMusicVolumeChanged?.Invoke(value / 100f);
-    }    
+    }
 
     /// <summary>
     /// Changes sounds volume accordingly.
@@ -118,15 +119,19 @@ public class SettingsMenu : MonoBehaviour
     private void ToggleControlsMenu()
     {
         bool ControlsActive = controls.activeSelf;
-        if (ControlsActive) 
+        if (ControlsActive)
         {
             settings.SetActive(true);
             controls.SetActive(false);
-        } 
-        else 
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
+        }
+        else
         {
             settings.SetActive(false);
             controls.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(controlsBackButton.gameObject);
         }
     }
 }
