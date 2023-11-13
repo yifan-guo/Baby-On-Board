@@ -54,6 +54,7 @@ public class HealthConsumable : Collectible
             healthManager.HealDamage(healingPerPickup);
         }
 
+        PlayerController.instance.pa.PlayPickup();
 
         // Raise pickup event
         OnConsumablePickedUp?.Invoke(gameObject);
