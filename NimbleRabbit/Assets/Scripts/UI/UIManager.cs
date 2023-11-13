@@ -142,6 +142,7 @@ public class UIManager : MonoBehaviour
         Indicator.ClearAll();
         BanditIndicator.ClearAll();
         ObjectivesList.ClearAll();
+        PoliceIndicator.ClearAll();
     }
 
     /// <summary>

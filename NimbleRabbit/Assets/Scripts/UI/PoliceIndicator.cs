@@ -125,7 +125,7 @@ public class PoliceIndicator : MonoBehaviour
             Vector3 indicatorOffset = new Vector3(
                 5f * distVector.normalized.x,
                 0.8f,
-                5f
+                5f * distVector.normalized.z
             );
 
             // update indicator's position
