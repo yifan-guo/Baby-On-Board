@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
@@ -159,7 +160,10 @@ public class UIManager : MonoBehaviour
         GameState.instance.TogglePause();
         settingsMenu.gameObject.SetActive(GameState.instance.isPaused);
 
-        if (settingsMenu.gameObject.activeInHierarchy) 
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(settingsMenu.resumeButton.gameObject);
+
+        if (settingsMenu.gameObject.activeInHierarchy)
         {
             settingsMenu.settings.SetActive(true);
             settingsMenu.controls.SetActive(false);
