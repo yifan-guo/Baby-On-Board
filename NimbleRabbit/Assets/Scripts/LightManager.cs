@@ -72,7 +72,6 @@ public class LightManager : MonoBehaviour {
 
 		if(sirenMode == 0)
 		{
-			Debug.Log ("Resetting lightmode");
 			horn = false;
 			mode = 3;
 			//No lights and sirens

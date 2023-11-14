@@ -37,7 +37,6 @@ public class CopLight : MonoBehaviour {
 				testLight.intensity = 0;
 				yield return new WaitForSeconds (speedFlicker);
 				testLight.intensity = 3;
-				Debug.Log ("Flicker");
 			}
 		}
 	}

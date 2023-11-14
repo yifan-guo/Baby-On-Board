@@ -153,7 +153,6 @@ public class NPCAudio : MonoBehaviour
 
     public void StopSiren()
     {
-        Debug.Log("stop siren");
         sirenSource.Stop();
     }
 
