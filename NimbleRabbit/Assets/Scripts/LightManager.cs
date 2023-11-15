@@ -30,7 +30,6 @@ public class LightManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		LightList = GetComponentsInChildren<CopLight>();
-		Debug.Log(LightList.Length);
 		lights = lightParent.GetComponentsInChildren<Light>();
 		foreach (Light light in lights)
 		{
