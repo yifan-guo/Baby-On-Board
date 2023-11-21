@@ -2940,7 +2940,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000009313226
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2948,7 +2948,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0000000037252903
+      value: -0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
@@ -4047,13 +4047,13 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
-      propertyPath: cmfl
-      value:
-      objectReference: {fileID: 641425635}
-    - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
       propertyPath: ac
-      value:
+      value: 
       objectReference: {fileID: 1113039058}
+    - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
+      propertyPath: cmfl
+      value: 
+      objectReference: {fileID: 641425635}
     - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
       propertyPath: quitGame.m_Id
       value: 0feac08b-83e3-4ba1-95c3-2aea7517eb67
@@ -4077,6 +4077,14 @@ PrefabInstance:
     - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
       propertyPath: quitGame.m_Flags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
+      propertyPath: lookSensitivityMax
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
+      propertyPath: lookSensitivityMin
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 9094240980501201504, guid: 01a13fa4441abac44a7db22e7335e94d, type: 3}
       propertyPath: quitGame.m_Interactions
