@@ -86,6 +86,12 @@ public class PlayerController : MonoBehaviour
 
         quitGame.performed += OnQuitGame;
         pauseGame.performed += OnPauseGame;
+
+        accelerate.performed += CheckInputDevice;
+        decelerate.performed += CheckInputDevice;
+        turn.performed += CheckInputDevice;
+        quitGame.performed += CheckInputDevice;
+        pauseGame.performed += CheckInputDevice;
     }
 
     /// <summary>
@@ -94,6 +100,16 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+    }
+
+    private float lastLog_s = -1f;
+    private void Update()
+    {
+        if (Time.time - lastLog_s > AuditLogger.FREQ_S)
+        {
+            AuditLogger.instance.RecordPlayerData();
+            lastLog_s = Time.time;
+        }
     }
 
     /// <summary>
@@ -193,7 +209,14 @@ public class PlayerController : MonoBehaviour
             lastCollisionTime_s = Time.time;
 
             ReclaimPackage(npc);
+
+            AuditLogger.instance.ar.numCollisions++;
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        AuditLogger.instance.ar.numCollisions++;
     }
 
     private void InputSystemCalls()
@@ -292,13 +315,11 @@ public class PlayerController : MonoBehaviour
         otherPc.DropPackage(
             stolenPackage,
             this.pc);
+        AuditLogger.instance.ar.numReclaimedPackages++;
     }
 
     void OnQuitGame(InputAction.CallbackContext context)
     {
-
-        Debug.Log("Quit action fired");
-        Debug.Log($"context.Interaction: {context.interaction}");
         if (context.interaction is HoldInteraction)
         {
         #if UNITY_EDITOR
@@ -311,7 +332,16 @@ public class PlayerController : MonoBehaviour
 
     void OnPauseGame(InputAction.CallbackContext context)
     {
-        Debug.Log("Pause action fired");
         UIManager.instance.ToggleSettingsMenu();
+    }
+
+    void CheckInputDevice(InputAction.CallbackContext context){
+        InputDevice device = context.control.device;
+        // Assume keyboard by default
+        // If we get any interaction with a gamepad, we'll set it to controller
+        if (device is Gamepad)
+        {
+            AuditLogger.instance.ar.inputType = AttemptReport.InputType.controller;
+        }
     }
 }

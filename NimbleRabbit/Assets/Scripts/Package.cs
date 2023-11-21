@@ -252,6 +252,7 @@ public class Package : Collectible, IObjective
         healthFailed = hp.currentHealth <= 0f;
         if (healthFailed) {
             Debug.Log("FAIL: package health below zero");
+            AuditLogger.instance.ar.numDestroyedPackages++;
         }
 
         Debug.Log("Checking TTL");
@@ -265,6 +266,7 @@ public class Package : Collectible, IObjective
              ttlFailed = obj.TimeElapsedSinceStart > TTLAfterPickupSeconds;
         }
         if (ttlFailed) {
+            Indicator.Untrack(deliveryLocation);
             Debug.Log("FAIL: package TTL exceeded");
         }
 

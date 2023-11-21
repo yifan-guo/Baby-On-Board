@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,8 @@ public class GameState : MonoBehaviour
     /// </summary>
     public Level level {get; private set;}
 
+    public float start_s {get; private set;}
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -32,6 +35,7 @@ public class GameState : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        start_s = Time.time;
         ((IObjective)level).StartObjective();
     }
 
@@ -60,8 +64,12 @@ public class GameState : MonoBehaviour
     /// <summary>
     /// Reloads current level.
     /// </summary>
-    public void Restart()
+    public void Restart() {StartCoroutine(_Restart());}
+    private IEnumerator _Restart()
     {
+        yield return StartCoroutine(
+            AuditLogger.instance.Finalize(AttemptReport.TerminatingState.restart));
+
         UIManager.instance.Restart();
         BanditHQ.Restart();
 
@@ -75,11 +83,16 @@ public class GameState : MonoBehaviour
         }
     }
 
+
     /// <summary>
     /// Quit the application.
     /// </summary>
-    public void Quit()
+    public void Quit() {StartCoroutine(_Quit());}
+    private IEnumerator _Quit()
     {
+        yield return StartCoroutine(
+            AuditLogger.instance.Finalize(AttemptReport.TerminatingState.quit));
+            
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #else

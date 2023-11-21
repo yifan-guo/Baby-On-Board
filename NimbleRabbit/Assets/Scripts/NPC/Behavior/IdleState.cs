@@ -86,6 +86,22 @@ public class IdleState : BaseState
                 me.na.PlaySiren();
                 me.na.TurnOnLights();
             }
+
+            // Logging
+            switch (me.role)
+            {
+                case NPC.Role.Bandit:
+                    AuditLogger.instance.ar.numBanditChases++;
+                    break;
+                
+                case NPC.Role.Police:
+                    AuditLogger.instance.ar.numPoliceChases++;
+                    break;
+                
+                default:
+                    break;
+            }
+
             return typeof(ChaseState);
         }
 

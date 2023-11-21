@@ -34,8 +34,7 @@ public class Destructible : MonoBehaviour
             ParticleSystem psPrefab = Instantiate(particlePrefab, spawnPosition, spawnRotation) as ParticleSystem;
             Destroy(psPrefab, psPrefab.main.duration);
             Destroy(gameObject);
+            AuditLogger.instance.ar.numObjectsDestroyed++;
         }
-        
-
     }
 }

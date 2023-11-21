@@ -82,7 +82,6 @@ public class LightManager : MonoBehaviour {
 
 		else if(sirenMode == 1)
 		{
-			Debug.Log ("You clicked once!");
 			horn = false;
 			mode = 3;
 			//Lights only

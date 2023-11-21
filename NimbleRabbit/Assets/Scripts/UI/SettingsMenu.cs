@@ -23,12 +23,12 @@ public class SettingsMenu : MonoBehaviour
     /// <summary>
     /// Reference to Music volume slider.
     /// </summary>
-    private Slider musicSlider;
+    public Slider musicSlider {get; private set;}
 
     /// <summary>
     /// Reference to Sounds volume slider.
     /// </summary>
-    private Slider soundsSlider;
+    public Slider soundsSlider {get; private set;}
 
     /// <summary>
     /// Reference to Resume button.
@@ -118,6 +118,7 @@ public class SettingsMenu : MonoBehaviour
     /// </summary>
     private void ToggleControlsMenu()
     {
+        AuditLogger.instance.ar.numControlViews++;
         bool ControlsActive = controls.activeSelf;
         if (ControlsActive)
         {

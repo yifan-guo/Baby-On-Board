@@ -81,6 +81,7 @@ public class Police : NPC
 
     IEnumerator FreezePlayer() 
     {   
+        AuditLogger.instance.ar.numTimesPulledOver += 1;
         PlayerController.instance.rb.constraints = RigidbodyConstraints.FreezePosition;
         this.rb.constraints = RigidbodyConstraints.FreezePosition;
 

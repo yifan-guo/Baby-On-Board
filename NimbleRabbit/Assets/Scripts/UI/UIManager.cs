@@ -1,6 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
@@ -175,8 +176,12 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Show the win screen.
     /// </summary>
-    public void DisplayWinScreen()
+    public void DisplayWinScreen(){StartCoroutine(_DisplayWinScreen());}
+    private IEnumerator _DisplayWinScreen()
     {
+        yield return StartCoroutine(
+            AuditLogger.instance.Finalize(AttemptReport.TerminatingState.win));
+
         Cursor.visible = true;
         SetWinText();
         endScreen.SetActive(true);
@@ -185,8 +190,12 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// Show the lose screen.
     /// </summary>
-    public void DisplayLoseScreen()
+    public void DisplayLoseScreen(){StartCoroutine(_DisplayLoseScreen());}
+    private IEnumerator _DisplayLoseScreen()
     {
+        yield return StartCoroutine(
+            AuditLogger.instance.Finalize(AttemptReport.TerminatingState.lose));
+
         Cursor.visible = true;
         losePopup.SetActive(true);
     }
@@ -253,6 +262,9 @@ public class UIManager : MonoBehaviour
 
         sm.scoringCategories = scoringCategories;
         string scoreSummaryText = sm.GetScoreSummaryText();
+
+        AuditLogger.instance.ar.finalLetterGrade = Enum.Parse<AttemptReport.FinalLetterGrade>(sm.grade);
+        AuditLogger.instance.ar.finalNumberGrade = sm.score;
         
         // Get the TextMeshPro component with the name "WinText" in the children of EndScreen 
         Component[] textMeshes = endScreen.GetComponentsInChildren<TMPro.TextMeshProUGUI>();

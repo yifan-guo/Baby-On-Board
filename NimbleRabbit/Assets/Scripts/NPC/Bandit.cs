@@ -104,5 +104,7 @@ public class Bandit : NPC
         player.hp.Hit(
             player.rb,
             force);
+
+        AuditLogger.instance.ar.numBanditSteals++;
     }
 }

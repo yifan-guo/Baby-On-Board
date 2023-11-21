@@ -1194,6 +1194,24 @@ MonoBehaviour:
       m_Action: Turn
       m_Flags: 8
     m_Flags: 0
+  quitGame:
+    m_Name: Quit Game
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e4a50416-14ae-4d54-bf3b-66a6204ed071
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  pauseGame:
+    m_Name: Pause Game
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 103c65ee-7c6d-4cc3-ba8b-b41f6aff4002
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   forwardSpeed: 20
   backwardsSpeed: 15
   turnSpeed: 60

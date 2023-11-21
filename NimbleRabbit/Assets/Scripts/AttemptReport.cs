@@ -3,6 +3,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+using Random=System.Random;
+
 public class AttemptReport
 {
 
@@ -67,16 +69,16 @@ public class AttemptReport
     /// The final letter grade achieved in the attempt. Null if not a win.
     /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum FinalLetterGrade { S, A, B, C, D, F};
+    public enum FinalLetterGrade { S, A, B, C, D, F, I};
 
     [JsonProperty("entry.21026437")]
-    public FinalLetterGrade finalLetterGrade;
+    public FinalLetterGrade finalLetterGrade = FinalLetterGrade.I;
 
     /// <summary>
     /// The final number grade 0-100 achieved by the player.
     /// </summary>
     [JsonProperty("entry.2083044711")]
-    public int finalNumberGrade;
+    public int finalNumberGrade = -1;
 
     /// <summary>
     /// The health value of the package at the end of the attempt.
@@ -196,6 +198,27 @@ public class AttemptReport
         {0f, 0f, 0f, 0f, 0f, 0f},
         {0f, 0f, 0f, 0f, 0f, 0f}
     };
+
+    public AttemptReport()
+    {
+        Random rng = new Random();
+
+        // See if they already had a cached sessionID
+        sessionID = PlayerPrefs.GetString(
+            "sessionID",
+            "");
+        
+        // If not, generate one and cache it
+        if (sessionID == "")
+        {
+            sessionID = $"{rng.Next()}";
+            PlayerPrefs.SetString(
+                "sessionID",
+                sessionID);
+        }
+
+        attemptID = $"{rng.Next()}";
+    }
 
     /// <summary>
     /// Example serialization method, can be removed later and just use JsonUtility.ToJson directly in caller class.

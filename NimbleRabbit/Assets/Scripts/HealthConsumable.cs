@@ -61,5 +61,7 @@ public class HealthConsumable : Collectible
 
         // Deactivate the consumable so it disappears
         gameObject.SetActive(false);
+        AuditLogger.instance.ar.numHealthCollectiblesConsumed++;
+
     }
 }

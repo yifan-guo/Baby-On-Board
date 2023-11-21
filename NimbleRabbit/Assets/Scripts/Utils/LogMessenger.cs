@@ -17,10 +17,7 @@ public class LogMessenger : MonoBehaviour
 
     private const string BASE_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdfI4wbKYRdcLMbhnpP_rc-XL-FacemFqzvsuKKjfKmaR8BdA/formResponse";
 
-    public void Send(AttemptReport report)
-    {
-        StartCoroutine(Post(report));
-    }
+    private bool sent = false;
 
     public IEnumerator Post(AttemptReport report)
     {
@@ -54,6 +51,11 @@ public class LogMessenger : MonoBehaviour
         // <input type="hidden" name="entry.753705781" value="">
         // <input type="hidden" name="entry.655076955" value="">
 
+        if (sent == true)
+        {
+            yield break;
+        }
+
         Dictionary<string, dynamic> reportDict = report.ToDict();
         
         WWWForm form = new WWWForm();
@@ -72,13 +74,7 @@ public class LogMessenger : MonoBehaviour
 
         yield return www;
 
+        sent = true;
         www.Dispose();
-    }
-
-    private void Awake()
-    {
-        // Temporary test code that sends default report values
-        // AttemptReport report = new AttemptReport();
-        // Send(report);
     }
 }

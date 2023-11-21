@@ -126,6 +126,7 @@ public class PlayerAudio : MonoBehaviour
     /// <param name="value"></param>
     private void SetSoundVolume(float value)
     {
+        AuditLogger.instance.ar.finalSFXVolume = value;
         engineSource.volume = value;
         otherSource.volume = value;
     }

@@ -120,6 +120,11 @@ public class HealthManager : MonoBehaviour
 
         // Broadcast event to notify subscribers
         OnHealthChange?.Invoke();
+
+        if (gameObject.tag == "Player")
+        {
+            AuditLogger.instance.ar.totalDamageTaken += damageAmount;
+        }
     }
 
     /// <summary>
