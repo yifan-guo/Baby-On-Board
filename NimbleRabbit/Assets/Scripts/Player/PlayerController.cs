@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -56,6 +57,11 @@ public class PlayerController : MonoBehaviour
     public PlayerAudio pa {get; private set;}
 
     /// <summary>
+    /// Cinemachine camera reference.
+    /// </summary>
+    public Cinemachine.CinemachineFreeLook cmfl;
+
+    /// <summary>
     /// Whether or not the car is started.
     /// </summary>
     public bool started {get; private set;}
@@ -72,6 +78,17 @@ public class PlayerController : MonoBehaviour
 
     //bool value to enable or disable control
     public bool enableControl = true;
+
+    /// <summary>
+    /// Look sensitivity maximum applied to camera.
+    /// </summary>
+    public float lookSensitivityMax = 3000f;
+
+
+     /// <summary>
+    /// Look sensitivity maximum applied to camera.
+    /// </summary>
+    public float lookSensitivityMin = 500f;
 
     /// <summary>
     /// Initialization Pt I.
@@ -100,6 +117,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Cursor.visible = false;
+        OnLookSensitivityChanged(PlayerPrefs.GetFloat("lookSensitivity", 0.5f));
     }
 
     private float lastLog_s = -1f;
@@ -155,6 +173,7 @@ public class PlayerController : MonoBehaviour
         quitGame.Enable();
         pauseGame.Enable();
         turn.Enable();
+        UIManager.instance.settingsMenu.OnLookSensitivityChanged += OnLookSensitivityChanged;
     }
 
     private void OnDisable()
@@ -164,6 +183,7 @@ public class PlayerController : MonoBehaviour
         quitGame.Disable();
         pauseGame.Disable();
         turn.Disable();
+        UIManager.instance.settingsMenu.OnLookSensitivityChanged -= OnLookSensitivityChanged;
     }
 
     /// <summary>
@@ -335,6 +355,14 @@ public class PlayerController : MonoBehaviour
         UIManager.instance.ToggleSettingsMenu();
     }
 
+    public void OnLookSensitivityChanged(float value)
+    {
+        float lookSensitivity = lookSensitivityMin + (lookSensitivityMax - lookSensitivityMin) * value;
+        PlayerPrefs.SetFloat("lookSensitivity", value);
+        cmfl.m_XAxis.m_MaxSpeed = lookSensitivity;
+        Debug.Log($"Look sensitivity changed to {lookSensitivity}");
+
+    }
     void CheckInputDevice(InputAction.CallbackContext context){
         InputDevice device = context.control.device;
         // Assume keyboard by default

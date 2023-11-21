@@ -31,6 +31,11 @@ public class SettingsMenu : MonoBehaviour
     public Slider soundsSlider {get; private set;}
 
     /// <summary>
+    /// Reference to Look Sensitivity slider.
+    /// </summary>
+    private Slider lookSensitivitySlider;
+
+    /// <summary>
     /// Reference to Resume button.
     /// </summary>
     public Button resumeButton;
@@ -66,6 +71,11 @@ public class SettingsMenu : MonoBehaviour
     public event Action<float> OnSoundVolumeChanged;
 
     /// <summary>
+    /// Event for when look sensitivity is changed.
+    /// </summary>
+    public event Action<float> OnLookSensitivityChanged;
+
+    /// <summary>
     /// Initialization Pt I.
     /// </summary>
     private void Awake()
@@ -75,6 +85,7 @@ public class SettingsMenu : MonoBehaviour
         closeButton = transform.Find("Panel/TitleBar/Close").GetComponent<Button>();
         musicSlider = transform.Find("Panel/Settings/Music/Slider").GetComponent<Slider>();
         soundsSlider = transform.Find("Panel/Settings/Sound/Slider").GetComponent<Slider>();
+        lookSensitivitySlider = transform.Find("Panel/Settings/Speed/Slider").GetComponent<Slider>();
         resumeButton = transform.Find("Panel/Settings/Resume").GetComponent<Button>();
         controlsButton = transform.Find("Panel/Settings/Controls").GetComponent<Button>();
         restartButton = transform.Find("Panel/Settings/Restart").GetComponent<Button>();
@@ -89,12 +100,15 @@ public class SettingsMenu : MonoBehaviour
     {
         musicSlider.onValueChanged.AddListener(AdjustMusicVolume);
         soundsSlider.onValueChanged.AddListener(AdjustSoundsVolume);
+        lookSensitivitySlider.onValueChanged.AddListener(AdjustLookSensitivity);
         closeButton.onClick.AddListener(UIManager.instance.ToggleSettingsMenu);
         resumeButton.onClick.AddListener(UIManager.instance.ToggleSettingsMenu);
         restartButton.onClick.AddListener(GameState.instance.Restart);
         quitButton.onClick.AddListener(GameState.instance.Quit);
         controlsButton.onClick.AddListener(ToggleControlsMenu);
         controlsBackButton.onClick.AddListener(ToggleControlsMenu);
+
+        lookSensitivitySlider.value = PlayerPrefs.GetFloat("lookSensitivity", 0.5f) * 100f;
     }
 
     /// <summary>
@@ -111,6 +125,14 @@ public class SettingsMenu : MonoBehaviour
     private void AdjustSoundsVolume(float value)
     {
         OnSoundVolumeChanged?.Invoke(value / 100f);
+    }
+
+    /// <summary>
+    /// Changes look sensitivity.
+    /// </summary>
+    private void AdjustLookSensitivity(float value)
+    {
+        OnLookSensitivityChanged?.Invoke(value / 100f);
     }
 
     /// <summary>
