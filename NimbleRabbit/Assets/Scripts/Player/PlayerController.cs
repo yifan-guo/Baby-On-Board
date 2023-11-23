@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public InputAction accelerate;
     public InputAction decelerate;
     public InputAction turn;
+    public InputAction playerReset;
     public InputAction quitGame;
     public InputAction pauseGame;
 
@@ -60,6 +61,37 @@ public class PlayerController : MonoBehaviour
     /// Cinemachine camera reference.
     /// </summary>
     public Cinemachine.CinemachineFreeLook cmfl;
+
+    /// <summary>
+    /// Whether or not the car is upright.
+    /// </summary>
+    public bool isUpright { get; private set; }
+
+    /// <summary>
+    /// Is true when the player reset interpolation is happening
+    /// </summary>
+    public bool isResetting;
+
+    /// <summary>
+    /// Player reset interpolation speed
+    /// </summary>
+    public float resetSpeed;
+
+    /// <summary>
+    /// Force used for resetting the player vehicle
+    /// </summary>
+    public float upwardResetForce;
+
+    /// <summary>
+    /// The time set for the reset cooldown
+    /// Can be configured in the editor
+    /// </summary>
+    public float cooldownTime;
+
+    /// <summary>
+    /// The timer for the cooldown variable.
+    /// </summary>
+    private float resetCooldownTimer;
 
     /// <summary>
     /// Whether or not the car is started.
@@ -107,8 +139,11 @@ public class PlayerController : MonoBehaviour
         accelerate.performed += CheckInputDevice;
         decelerate.performed += CheckInputDevice;
         turn.performed += CheckInputDevice;
+        playerReset.performed += CheckInputDevice;
         quitGame.performed += CheckInputDevice;
         pauseGame.performed += CheckInputDevice;
+
+        isResetting = false;
     }
 
     /// <summary>
@@ -128,6 +163,9 @@ public class PlayerController : MonoBehaviour
             AuditLogger.instance.RecordPlayerData();
             lastLog_s = Time.time;
         }
+
+        
+        
     }
 
     /// <summary>
@@ -136,13 +174,17 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //if enableControl == false, then pause control
-        if(!enableControl)
+        if (!enableControl)
         {
             return;
         }
 
+        
+        
+
         // New Input System
         InputSystemCalls();
+        PlayerReset();
 
         // Forward
         SweepTest(
@@ -165,6 +207,56 @@ public class PlayerController : MonoBehaviour
             (transform.localScale.x / 2f) + 0.1f);
     }
 
+    // Resetting the player to the upright position
+    private void PlayerReset()
+    {
+
+        //Clamp the range to check if car is upright
+        float minRotationVal = 5f;
+        float maxRotationVal = 355f;
+        bool xComparison = gameObject.transform.rotation.eulerAngles.x < minRotationVal || gameObject.transform.rotation.eulerAngles.x > maxRotationVal;
+        bool zComparison = gameObject.transform.rotation.eulerAngles.z < minRotationVal || gameObject.transform.rotation.eulerAngles.z > maxRotationVal;
+
+        //Set is upright based on the clamp results
+        if (xComparison && zComparison)
+        {
+            isUpright = true;
+            //Done interpolating
+            isResetting = false;
+        } 
+        else isUpright = false;
+
+        //Cooldown timer
+        resetCooldownTimer += Time.deltaTime;
+
+        //Implement Reset Algorithm
+        if (!isUpright && resetCooldownTimer > cooldownTime)
+        {
+            float resetCalled = playerReset.ReadValue<float>();
+            
+            // Start reset cool down timer
+            if (resetCalled > 0f)
+            {
+                resetCooldownTimer = 0;
+                // Add force in worldspace up direction
+                rb.velocity += Vector3.up * upwardResetForce * Time.deltaTime;
+                isResetting = true;
+            }
+        }
+
+        //Interpolate current rotation with upright rotation (0, y, 0)
+        if (isResetting)
+        {
+            // Handle player reset interpolation
+            if (!isUpright)
+            {
+                Quaternion targetRotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f); // Upright rotation
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, resetSpeed * Time.deltaTime);
+            }
+        }
+        
+    }
+
     // OnEnable/OnDisable for Unity's new input system
     private void OnEnable()
     {
@@ -173,6 +265,7 @@ public class PlayerController : MonoBehaviour
         quitGame.Enable();
         pauseGame.Enable();
         turn.Enable();
+        playerReset.Enable();
         UIManager.instance.settingsMenu.OnLookSensitivityChanged += OnLookSensitivityChanged;
     }
 
@@ -183,6 +276,7 @@ public class PlayerController : MonoBehaviour
         quitGame.Disable();
         pauseGame.Disable();
         turn.Disable();
+        playerReset.Disable();
         UIManager.instance.settingsMenu.OnLookSensitivityChanged -= OnLookSensitivityChanged;
     }
 
@@ -241,6 +335,8 @@ public class PlayerController : MonoBehaviour
 
     private void InputSystemCalls()
     {
+        
+
         float isAccelerating = accelerate.ReadValue<float>();
         float isDecelerating = decelerate.ReadValue<float>();
         float turnVal = turn.ReadValue<float>();
@@ -272,6 +368,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // Disable input calls when vehicle is not in upright position
+        if (isUpright == false) return;
         ///////////////////////////////////////
         // VEHICLE ACCELERATION AND TURNING //
         //////////////////////////////////////

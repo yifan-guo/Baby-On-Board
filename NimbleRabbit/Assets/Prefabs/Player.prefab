@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1639564235
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1639564236}
+  m_Layer: 0
+  m_Name: PoliceIndicators
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1639564236
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639564235}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9094240982415962314}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &298122327436109014
 GameObject:
   m_ObjectHideFlags: 0
@@ -1031,8 +1062,9 @@ GameObject:
   - component: {fileID: 8603814483665670458}
   - component: {fileID: 7777082926669342591}
   - component: {fileID: 4073959230506475328}
-  - component: {fileID: 1365038187363814764}
   - component: {fileID: 2494877646668269228}
+  - component: {fileID: 1967095478}
+  - component: {fileID: 1967095489}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1055,6 +1087,7 @@ Transform:
   - {fileID: 6551500676853618852}
   - {fileID: 895538709139745059}
   - {fileID: 3860805129114419840}
+  - {fileID: 1639564236}
   - {fileID: 7586603119353355577}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1073,7 +1106,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &9094240980501201504
 MonoBehaviour:
@@ -1194,23 +1227,80 @@ MonoBehaviour:
       m_Action: Turn
       m_Flags: 8
     m_Flags: 0
-  quitGame:
-    m_Name: Quit Game
+  playerReset:
+    m_Name: Player Reset
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: e4a50416-14ae-4d54-bf3b-66a6204ed071
+    m_Id: d9b0a015-dc34-4e83-848f-59e7295a276b
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: ce48e58d-36cd-4f10-b6ef-525930eeaab2
+      m_Path: <Keyboard>/r
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Reset
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 396923a7-1b0a-488d-af4d-56d743dfc7e2
+      m_Path: <Gamepad>/buttonNorth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Player Reset
+      m_Flags: 0
+    m_Flags: 0
+  quitGame:
+    m_Name: Quit Game
+    m_Type: 1
+    m_ExpectedControlType: Button
+    m_Id: 0feac08b-83e3-4ba1-95c3-2aea7517eb67
+    m_Processors: 
+    m_Interactions: Press
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: b1f2c44d-e2b9-439e-9666-0b851507e9d6
+      m_Path: <Keyboard>/q
+      m_Interactions: Hold(duration=3)
+      m_Processors: 
+      m_Groups: 
+      m_Action: Quit Game
+      m_Flags: 0
+    - m_Name: 
+      m_Id: e80d0b94-5208-4a3e-b331-bacab0955b31
+      m_Path: <Gamepad>/select
+      m_Interactions: Hold(duration=3)
+      m_Processors: 
+      m_Groups: 
+      m_Action: Quit Game
+      m_Flags: 0
     m_Flags: 0
   pauseGame:
     m_Name: Pause Game
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 103c65ee-7c6d-4cc3-ba8b-b41f6aff4002
+    m_Id: b601bb37-6edc-479c-877d-b098453fc238
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 9dd5c014-35ba-4555-b3e9-26e20e6a880d
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause Game
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3c33fd3b-e181-4702-9de9-af7937dacb00
+      m_Path: <Gamepad>/start
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause Game
+      m_Flags: 0
     m_Flags: 0
   forwardSpeed: 20
   backwardsSpeed: 15
@@ -1226,7 +1316,14 @@ MonoBehaviour:
   wheelTurnSpeed: 80
   returnSpeed: 10
   maxTurnAngle: 40
+  cmfl: {fileID: 0}
+  isResetting: 0
+  resetSpeed: 5
+  upwardResetForce: 300
+  cooldownTime: 3
   enableControl: 1
+  lookSensitivityMax: 3000
+  lookSensitivityMin: 500
 --- !u!65 &6557030270527686124
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1239,7 +1336,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2.4003558, y: 1.4790113, z: 5.6500807}
-  m_Center: {x: -0.014814138, y: 0.754081, z: 0.13393545}
+  m_Center: {x: 0, y: 0.754081, z: 0.13393545}
 --- !u!114 &6340575671951941866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1554,22 +1651,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!208 &1365038187363814764
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9094240982416146308}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1.5, y: 0.7395055, z: 3}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: -0.014814138, y: 0.754081, z: 0.13393545}
-  m_TimeToStationary: 0.5
 --- !u!114 &2494877646668269228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1582,6 +1663,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f458ba2d3573e4eb796472afb85bd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1967095478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9094240982416146308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: 0}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!208 &1967095489
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9094240982416146308}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &7586603119353232965
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1599,7 +1726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 402300, guid: 079954accd64b32419ec069129c81273, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 402300, guid: 079954accd64b32419ec069129c81273, type: 3}
       propertyPath: m_LocalScale.x
