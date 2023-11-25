@@ -93,6 +93,8 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     public Vector3 dimensions {get; protected set;}
 
+    public string status {get; protected set;}
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -112,6 +114,7 @@ public abstract class NPC : MonoBehaviour
     protected virtual void Start()
     {
         dimensions = coll.bounds.size;
+        status = stateMachine.GetState();
     }
 
     /// <summary>
@@ -145,6 +148,8 @@ public abstract class NPC : MonoBehaviour
             // Change nav velocity, not speed here
             nav.velocity = Vector3.zero;
         }
+
+        status = stateMachine.GetState();
     }
 
     /// <summary>

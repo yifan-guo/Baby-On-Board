@@ -38,8 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571336, b: 0.3069219, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1376,6 +1375,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b13741681506489f98be454589cfb5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &776566789 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7326879824498433642, guid: 8e1cecdf533734397a56f2667f947ac4, type: 3}
+  m_PrefabInstance: {fileID: 58794276}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &776566801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776566789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8a6b6771f404495a7d816407fa90b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubbleWidth: 200
+  bubbleHeight: 100
+  offsetX: 0
+  offsetY: 150
+  mat: {fileID: 2100000, guid: 8e79b898214ee485c9d8e26b006e7f96, type: 2}
+  guiSkin: {fileID: 11400000, guid: 75973ae104e064b3890d12253aec9684, type: 2}
 --- !u!1 &814511839 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3671675062058499933, guid: a556049aab420ba4288a2a8caa2158c1, type: 3}
@@ -2936,7 +2958,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.000000009313226
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.y
@@ -2944,7 +2966,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6284575955600379647, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.0000000037252903
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2e0013d602c1484eb38a87e045c23f2, type: 3}
@@ -5394,6 +5416,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e90148e055ada4342826297c008ff4df, type: 3}
+--- !u!1 &1695494764 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7326879824498433642, guid: 8e1cecdf533734397a56f2667f947ac4, type: 3}
+  m_PrefabInstance: {fileID: 618270079}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1695494765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695494764}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8a6b6771f404495a7d816407fa90b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bubbleWidth: 200
+  bubbleHeight: 100
+  offsetX: 0
+  offsetY: 150
+  mat: {fileID: 2100000, guid: 8e79b898214ee485c9d8e26b006e7f96, type: 2}
+  guiSkin: {fileID: 11400000, guid: 75973ae104e064b3890d12253aec9684, type: 2}
 --- !u!1001 &1698864563
 PrefabInstance:
   m_ObjectHideFlags: 0

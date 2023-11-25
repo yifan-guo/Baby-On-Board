@@ -62,4 +62,14 @@ public class StateMachine : MonoBehaviour
         currentState = states[nextStateType];
         OnStateChanged?.Invoke(currentState);
     }
+
+    public string GetState()
+    {
+        if (currentState != null) {
+            return currentState.ToString();
+        }
+        else {
+            return "";
+        }
+    }
 }
