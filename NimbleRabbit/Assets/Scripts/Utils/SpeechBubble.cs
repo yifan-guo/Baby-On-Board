@@ -76,6 +76,10 @@ public class SpeechBubble : MonoBehaviour
 	//Draw GUIs
 	void OnGUI()
 	{
+		string currentNpcStatus;
+		if (!npc.npcStatusTexts.TryGetValue(npc.stateMachine.currentState.GetType(), out currentNpcStatus)) {
+			Debug.Log("no current NPC status");
+		} else {
 		//Begin the GUI group centering the speech bubble at the same position of this game object. After that, apply the offset
 		GUI.BeginGroup(new Rect(goScreenPos.x-centerOffsetX-offsetX,Screen.height-goScreenPos.y-centerOffsetY-offsetY,bubbleWidth,bubbleHeight));
 
@@ -83,7 +87,7 @@ public class SpeechBubble : MonoBehaviour
 			GUI.Label(new Rect(0,0,200,100),"",guiSkin.customStyles[0]);
 
 			//Render the text
-			GUI.Label(new Rect(10,25,190,50), $"My status: {npc.status}", guiSkin.label);
+			GUI.Label(new Rect(10,25,190,50), $"My status: {currentNpcStatus}", guiSkin.label);
 
 			//If the button is pressed, go back to 41 Post
 			if(GUI.Button(new Rect(50,60,100,30),"Back to post..."))
@@ -92,6 +96,7 @@ public class SpeechBubble : MonoBehaviour
 			}
 
 		GUI.EndGroup();
+		}
 	}
 
 	//Called after camera has finished rendering the scene

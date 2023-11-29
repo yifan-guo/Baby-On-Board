@@ -9,6 +9,11 @@ public class Bandit : NPC
     /// </summary>
     public PackageCollector pc {get; private set;} 
 
+    public override string IdleStatusText => "No bum's got a package...";
+    public override string ChaseStatusText => "That driver's got loot! @%#$%";
+    public override string AttackStatusText => "Gimme that package!";
+    public override string FleeStatusText => "See ya sucker!";
+    public override string EngineFailureStatusText => "$%#$% my Engine broke!";
     /// <summary>
     /// Initialization Pt I.
     /// </summary>

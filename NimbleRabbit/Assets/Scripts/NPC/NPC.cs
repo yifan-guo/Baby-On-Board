@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
@@ -93,7 +95,15 @@ public abstract class NPC : MonoBehaviour
     /// </summary>
     public Vector3 dimensions {get; protected set;}
 
-    public string status {get; protected set;}
+    public Type status {get; protected set;}
+
+    public abstract string IdleStatusText {get;}
+    public abstract string ChaseStatusText {get; }
+    public abstract string AttackStatusText {get; }
+    public abstract string FleeStatusText {get; }
+    public abstract string EngineFailureStatusText {get; }
+
+    public Dictionary<Type, string> npcStatusTexts {get; protected set;}
 
     /// <summary>
     /// Initialization Pt I.
@@ -114,7 +124,16 @@ public abstract class NPC : MonoBehaviour
     protected virtual void Start()
     {
         dimensions = coll.bounds.size;
-        status = stateMachine.GetState();
+        // status = stateMachine.GetState();
+
+        this.npcStatusTexts = new Dictionary<Type, String> 
+        {
+            {typeof(IdleState), this.IdleStatusText},
+            {typeof(ChaseState), this.ChaseStatusText},
+            {typeof(AttackState), this.AttackStatusText},
+            {typeof(FleeState), this.FleeStatusText},
+            {typeof(EngineFailureState), this.EngineFailureStatusText}
+        };
     }
 
     /// <summary>
@@ -149,7 +168,7 @@ public abstract class NPC : MonoBehaviour
             nav.velocity = Vector3.zero;
         }
 
-        status = stateMachine.GetState();
+        // status = stateMachine.GetState();
     }
 
     /// <summary>

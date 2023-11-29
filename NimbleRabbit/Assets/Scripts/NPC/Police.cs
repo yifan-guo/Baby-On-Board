@@ -10,6 +10,11 @@ public class Police : NPC
     
     public const float SPEED_LIMIT = 15.0f;
 
+    public override string IdleStatusText => "Just another day";
+    public override string ChaseStatusText => "Got me a roadrunner!!";
+    public override string AttackStatusText => "Gotcha! You're pulled over!";
+    public override string FleeStatusText => "";
+    public override string EngineFailureStatusText => "See you at court!";
     private GameObject pullOverScreen;
 
     protected override void Awake() {

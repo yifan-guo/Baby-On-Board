@@ -63,13 +63,8 @@ public class StateMachine : MonoBehaviour
         OnStateChanged?.Invoke(currentState);
     }
 
-    public string GetState()
+    public Type GetState()
     {
-        if (currentState != null) {
-            return currentState.ToString();
-        }
-        else {
-            return "";
-        }
+        return currentState.GetType();
     }
 }
