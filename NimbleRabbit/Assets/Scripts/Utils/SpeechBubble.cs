@@ -89,12 +89,6 @@ public class SpeechBubble : MonoBehaviour
 			//Render the text
 			GUI.Label(new Rect(10,25,190,50), $"My status: {currentNpcStatus}", guiSkin.label);
 
-			//If the button is pressed, go back to 41 Post
-			if(GUI.Button(new Rect(50,60,100,30),"Back to post..."))
-			{
-				Application.OpenURL("http://www.41post.com/?p=4123");
-			}
-
 		GUI.EndGroup();
 		}
 	}
