@@ -82,10 +82,7 @@ public class SpeechBubble : MonoBehaviour
 	//Draw GUIs
 	void OnGUI()
 	{
-		
-		distanceFromNPCToPlayer = Vector3.Distance(npc.transform.position, PlayerController.instance.transform.position);
-
-		if (distanceFromNPCToPlayer < speechBubbleVisibleRange) {
+		if (PlayerController.instance.CanSee(npc.transform.position, visionRangeMax: speechBubbleVisibleRange)) {
 			string currentNpcStatus;
 			if (!npc.npcStatusTexts.TryGetValue(npc.stateMachine.currentState.GetType(), out currentNpcStatus)) {
 				Debug.Log("no current NPC status");
@@ -108,9 +105,8 @@ public class SpeechBubble : MonoBehaviour
 	//Called after camera has finished rendering the scene
 	void OnRenderObject()
 	{
-		distanceFromNPCToPlayer = Vector3.Distance(npc.transform.position, PlayerController.instance.transform.position);
 
-		if (distanceFromNPCToPlayer < speechBubbleVisibleRange) {
+		if (PlayerController.instance.CanSee(npc.transform.position, visionRangeMax: speechBubbleVisibleRange)) {
 				//push current matrix into the matrix stack
 			GL.PushMatrix();
 			//set material pass

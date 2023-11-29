@@ -122,6 +122,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float lookSensitivityMin = 500f;
 
+
+    protected Collider coll;
+    
+    public Vector3 dimensions {get; protected set;}
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -144,6 +149,8 @@ public class PlayerController : MonoBehaviour
         pauseGame.performed += CheckInputDevice;
 
         isResetting = false;
+
+        coll = GetComponent<Collider>();
     }
 
     /// <summary>
@@ -153,6 +160,7 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.visible = false;
         OnLookSensitivityChanged(PlayerPrefs.GetFloat("lookSensitivity", 0.5f));
+        dimensions = coll.bounds.size;
     }
 
     private float lastLog_s = -1f;
@@ -469,5 +477,54 @@ public class PlayerController : MonoBehaviour
         {
             AuditLogger.instance.ar.inputType = AttemptReport.InputType.controller;
         }
+    }
+
+    public float GetFOV(Vector3 target)
+    {
+        float dot = Vector3.Dot(
+            (target - transform.position).normalized,
+            transform.forward);
+        
+        return dot;
+    }
+
+    public bool CanSee(
+        Vector3 target,
+        float fovMin=0.5f,
+        float visionRangeMin=Mathf.NegativeInfinity,
+        float visionRangeMax=Mathf.Infinity,
+        bool lineOfSight=false)
+    {
+        // Add half of our height so that this is from the center of the NPC
+        Vector3 pos = transform.position + Vector3.up * (dimensions.y / 2f);
+        Vector3 diff = target - pos;
+
+        // If target is too close, then guaranteed to be seen
+        if (visionRangeMin > Mathf.NegativeInfinity &&
+            diff.sqrMagnitude < visionRangeMin * visionRangeMin)
+        {
+            return true;
+        }
+
+        // Check if target is too far
+        if (visionRangeMax < Mathf.Infinity &&
+            diff.sqrMagnitude > visionRangeMax * visionRangeMax)
+        {
+            return false;
+        }
+
+        // Check if in FOV
+        float fov = GetFOV(target);
+        fovMin = Mathf.Clamp(
+            fovMin,
+            -1f,
+            1f);
+
+        if (fov < fovMin)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
