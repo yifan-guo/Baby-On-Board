@@ -7,6 +7,12 @@ public class Civilian : NPC
     /// <summary>
     /// Initialization Pt II.
     /// </summary>
+    /// 
+    public override string IdleStatusText => "";
+    public override string ChaseStatusText => "";
+    public override string AttackStatusText => "";
+    public override string FleeStatusText => "";
+    public override string EngineFailureStatusText => "";
     protected override void Start()
     {
         base.Start();
