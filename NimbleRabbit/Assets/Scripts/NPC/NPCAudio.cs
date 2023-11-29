@@ -66,7 +66,7 @@ public class NPCAudio : MonoBehaviour
             sirenSource.pitch = 1f;
             sirenSource.loop = true;
         }
-        
+
 
         UIManager.instance.settingsMenu.OnSoundVolumeChanged += SetSoundVolume;
 

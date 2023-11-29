@@ -64,6 +64,8 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private AudioSource musicSource;
 
+    public bool mainMusicPlaying = false;
+
     [Header("Prefabs")]
 
     /// <summary>
@@ -93,6 +95,8 @@ public class UIManager : MonoBehaviour
 
     public ScoreManager sm {get; private set;}
 
+    private GameObject hostileVehicleWarning;
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -108,8 +112,10 @@ public class UIManager : MonoBehaviour
         losePopup = transform.Find("LosePopup").gameObject;
         endScreen = transform.Find("EndScreen").gameObject;
         pullOverScreen = transform.Find("PulledOverScreen").gameObject;
+        hostileVehicleWarning = transform.Find("HostileVehicleWarning").gameObject;
 
         musicSource = GetComponent<AudioSource>();
+        mainMusicPlaying = true;
 
         sm = ScriptableObject.CreateInstance<ScoreManager>();
     }
@@ -279,5 +285,29 @@ public class UIManager : MonoBehaviour
     private void SetMusicVolume(float value)
     {
         musicSource.volume = value;
+    }
+
+    public void PlayMusic()
+    {
+        if (mainMusicPlaying == false) {
+            musicSource.Play();
+        }
+        mainMusicPlaying = true;
+    }
+
+    public void StopMusic()
+    {
+        musicSource.Stop();
+        mainMusicPlaying = false;
+    }
+
+    public void ShowHostileVehicleWarning()
+    {
+        hostileVehicleWarning.SetActive(true);
+    }
+
+    public void HideHostileVehicleWarning()
+    {
+        hostileVehicleWarning.SetActive(false);
     }
 }
