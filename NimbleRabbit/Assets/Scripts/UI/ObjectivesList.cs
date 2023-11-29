@@ -6,7 +6,7 @@ public class ObjectivesList : MonoBehaviour
     /// <summary>
     /// Map of objectives to their entries.
     /// </summary>
-    private static Dictionary<IObjective, ObjectiveEntry> entries;
+    public static Dictionary<IObjective, ObjectiveEntry> entries {get; private set;}
 
     /// <summary>
     /// Initialization Pt I.
@@ -31,6 +31,16 @@ public class ObjectivesList : MonoBehaviour
         }
 
         return entries[obj].color;
+    }
+
+    public static string GetLetter(IObjective obj)
+    {
+        if (entries.ContainsKey(obj) == false)
+        {
+            return "";
+        }
+
+        return $"{entries[obj].letter}";
     }
 
     /// <summary>

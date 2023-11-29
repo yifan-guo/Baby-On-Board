@@ -51,30 +51,32 @@ public class LogMessenger : MonoBehaviour
         // <input type="hidden" name="entry.753705781" value="">
         // <input type="hidden" name="entry.655076955" value="">
 
-        if (sent == true)
-        {
-            yield break;
-        }
+        yield break;
 
-        Dictionary<string, dynamic> reportDict = report.ToDict();
+        // if (sent == true)
+        // {
+        //     yield break;
+        // }
+
+        // Dictionary<string, dynamic> reportDict = report.ToDict();
         
-        WWWForm form = new WWWForm();
+        // WWWForm form = new WWWForm();
         
-        foreach (var item in reportDict)
-        {
-            form.AddField(
-                item.Key,
-                $"{item.Value}");
-        }
+        // foreach (var item in reportDict)
+        // {
+        //     form.AddField(
+        //         item.Key,
+        //         $"{item.Value}");
+        // }
 
-        byte[] rawData = form.data;
-        WWW www = new WWW(
-            BASE_URL, 
-            rawData);
+        // byte[] rawData = form.data;
+        // WWW www = new WWW(
+        //     BASE_URL, 
+        //     rawData);
 
-        yield return www;
+        // yield return www;
 
-        sent = true;
-        www.Dispose();
+        // sent = true;
+        // www.Dispose();
     }
 }

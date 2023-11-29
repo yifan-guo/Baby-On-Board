@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Indicator : MonoBehaviour
 {
@@ -21,9 +22,19 @@ public class Indicator : MonoBehaviour
     private GameObject target;
 
     /// <summary>
+    /// Objective associated with this indicator.
+    /// </summary>
+    private IObjective obj;
+
+    /// <summary>
     /// Reference to the Image component.
     /// </summary>
     private Image img;
+
+    /// <summary>
+    /// Background of indicator.
+    /// </summary>
+    private Image backgroundImg;
 
     /// <summary>
     /// Arrow Image component when target is in view.
@@ -31,12 +42,21 @@ public class Indicator : MonoBehaviour
     private Image arrowImg;
 
     /// <summary>
+    /// Distance measurement display.
+    /// </summary>
+    private TMP_Text distanceTxt;
+
+    private TMP_Text letterID;
+
+    private GameObject minimapObject;
+
+    /// <summary>
     /// Provide new object to track with indicator.
     /// </summary>
     /// <param name="obj"></param>
     public static void Track(
         GameObject go,
-        IObjective obj = null)
+        IObjective obj)
     {
         // Initialize object map
         if (trackedObjectsMap == null)
@@ -55,15 +75,30 @@ public class Indicator : MonoBehaviour
         // Activate indicator
         Indicator indicator = GetIndicator();
         indicator.target = go;
+        indicator.obj = obj;
         indicator.gameObject.SetActive(true);
 
+        // Setup minimap visual
+        indicator.minimapObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        indicator.minimapObject.transform.parent = go.transform;
+        indicator.minimapObject.transform.localPosition = Vector3.zero;
+        indicator.minimapObject.transform.localScale = Vector3.one * 10f;
+        indicator.minimapObject.layer = LayerMask.NameToLayer("Minimap");
+        indicator.minimapObject.GetComponent<Collider>().enabled = false;
+
+        // Update Letter ID
+        indicator.letterID.text = ObjectivesList.GetLetter(obj);
+
         // Color it based on the objective entry
-        Color color = (obj == null) ?
-            Color.white :
-            ObjectivesList.GetColor(obj);
+        Color color = ObjectivesList.GetColor(obj);
 
         indicator.img.color = color;
         indicator.arrowImg.color = color;
+        indicator.letterID.color = color;
+        indicator.minimapObject.GetComponent<Renderer>().material.color = color;
+        color.a = 30f / 255f;
+        indicator.backgroundImg.color = color;
+
 
         trackedObjectsMap.Add(
             id,
@@ -142,7 +177,10 @@ public class Indicator : MonoBehaviour
     private void Awake()
     {
         img = GetComponent<Image>();
+        backgroundImg = transform.Find("Background").GetComponent<Image>();
         arrowImg = transform.Find("Arrow").GetComponent<Image>();
+        distanceTxt = transform.Find("Distance").GetComponent<TMP_Text>();
+        letterID = transform.Find("Letter").GetComponent<TMP_Text>();
         this.transform.position = Vector3.zero;
     }
 
@@ -168,6 +206,10 @@ public class Indicator : MonoBehaviour
     {
         target = null;
         this.gameObject.SetActive(false);
+        if (minimapObject != null)
+        {
+            Destroy(minimapObject);
+        }
     }
 
     /// <summary>
@@ -187,16 +229,20 @@ public class Indicator : MonoBehaviour
             0f,
             1f);
 
-        img.rectTransform.localScale = Vector2.one * (1f + ratio);
+        img.rectTransform.localScale = Vector2.one * (1.5f + ratio);
 
         // Minimum image alpha value
-        const float MIN_ALPHA = 0.35f;
+        const float MIN_ALPHA = 0.6f;
 
         // Adjust alpha to distance as well
         Color color = img.color;
         color.a = MIN_ALPHA + (1f - MIN_ALPHA) * (1f - ratio);
         img.color = color;
         arrowImg.color = color;
+        letterID.color = color;
+
+        // Update distance
+        distanceTxt.text = Mathf.Sqrt(dist_2).ToString("f1") + "m";
     }
 
     /// <summary>
