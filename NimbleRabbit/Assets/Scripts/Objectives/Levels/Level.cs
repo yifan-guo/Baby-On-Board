@@ -68,7 +68,7 @@ public class Level : MonoBehaviour, IObjective
         get { return _prereqCompletionOperator; }
     }
 
-    private IObjective.PrereqOperator _prereqFailureOperator = IObjective.PrereqOperator.AND;
+    private IObjective.PrereqOperator _prereqFailureOperator = IObjective.PrereqOperator.OR;
     public IObjective.PrereqOperator prereqFailureOperator
     {
         get { return _prereqFailureOperator; }

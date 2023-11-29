@@ -94,7 +94,7 @@ public class PackageCollector : MonoBehaviour
         }
 
         // Untrack in case we are a bandit
-        Indicator.Untrack(pkg.transform.parent.gameObject);
+        Indicator.Untrack(pkg.gameObject);
 
         // Untrack if we delivered it
         Indicator.Untrack(pkg.deliveryLocation.gameObject);

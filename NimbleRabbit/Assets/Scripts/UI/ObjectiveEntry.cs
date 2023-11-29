@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class ObjectiveEntry : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class ObjectiveEntry : MonoBehaviour
     /// Profile picture ID icon.
     /// </summary>
     private Image id;
+
+    private TMP_Text letterID;
 
     /// <summary>
     /// Text that tells the player what they need to do.
@@ -44,11 +48,28 @@ public class ObjectiveEntry : MonoBehaviour
     /// </summary>
     private RectTransform xform;
 
+    private Image border;
+
     /// <summary>
     /// Color corresponding to this objective
     /// (Affects objective entry as well as indicator).
     /// </summary>
     public Color color {get; set;}
+    private static readonly List<Color> colors = new List<Color>
+    {
+        Color.blue,
+        Color.cyan,
+        Color.green,
+        Color.magenta,
+        Color.red,
+        Color.yellow
+    };
+
+    /// <summary>
+    /// Letter ID.
+    /// </summary>
+    public char letter {get; set;}
+    private const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /// <summary>
     /// Initialization Pt I.
@@ -56,12 +77,15 @@ public class ObjectiveEntry : MonoBehaviour
     private void Awake()
     {
         id = transform.Find("ID").GetComponent<Image>();
+        letterID = transform.Find("ID/Letter").GetComponent<TMP_Text>();
         instruction = transform.Find("Instruction").GetComponent<TextMeshProUGUI>();
         timeBar = transform.Find("TimeBar").GetComponent<Image>();
         emptyTimeBar = transform.Find("EmptyTimeBar").GetComponent<Image>();
         time = transform.Find("Time").GetComponent<TextMeshProUGUI>();
         clock = transform.Find("Clock").GetComponent<Image>();
         xform = GetComponent<RectTransform>();
+        border = transform.Find("Border").GetComponent<Image>();
+        border.enabled = false;
     }
 
     /// <summary>
@@ -69,8 +93,13 @@ public class ObjectiveEntry : MonoBehaviour
     /// </summary>
     public void Link(IObjective obj)
     {
-        color = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        color = colors[ObjectivesList.entries.Count % colors.Count];
         id.color = color;
+        letterID.color = color;
+
+        letter = letters[ObjectivesList.entries.Count % letters.Length];
+        letterID.text = $"{letter}";
+        
         this.obj = obj;
         this.obj.OnObjectiveUpdated += UpdateEntry;
         UpdateEntry();
@@ -121,6 +150,7 @@ public class ObjectiveEntry : MonoBehaviour
                 time.enabled = false;
                 timeBar.enabled = false;
                 emptyTimeBar.enabled = false;
+                border.enabled = false;
                 break;
 
             case IObjective.Status.InProgress:
@@ -138,6 +168,8 @@ public class ObjectiveEntry : MonoBehaviour
                 time.enabled = true;
                 timeBar.enabled = true;
                 emptyTimeBar.enabled = true;
+                border.enabled = true;
+                StartCoroutine(BorderFlash());
                 break;
 
             case IObjective.Status.Complete:
@@ -146,6 +178,7 @@ public class ObjectiveEntry : MonoBehaviour
                 time.enabled = false;
                 timeBar.enabled = false;
                 emptyTimeBar.enabled = false;
+                border.enabled = false;
                 break;
 
             case IObjective.Status.Failed:
@@ -156,6 +189,7 @@ public class ObjectiveEntry : MonoBehaviour
                 time.enabled = false;
                 timeBar.enabled = false;
                 emptyTimeBar.enabled = false;
+                border.enabled = false;
                 break;
 
             default:
@@ -164,9 +198,36 @@ public class ObjectiveEntry : MonoBehaviour
                 time.enabled = false;
                 timeBar.enabled = false;
                 emptyTimeBar.enabled = false;
+                border.enabled = false;
                 break;
         }
 
         instruction.text = txt;
+    }
+
+    private IEnumerator BorderFlash()
+    {
+        Color orange = new Color(
+            255f / 255f, 
+            116f/ 255f, 
+            0);
+            
+        float time_s = Time.time;
+
+        while (obj.ObjectiveStatus == IObjective.Status.InProgress)
+        {
+            if (Time.time - time_s > 0.5f)
+            {
+                border.color = (border.color == orange) ?
+                    Color.white :
+                    orange;
+
+                time_s = Time.time;
+            }
+
+            yield return null;
+        }
+
+        yield break;
     }
 }

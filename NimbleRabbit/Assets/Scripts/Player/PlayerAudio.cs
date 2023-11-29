@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class PlayerAudio : MonoBehaviour
     /// </summary>
     public const float STARTUP_TIME_S = 0.9f;
 
+    public const float DANGER_DISTANCE_M = 50f;
+
     /// <summary>
     /// Sound of car starting up.
     /// </summary>
@@ -20,6 +23,8 @@ public class PlayerAudio : MonoBehaviour
     /// Sound of car engine running.
     /// </summary>
     public AudioClip engine;
+
+    public AudioClip dangerMusic;
 
     /// <summary>
     /// Sound to play when hitting something.
@@ -41,6 +46,10 @@ public class PlayerAudio : MonoBehaviour
     /// </summary>
     private AudioSource otherSource;
 
+    private AudioSource musicSource;
+
+    private bool dangerMusicPlaying = false;
+
     /// <summary>
     /// Initialization Pt I.
     /// </summary>
@@ -49,6 +58,7 @@ public class PlayerAudio : MonoBehaviour
         AudioSource[] sources = GetComponents<AudioSource>();
         engineSource = sources[0];
         otherSource = sources[1];
+        musicSource = sources[2];
     }
 
     /// <summary>
@@ -68,6 +78,9 @@ public class PlayerAudio : MonoBehaviour
         otherSource.loop = false;
 
         UIManager.instance.settingsMenu.OnSoundVolumeChanged += SetSoundVolume;
+
+        InvokeRepeating("HandleDangerMusic", 1f, 1f);
+
     }
 
     /// <summary>
@@ -129,6 +142,7 @@ public class PlayerAudio : MonoBehaviour
         AuditLogger.instance.ar.finalSFXVolume = value;
         engineSource.volume = value;
         otherSource.volume = value;
+        musicSource.volume = value;
     }
 
     /// <summary>
@@ -175,5 +189,46 @@ public class PlayerAudio : MonoBehaviour
     public void PlayPickup()
     {
         otherSource.PlayOneShot(pickup);
+    }
+
+    public void PlayDangerMusic()
+    {
+        UIManager.instance.StopMusic();
+        UIManager.instance.ShowHostileVehicleWarning();
+        musicSource.PlayOneShot(dangerMusic);
+        dangerMusicPlaying = true;
+    }
+
+    public void StopDangerMusic()
+    {
+        UIManager.instance.PlayMusic();
+        UIManager.instance.HideHostileVehicleWarning();
+        musicSource.Stop();
+        dangerMusicPlaying = false;
+    }
+
+    private void HandleDangerMusic()
+    {
+        NPC[] npcs = FindObjectsOfType(typeof(NPC)) as NPC[];
+
+        npcs = Array.FindAll(npcs, npc => npc.role == NPC.Role.Police || npc.role == NPC.Role.Bandit);
+
+        bool inDanger = false;
+        foreach (NPC npc in npcs)
+        {
+            float distance = Vector3.Distance(transform.position, npc.transform.position);
+            if (distance < DANGER_DISTANCE_M)
+            {
+                inDanger = true;
+                if (dangerMusicPlaying == false)
+                {
+                    PlayDangerMusic();
+                }
+            }
+        }
+        if (inDanger == false)
+        {
+            StopDangerMusic();
+        }
     }
 }
