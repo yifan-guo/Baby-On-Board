@@ -97,7 +97,7 @@ public class SpeechBubble : MonoBehaviour
 				GUI.Label(new Rect(0,0,200,100),"",guiSkin.customStyles[0]);
 
 				//Render the text
-				GUI.Label(new Rect(10,25,190,50), $"My status: {currentNpcStatus}", guiSkin.label);
+				GUI.Label(new Rect(10,25,190,50), $"{currentNpcStatus}", guiSkin.label);
 
 			GUI.EndGroup();
 			}
