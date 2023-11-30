@@ -5721,6 +5721,22 @@ PrefabInstance:
       propertyPath: TTLAfterPickupSeconds
       value: 120
       objectReference: {fileID: 0}
+    - target: {fileID: 5469645984531366996, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
+      propertyPath: looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469645984531366996, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
+      propertyPath: startDelay.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469645984531382134, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469645984531382134, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
+      propertyPath: startDelay.scalar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7755871105328215575, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -5735,7 +5751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7755871105328215575, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -250.47
+      value: -250.4
       objectReference: {fileID: 0}
     - target: {fileID: 7755871105328215575, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5768,6 +5784,10 @@ PrefabInstance:
     - target: {fileID: 7755871105328215579, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
       propertyPath: m_Name
       value: Package
+      objectReference: {fileID: 0}
+    - target: {fileID: 9116065797944608627, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
+      propertyPath: damageMultiplier
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a7588755fc3a214e9fe764818d5f8c0, type: 3}
