@@ -641,7 +641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4504444892538768734
 Transform:
   m_ObjectHideFlags: 0
@@ -1178,8 +1178,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f4cf5c8db0c14654e850e489f979bd69, type: 3}
   - {fileID: 8300000, guid: 92d3e97ac3510134a82e99590080832b, type: 3}
   sirens: []
-  enemyNearMusic: {fileID: 8300000, guid: 838658981ae154992966900c2daa234f, type: 3}
-  chasingMusic: {fileID: 8300000, guid: 35544d3a8da0e4dc5b3580cf13d147cb, type: 3}
 --- !u!1 &7191918800507971042
 GameObject:
   m_ObjectHideFlags: 0
