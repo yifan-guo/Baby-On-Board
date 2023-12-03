@@ -93,6 +93,8 @@ public class PackageCollector : MonoBehaviour
             pkgObjective.Fail();
         }
 
+        UIManager.instance.sm.ScorePackage(objectiveStatus ? pkg.hp.currentHealth : 0f);
+
         // Untrack in case we are a bandit
         Indicator.Untrack(pkg.gameObject);
 

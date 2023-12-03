@@ -33,6 +33,20 @@ public class ScoreManager : ScriptableObject
     /// </summary>
     public List<ScoreCategory> scoringCategories;
 
+    public ScoreCategory pkgHealthCategory = new ScoreCategory()
+    {
+        displayName = "Package Health", 
+        weightingPercent = 70, 
+        targetValue = 0, 
+        currentValue = 0
+    };
+
+    public void ScorePackage(float endHealth)
+    {
+        pkgHealthCategory.targetValue += 100f;
+        pkgHealthCategory.currentValue += endHealth;
+    }
+
     public (int score, string grade) CalculateGrade()
     {
         // Calculate the score by summing the scores of each category

@@ -26,8 +26,6 @@ public class SpeechBubble : MonoBehaviour
 
 	private float speechBubbleVisibleRange = 200f;
 
-	private float distanceFromNPCToPlayer;
-
 	//a material to render the triangular part of the speech balloon
 	public Material mat;
 	//a guiSkin, to render the round part of the speech balloon
@@ -63,8 +61,6 @@ public class SpeechBubble : MonoBehaviour
 		//Calculate the X and Y offsets to center the speech balloon exactly on the center of the game object
 		centerOffsetX = bubbleWidth/2;
 		centerOffsetY = bubbleHeight/2;
-
-		distanceFromNPCToPlayer = Vector3.Distance(npc.transform.position, PlayerController.instance.transform.position);
 	}
 
 	//Called once per frame, after the update
@@ -82,6 +78,11 @@ public class SpeechBubble : MonoBehaviour
 	//Draw GUIs
 	void OnGUI()
 	{
+		if (PlayerController.instance == null)
+		{
+			return;
+		}
+
 		if (PlayerController.instance.CanSee(npc.transform.position, visionRangeMax: speechBubbleVisibleRange)) {
 			string currentNpcStatus;
 			if (!npc.npcStatusTexts.TryGetValue(npc.stateMachine.currentState.GetType(), out currentNpcStatus)) {
@@ -105,6 +106,10 @@ public class SpeechBubble : MonoBehaviour
 	//Called after camera has finished rendering the scene
 	void OnRenderObject()
 	{
+		if (PlayerController.instance == null)
+		{
+			return;
+		}
 
 		if (PlayerController.instance.CanSee(npc.transform.position, visionRangeMax: speechBubbleVisibleRange)) {
 				//push current matrix into the matrix stack

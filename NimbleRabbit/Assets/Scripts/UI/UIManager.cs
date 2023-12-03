@@ -262,9 +262,9 @@ public class UIManager : MonoBehaviour
         // I wanted to do this in the level class, but since it's an IObjective here I can't access the non-interface methods
         // TODO() refactor this later to make score calculation part of the level class
         List<ScoreCategory> scoringCategories = new List<ScoreCategory>() {
-        new ScoreCategory() { displayName = "Package Health", weightingPercent = 40, targetValue = 100, currentValue=(int)Math.Round(PlayerController.instance.pc.packages[0].hp.currentHealth)},
+        sm.pkgHealthCategory,
         new ScoreCategory() { displayName = "Player Health", weightingPercent = 20, targetValue = 100, currentValue=(int)Math.Round(PlayerController.instance.hp.currentHealth)},
-        new ScoreCategory() { displayName = "Completion Time", weightingPercent = 40, targetValue = 0, targetHigh = false, missZeroTargetPenaltyExponent=0.999f, currentValue=(int)Math.Round(levelObj.EndTime - levelObj.StartTime)}};
+        new ScoreCategory() { displayName = "Completion Time", weightingPercent = 10, targetValue = 0, targetHigh = false, missZeroTargetPenaltyExponent=0.999f, currentValue=(int)Math.Round(levelObj.EndTime - levelObj.StartTime)}};
 
         sm.scoringCategories = scoringCategories;
         string scoreSummaryText = sm.GetScoreSummaryText();

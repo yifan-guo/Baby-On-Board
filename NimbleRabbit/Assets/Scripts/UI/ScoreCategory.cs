@@ -18,12 +18,12 @@ public class ScoreCategory
     /// <summary>
     /// The target value for this score category.
     /// </summary>
-    public int targetValue;
+    public float targetValue;
 
     /// <summary>
     /// The current value for this score category
     /// </summary>
-    public int currentValue = 0;
+    public float currentValue = 0;
 
     /// <summary>
     /// Bool to decide if the target value should be high or low.
