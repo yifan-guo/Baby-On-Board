@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.EventSystems;
 
 public class GameStarter : MonoBehaviour
 {
@@ -13,6 +13,9 @@ public class GameStarter : MonoBehaviour
     private GameObject NextButton;
     private GameObject BackButton;
     private GameObject LetsPlayButton;
+
+    private GameObject DevCredits;
+
 
     void Awake()
     {
@@ -25,6 +28,8 @@ public class GameStarter : MonoBehaviour
         BackButton = transform.Find("BackButton").gameObject;
         LetsPlayButton = transform.Find("LetsPlayButton").gameObject;
 
+        DevCredits = transform.Find("Credits").gameObject;
+
         GameTitle.SetActive(true);
         Startbutton.SetActive(true);
         Quitbutton.SetActive(true);
@@ -33,6 +38,9 @@ public class GameStarter : MonoBehaviour
         NextButton.SetActive(false);
         BackButton.SetActive(false);
         LetsPlayButton.SetActive(false);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(Startbutton);
     }
 
 
@@ -51,10 +59,15 @@ public class GameStarter : MonoBehaviour
         GameTitle.SetActive(false);
         Startbutton.SetActive(false);
         Quitbutton.SetActive(false);
+        DevCredits.SetActive(false);
+
 
         intro00Story.SetActive(true);
         NextButton.SetActive(true);
         LetsPlayButton.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(NextButton);
 
     }
 

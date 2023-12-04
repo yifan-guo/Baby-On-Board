@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-//using TMPro;
+using UnityEngine.EventSystems;
 
 public class GameInstructions : MonoBehaviour
 {
@@ -20,6 +20,7 @@ public class GameInstructions : MonoBehaviour
 
     private GameObject NextButton;
     private GameObject BackButton;
+    private GameObject LetsPlayButton;
 
     //private TextMeshProUGUI nextButtonText;
 
@@ -43,6 +44,8 @@ public class GameInstructions : MonoBehaviour
 
         NextButton = transform.Find("NextButton").gameObject;
         BackButton = transform.Find("BackButton").gameObject;
+
+        LetsPlayButton = transform.Find("LetsPlayButton").gameObject;
 
         intro00Story.SetActive(false);
         intro01Player.SetActive(false);
@@ -73,6 +76,8 @@ public class GameInstructions : MonoBehaviour
         { 
             BackButton.SetActive(false);
             NextButton.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(NextButton);
         }
         else if((showIndex > 0) && (showIndex < 9))
         {
@@ -83,6 +88,8 @@ public class GameInstructions : MonoBehaviour
         {
             BackButton.SetActive(true);
             NextButton.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(BackButton);
         }
 
         if ((showIndex >=0) && (showIndex <=9)) 
@@ -135,6 +142,8 @@ public class GameInstructions : MonoBehaviour
                     //change button text, remind player the game will start
                     //nextButtonText = NextButton.GetComponentInChildren<TextMeshProUGUI>();
                     //nextButtonText.text = "END";
+                    OverwriteBackButtonNavForFinalMenu();
+                    OverWritePlayButtonForFinalMenu();
                     break;
 
             }
@@ -144,12 +153,16 @@ public class GameInstructions : MonoBehaviour
 
     public void ClickBackButton()
     {
+        ResetBackButtonNav();
+        ResetPlayButtonNav();
         showIndex--;
 
         if (showIndex == 0)
         {
             BackButton.SetActive(false);
             NextButton.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(NextButton);
         }
         else if ((showIndex > 0) && (showIndex < 9))
         {
@@ -223,6 +236,46 @@ public class GameInstructions : MonoBehaviour
     {
         SceneManager.LoadScene("Level1");
         Time.timeScale = 1.0f;
+    }
+
+    private void OverwriteBackButtonNavForFinalMenu()
+    {
+        Navigation newButtonNav = new Navigation();
+        newButtonNav.mode = Navigation.Mode.Explicit;
+        newButtonNav.selectOnRight = LetsPlayButton.GetComponent<Button>();
+        newButtonNav.selectOnLeft = LetsPlayButton.GetComponent<Button>();
+        newButtonNav.selectOnDown = LetsPlayButton.GetComponent<Button>();
+        newButtonNav.selectOnUp = LetsPlayButton.GetComponent<Button>();
+        BackButton.GetComponent<Button>().navigation = newButtonNav;
+    }
+
+    private void ResetBackButtonNav()
+    {
+        Navigation newButtonNav = new Navigation();
+        newButtonNav.mode = Navigation.Mode.Explicit;
+        newButtonNav.selectOnRight = NextButton.GetComponent<Button>();
+        newButtonNav.selectOnUp = NextButton.GetComponent<Button>();
+        BackButton.GetComponent<Button>().navigation = newButtonNav;
+    }
+
+    private void OverWritePlayButtonForFinalMenu()
+    {
+        Navigation newButtonNav = new Navigation();
+        newButtonNav.mode = Navigation.Mode.Explicit;
+        newButtonNav.selectOnRight = BackButton.GetComponent<Button>();
+        newButtonNav.selectOnLeft = BackButton.GetComponent<Button>();
+        newButtonNav.selectOnUp = BackButton.GetComponent<Button>();
+        newButtonNav.selectOnDown = BackButton.GetComponent<Button>();
+        LetsPlayButton.GetComponent<Button>().navigation = newButtonNav;
+    }
+
+    private void ResetPlayButtonNav()
+    {
+        Navigation newButtonNav = new Navigation();
+        newButtonNav.mode = Navigation.Mode.Explicit;
+        newButtonNav.selectOnLeft = NextButton.GetComponent<Button>();
+        newButtonNav.selectOnDown = NextButton.GetComponent<Button>();
+        LetsPlayButton.GetComponent<Button>().navigation = newButtonNav;
     }
 
 }

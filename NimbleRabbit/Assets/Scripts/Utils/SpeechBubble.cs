@@ -24,7 +24,7 @@ public class SpeechBubble : MonoBehaviour
 	private int centerOffsetX;
 	private int centerOffsetY;
 
-	private float speechBubbleVisibleRange = 200f;
+	private float speechBubbleVisibleRange = 50f;
 
 	//a material to render the triangular part of the speech balloon
 	public Material mat;
